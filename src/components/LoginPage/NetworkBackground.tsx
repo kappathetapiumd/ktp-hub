@@ -1,18 +1,20 @@
-"use client";
+import { useEffect, RefObject } from "react";
 
-import { useEffect, useRef } from "react";
+type Props = {
+  canvasRef: RefObject<HTMLCanvasElement | null>;
+}
 
-export default function NetworkBackground() {
-  const canvasRef = useRef(null);
-
+export default function NetworkBackground({ canvasRef }: Props) {
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const canvas = canvasRef.current!;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d")!;
+    if (!ctx) return;
 
     let width = 0;
     let height = 0;
-    let particles = [];
-    let animationId;
+    let animationId: number;
 
     const config = {
       particleCount: 80,
@@ -23,8 +25,18 @@ export default function NetworkBackground() {
       secondaryColor: "#0984e3",
     };
 
+    let particles: {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+    }[] = [];
+
     function resize() {
       const parent = canvas.parentElement;
+      if (!parent) return;
+
       width = parent.offsetWidth;
       height = parent.offsetHeight;
       canvas.width = width;
@@ -32,28 +44,20 @@ export default function NetworkBackground() {
     }
 
     function createParticles() {
-      particles = [];
-
-      for (let i = 0; i < config.particleCount; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * config.speed,
-          vy: (Math.random() - 0.5) * config.speed,
-          radius: Math.random() * config.particleRadius + 1,
-        });
-      }
+      particles = Array.from({ length: config.particleCount }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * config.speed,
+        vy: (Math.random() - 0.5) * config.speed,
+        radius: Math.random() * config.particleRadius + 1,
+      }));
     }
 
-    function drawParticle(particle, index) {
-      const color =
-        index % 2 === 0
-          ? config.primaryColor
-          : config.secondaryColor;
-
+    function drawParticle(particle: (typeof particles)[number], index: number) {
       ctx.beginPath();
       ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-      ctx.fillStyle = color;
+      ctx.fillStyle =
+        index % 2 === 0 ? config.primaryColor : config.secondaryColor;
       ctx.fill();
     }
 
@@ -67,10 +71,6 @@ export default function NetworkBackground() {
           if (distance < config.lineDistance) {
             const opacity = 1 - distance / config.lineDistance;
 
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-
             const gradient = ctx.createLinearGradient(
               particles[i].x,
               particles[i].y,
@@ -81,6 +81,9 @@ export default function NetworkBackground() {
             gradient.addColorStop(0, `rgba(0, 212, 170, ${opacity * 0.4})`);
             gradient.addColorStop(1, `rgba(9, 132, 227, ${opacity * 0.4})`);
 
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
             ctx.strokeStyle = gradient;
             ctx.lineWidth = 1;
             ctx.stroke();
@@ -119,10 +122,8 @@ export default function NetworkBackground() {
       createParticles();
     });
 
-    return () => {
-      cancelAnimationFrame(animationId);
-    };
+    return () => cancelAnimationFrame(animationId);
   }, []);
 
-  return <canvas className="particles" ref={canvasRef} />;
+  return <canvas className="network-canvas" ref={canvasRef} />;
 }
