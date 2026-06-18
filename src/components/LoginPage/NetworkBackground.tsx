@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 
-
 export default function NetworkBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   
@@ -127,7 +126,7 @@ export default function NetworkBackground() {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", handleResize);
     }
-  }, [canvasRef]);
+  }, []);
 
   return <canvas className="network-canvas" ref={canvasRef} />;
 }
