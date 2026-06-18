@@ -75,7 +75,7 @@
   border: 1.5px solid rgba(0, 224, 198, 0.75);
   border-radius: 0.9rem;
 
-  background: transparent;
+  background: rgba(10, 22, 40, 0.8);
   color: #e8eef7;
   font-size: 1rem;
   outline: none;
@@ -108,7 +108,7 @@
   flex: 1;
   min-height: 52px;
 
-  background: transparent;
+  background: rgba(10, 22, 40, 0.3);
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
 
