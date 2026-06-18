@@ -102,7 +102,8 @@
 .login-btns-container {
   display: grid;
   gap: var(--spacing-3);
-  margin-top: var(--spacing-3);
+  /* margin-top: 0px; */
+  margin-top: var(--spacing-2);
 }
 
 .login-btns-container button {
@@ -127,14 +128,55 @@
   box-shadow: var(--shadow-glow);
 }
 
-.switch-btn {
-  color: var(--color-primary-light);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid var(--color-border);
+.submit-btn:disabled {
+  cursor: not-allowed;
+  transform: none;
+  color: rgba(255, 255, 255, 0.55);
+
+  background: rgba(255, 255, 255, 0.06);
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.2);
+
+  opacity: 0.75;
 }
 
-.switch-btn:hover {
-  background: rgba(255, 255, 255, 0.11);
+.submit-btn:disabled:hover {
+  transform: none;
+}
+
+.account-container {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.switch-link {
+  margin-left: 0.25rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-primary-light);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: none;
+  transition:
+    color var(--transition-fast),
+    text-shadow var(--transition-fast);
+}
+
+.switch-link:hover {
+  transform: none;
+  color: var(--color-primary);
+  text-shadow: 0 0 12px rgba(0, 212, 170, 0.35);
+}
+
+.switch-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.2);
 }
 
 @media (max-width: 520px) {
