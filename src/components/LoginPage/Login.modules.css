@@ -138,6 +138,10 @@
 }
 
 @media (max-width: 520px) {
+  .login-container {
+    background: transparent;
+  }
+
   .login-content {
     padding: var(--spacing-8) var(--spacing-6);
   }

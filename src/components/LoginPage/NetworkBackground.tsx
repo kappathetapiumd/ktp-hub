@@ -117,13 +117,18 @@ export default function NetworkBackground({ canvasRef }: Props) {
     createParticles();
     animate();
 
-    window.addEventListener("resize", () => {
+    function handleResize() {
       resize();
       createParticles();
-    });
+    }
 
-    return () => cancelAnimationFrame(animationId);
-  }, []);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", handleResize);
+    }
+  }, [canvasRef]);
 
   return <canvas className="network-canvas" ref={canvasRef} />;
 }
