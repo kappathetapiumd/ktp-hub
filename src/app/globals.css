@@ -1,49 +1,179 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #00d4aa;
+  --color-primary-dark: #00b894;
+  --color-primary-light: #55efc4;
+  --color-secondary: #0984e3;
+  --color-secondary-dark: #0652DD;
+  --color-secondary-light: #74b9ff;
+  --color-accent: #6c5ce7;
+  --gradient-primary: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  --font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-size-xs: .75rem;
+  --font-size-sm: .875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  --spacing-1: .25rem;
+  --spacing-2: .5rem;
+  --spacing-3: .75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --radius-sm: .25rem;
+  --radius-md: .5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+  --transition-fast: .15s ease;
+  --transition-base: .25s ease;
+  --transition-slow: .35s ease;
+  --container-max: 1200px;
+  --container-padding: var(--spacing-6)
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root,
+[data-theme=dark] {
+  --color-bg: #0a1628;
+  --color-bg-card: #0f1f38;
+  --color-bg-elevated: #162a4a;
+  --color-text: #e9ecef;
+  --color-text-muted: #adb5bd;
+  --color-text-heading: #ffffff;
+  --color-border: rgba(255, 255, 255, .1);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / .3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / .3), 0 2px 4px -2px rgb(0 0 0 / .2);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / .3), 0 4px 6px -4px rgb(0 0 0 / .2);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / .3), 0 8px 10px -6px rgb(0 0 0 / .2);
+  --shadow-glow: 0 0 30px rgba(0, 212, 170, .3);
+  --logo-filter: none;
+  --logo-bg: rgba(255, 255, 255, .95)
 }
 
-html {
-  height: 100%;
+[data-theme=light] {
+  --color-primary: #059669;
+  --color-primary-dark: #047857;
+  --color-primary-light: #10b981;
+  --color-secondary: #0764b8;
+  --color-secondary-dark: #054a8a;
+  --color-secondary-light: #3b82f6;
+  --color-accent: #5b4cdb;
+  --gradient-primary: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  --color-bg: #f8f9fa;
+  --color-bg-card: #ffffff;
+  --color-bg-elevated: #f1f3f5;
+  --color-text: #343a40;
+  --color-text-muted: #6c757d;
+  --color-text-heading: #212529;
+  --color-border: rgba(0, 0, 0, .1);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / .05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / .1), 0 8px 10px -6px rgb(0 0 0 / .1);
+  --shadow-glow: 0 0 20px rgba(5, 150, 105, .25);
+  --logo-filter: none;
+  --logo-bg: #ffffff
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*,
+*:before,
+*:after {
+  box-sizing: border-box
 }
 
 * {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+  min-height: 100vh;
+  transition: background var(--transition-base), color var(--transition-base)
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--color-text-heading)
+}
+
+h1 {
+  font-size: var(--font-size-5xl)
+}
+
+h2 {
+  font-size: var(--font-size-4xl)
+}
+
+h3 {
+  font-size: var(--font-size-3xl)
+}
+
+h4 {
+  font-size: var(--font-size-2xl)
+}
+
+h5 {
+  font-size: var(--font-size-xl)
+}
+
+h6 {
+  font-size: var(--font-size-lg)
 }
 
 a {
-  color: inherit;
+  color: var(--color-primary);
   text-decoration: none;
+  transition: color var(--transition-fast)
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+a:hover {
+  color: var(--color-primary-light)
+}
+
+p {
+  margin-bottom: var(--spacing-4)
 }

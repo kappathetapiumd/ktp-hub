@@ -1,0 +1,136 @@
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  mask-image: radial-gradient(circle,
+    rgba(0, 0, 0, 1) 25%,
+    rgba(0, 0, 0, 0.7) 50%,
+    transparent 75%,
+    transparent 100%
+  );
+
+  -webkit-mask-image: radial-gradient(circle,
+    rgba(0, 0, 0, 1) 25%,
+    rgba(0, 0, 0, 0.7) 50%,
+    transparent 75%,
+    transparent 100%
+  );
+}
+
+.login-content {
+  position: relative;
+  z-index: 1;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-page h1 {
+  font-size: clamp(5rem, 10vw, 10rem);
+  font-weight: 800;
+  margin-bottom: var(--spacing-4);
+  letter-spacing: 0.1em;
+
+  transform: translateX(0.05em);
+}
+
+.login-container {
+  width: min(90vw, 450px);
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+
+  color: #b8c0cc;
+}
+
+.login-container>div {
+  width: 100%;
+}
+
+.login-container p {
+  margin: 0 0 0.35rem;
+  color: #b8c0cc;
+  font-size: 0.95rem;
+}
+
+.login-container input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 0.85rem 1rem;
+  border: 1.5px solid rgba(0, 224, 198, 0.75);
+  border-radius: 0.9rem;
+
+  background: transparent;
+  color: #e8eef7;
+  font-size: 1rem;
+  outline: none;
+}
+
+.login-container input::placeholder {
+  color: rgba(184, 192, 204, 0.55);
+}
+
+.login-container input:focus {
+  border-color: #00e0c6;
+  box-shadow: 0 0 0 3px rgba(0, 224, 198, 0.12);
+}
+
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text
+}
+
+.secondary-btns-container {
+  display: flex;
+  gap: 0.8rem;
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.secondary-btns-container button {
+  flex: 1;
+  min-height: 52px;
+
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+
+  padding: var(--spacing-3) var(--spacing-6);
+
+  font-size: var(--font-size-base);
+  font-weight: 600;
+
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.secondary-btns-container button:hover {
+  background: var(--color-primary);
+  color: var(--color-bg);
+  box-shadow: var(--shadow-xl)
+}
+
+@media (max-width: 420px) {
+  .secondary-btns-container {
+    flex-direction: column;
+  }
+}
