@@ -9,7 +9,7 @@ export default function LoginPage() {
 
   return (
     <main className="login-container">
-      <NetworkBackground canvasRef={canvasRef} />
+      <NetworkBackground />
 
       <section className="login-content">
         <h1>Κ Θ Π</h1>

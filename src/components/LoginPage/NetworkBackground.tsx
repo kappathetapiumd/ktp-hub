@@ -1,10 +1,9 @@
-import { useEffect, RefObject } from "react";
+import { useEffect, useRef } from "react";
 
-type Props = {
-  canvasRef: RefObject<HTMLCanvasElement | null>;
-}
 
-export default function NetworkBackground({ canvasRef }: Props) {
+export default function NetworkBackground() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  
   useEffect(() => {
     const canvas = canvasRef.current!;
     if (!canvas) return;
