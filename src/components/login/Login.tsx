@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
 
   const router = useRouter();
 
@@ -18,21 +18,21 @@ export default function LoginPage() {
   const validRegister = name.trim().split(/\s+/).length === 2;
 
   async function handleAuth(): Promise<void> {
-    const route = isLogin ? 'login' : 'signup';
+    // const route = isLogin ? 'login' : 'signup';
 
-    const response = await fetch(`/api/${route}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
+    // const response = await fetch(`/api/${route}`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ email, password })
+    // });
 
-    const data = await response.json();
+    // const data = await response.json();
 
-    if (!response.ok) {
-      // need to fill in
-    }
+    // if (!response.ok) {
+    //   // need to fill in
+    // }
 
-    router.push('/users');
+    router.push('/strikes');
   }
 
   return (
@@ -62,6 +62,7 @@ export default function LoginPage() {
               onChange={e => setEmail(e.target.value)}
               type="text"
               placeholder="Email"
+              suppressHydrationWarning
             />
           </div>
 
@@ -72,11 +73,13 @@ export default function LoginPage() {
               onChange={e => setPassword(e.target.value)}
               type="password"
               placeholder="Password"
+              suppressHydrationWarning
             />
           </div>
 
           <div className="login-btns-container">
             <button
+              onClick={handleAuth}
               className="submit-btn"
               disabled={isLogin ? (invalidLogin) : (invalidLogin || !validRegister)}>
               {isLogin ? 'Sign in' : 'Register'}
@@ -84,7 +87,8 @@ export default function LoginPage() {
             <p className="account-container">
               {isLogin
                 ? "Don't have an account? "
-                : 'Already have an account? '}
+                : 'Already have an account? '
+              }
               <a onClick={() => setIsLogin(!isLogin)} className="switch-link">
                 {isLogin ? 'Register' : 'Sign in'}
               </a>

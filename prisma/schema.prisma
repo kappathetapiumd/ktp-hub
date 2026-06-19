@@ -23,14 +23,32 @@ enum Role {
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
-  firstName    String
-  lastName     String
+  Name         String
   passwordHash String
 
   role         Role     @default(NONE)
 
   membershipCommittee Boolean @default(false)
 
+  pledgeStrikeEvents  StrikeEvent[] @relation("PledgeStrikeEvents")
+  createdStrikeEvents StrikeEvent[] @relation("CreatedStrikeEvents")
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model StrikeEvent {
+  id          String   @id @default(cuid())
+
+  pledgeId   String
+  pledge     User     @relation("PledgeStrikeEvents", fields: [pledgeId], references: [id])
+
+  createdById String
+  createdBy   User   @relation("CreatedStrikeEvents", fields: [createdById], references: [id])
+
+  amount      Int
+  reason      String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
