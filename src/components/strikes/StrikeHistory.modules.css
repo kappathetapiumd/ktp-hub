@@ -1,6 +1,36 @@
 .strike-history-container {
   display: grid;
   gap: var(--spacing-3);
+
+  padding: 10px 10px;
+}
+
+.week-amount {
+  margin: 0 3px;
+
+  font-size: 1.75rem;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.2;
+
+  color: var(--color-text);
+}
+
+.week-amount span {
+  color: inherit;
+  font: inherit;
+
+  margin-left: 5px;
+}
+
+.horizontal-line {
+  width: 138px;
+  height: 3px;
+
+  margin: 0 3px;
+
+  background: var(--color-border);
+  opacity: 0.6;
 }
 
 .strike-card {

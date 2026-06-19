@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   const invalidLogin = password.length < 4 || email.length <= 8 ||
     !email.includes('umd.edu') || !email.includes('@');
-  const validRegister = name.trim().split(/\s+/).length === 2;
+  const validRegister = name.trim().split(/\s+/).length >= 2;
 
   async function handleAuth(): Promise<void> {
     // const route = isLogin ? 'login' : 'signup';

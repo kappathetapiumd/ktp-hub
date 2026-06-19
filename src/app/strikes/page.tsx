@@ -1,12 +1,12 @@
 'use client';
 
-import Weeks from "@/components/strikes/Weeks";
+import WeeksSelect from "@/components/strikes/WeeksSelect";
 import StrikeHistory from '@/components/strikes/StrikeHistory';
 
 export default function Strikes() {
   return (
     <>
-      <Weeks />
+      <WeeksSelect />
       <StrikeHistory />
     </>
   );
