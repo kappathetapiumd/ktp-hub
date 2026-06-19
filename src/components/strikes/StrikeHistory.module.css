@@ -5,7 +5,9 @@
 
   height: 100%;
   min-height: 0;
-  padding: 10px;
+  padding: 10px 0;
+
+  margin-right: -10px
 }
 
 .week-amount {
@@ -177,5 +179,9 @@
 @media (max-width: 520px) {
   .reason {
     max-width: 100%;
+  }
+
+  .strike-history-container {
+    margin-right: 0px
   }
 }

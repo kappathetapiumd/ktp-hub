@@ -54,30 +54,32 @@ export default function Weeks() {
   }
 
   return (
-    <div
-      ref={scrollRef}
-      className={styles['weeks-scroll']}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={stopDragging}
-      onMouseLeave={stopDragging}
-    >
-      <div className={styles["weeks-container"]}>
-        {weeks.map((week, index) => {
-          return (
-            <button
-              onClick={() => {
-                if (hasDragged.current) return;
-                setActiveWeek(week);
-              }}
-              key={week + index}
-              className={`${styles['week-btn']} ${styles[`${activeWeek === week ? 'active' : ''}`]}`}
-            >
-              <span className={styles["week-label"]}>Week {index + 1}</span>
-              <span className={styles["week-dates"]}>{formatWeek(week)}</span>
-            </button>
-          );
-        })}
+    <div className={styles['weeks-frame']}>
+      <div
+        ref={scrollRef}
+        className={styles['weeks-scroll']}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={stopDragging}
+        onMouseLeave={stopDragging}
+      >
+        <div className={styles["weeks-container"]}>
+          {weeks.map((week, index) => {
+            return (
+              <button
+                onClick={() => {
+                  if (hasDragged.current) return;
+                  setActiveWeek(week);
+                }}
+                key={week + index}
+                className={`${styles['week-btn']} ${styles[`${activeWeek === week ? 'active' : ''}`]}`}
+              >
+                <span className={styles["week-label"]}>Week {index + 1}</span>
+                <span className={styles["week-dates"]}>{formatWeek(week)}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

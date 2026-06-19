@@ -10,7 +10,7 @@ export default function Strikes() {
   return (
     <main className={styles['dashboard']}>
       <aside className={styles['sidebar']}>
-        {/* <PledgeSideBar /> */}
+        <PledgeSideBar />
       </aside>
 
       <section className={styles['dashboard-main']}>
