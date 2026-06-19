@@ -39,7 +39,7 @@ export default function PledgeSideBar() {
           >{totalStrikes}</span>
         </h1>
         <button className={styles["close-nav"]}>
-          <i className={styles["fa-solid fa-xmark"]}></i>
+          <i className="fa-solid fa-xmark"></i>
         </button>
       </div>
 

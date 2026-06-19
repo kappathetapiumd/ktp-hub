@@ -1,0 +1,80 @@
+.strike-input-container {
+  display: grid;
+  gap: var(--spacing-2);
+  width: 100%;
+
+  padding: 5px;
+}
+
+.strike-content {
+  display: grid;
+  grid-template-columns: 1fr 72px;
+  gap: var(--spacing-2);
+}
+
+.reason-input,
+.amount-input,
+.add-btn {
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.reason-input,
+.amount-input {
+  min-height: 64px;
+  padding: var(--spacing-3);
+  outline: none;
+
+  border-radius: var(--radius-lg);
+}
+
+.reason-input {
+  resize: none;
+  text-align: left;
+  line-height: 1.4;
+
+  scrollbar-width: none;
+}
+
+.amount-input {
+  text-align: right;
+}
+
+.reason-input::placeholder,
+.amount-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.reason-input:focus,
+.amount-input:focus {
+  border-color: var(--color-primary-light);
+}
+
+.add-btn {
+  min-height: 44px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.1s ease,
+    opacity 0.2s ease;
+
+  border-radius: var(--radius-lg);
+}
+
+.add-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.add-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.add-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--color-border);
+}
