@@ -23,7 +23,7 @@ export default function Weeks() {
     hasDragged.current = false;
     startX.current = e.pageX;
     scrollLeft.current = element.scrollLeft;
-
+    element.classList.add('dragging');
   }
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -41,14 +41,19 @@ export default function Weeks() {
     }
   }
 
+  function stopDragging() {
+    isMouseDown.current = false
+    scrollRef.current?.classList.remove('dragging');
+  }
+
   return (
     <div
       ref={scrollRef}
-      className={`weeks-scroll ${hasDragged.current && 'dragging'}`}
+      className={'weeks-scroll'}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
-      onMouseUp={() => isMouseDown.current = false}
-      onMouseLeave={() => isMouseDown.current = false}
+      onMouseUp={stopDragging}
+      onMouseLeave={stopDragging}
     >
       <div className="weeks-container">
         {weeks.map((week, index) => {
