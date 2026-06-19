@@ -12,7 +12,7 @@ const strikes = [{
   date: "03/23 • 7:04 PM"
 }, {
   amount: -1,
-  reason: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut asperiores in enim vero sed aspernatur alias autem natus, saepe fuga cum ut pariatur dolorum magni optio officiis incidunt. Vitae, dolore?",
+  reason: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut asperiores in enim vero sed aspernatur alias autem natus, saepe fuga cum ut pariatur dolorum magni optio officiis incidunt. Vitae, dolore? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus vero molestias labore mollitia officiis provident aspernatur. Distinctio tenetur at similique assumenda deleniti, doloribus recusandae adipisci minima officiis. Culpa, beatae dignissimos? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus vero molestias labore mollitia officiis provident aspernatur. Distinctio tenetur at similique assumenda deleniti, doloribus recusandae adipisci minima officiis. Culpa, beatae dignissimos? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus vero molestias labore mollitia officiis provident aspernatur. Distinctio tenetur at similique assumenda deleniti, doloribus recusandae adipisci minima officiis. Culpa, beatae dignissimos? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus vero molestias labore mollitia officiis provident aspernatur. Distinctio tenetur at similique assumenda deleniti, doloribus recusandae adipisci minima officiis. Culpa, beatae dignissimos?",
   name: "Aditya Hardikar",
   date: "03/27 • 10:10 AM"
 }, {
@@ -25,7 +25,7 @@ const strikes = [{
   reason: "not following up with pratham again",
   name: "Amaar Trisal",
   date: "03/29 • 4:38 PM"
-}]
+}];
 
 const totalAmount = 5;
 

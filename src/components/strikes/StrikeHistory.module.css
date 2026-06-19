@@ -39,20 +39,32 @@
 }
 
 .strike-card-list {
-  display: grid;
-  gap: var(--spacing-3);
+  flex: 1;
   min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
 
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+
   scrollbar-width: none;
 }
 
+.strike-card-list::-webkit-scrollbar {
+  display: none;
+}
+
 .strike-card {
+  flex: 0 0 auto;
+
   min-height: 7rem;
+  height: auto;
+
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  overflow: hidden;
+
+  overflow: visible;
 
   transition: background 150ms ease, border-color 150ms ease;
 }
