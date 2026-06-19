@@ -38,39 +38,41 @@ export default function StrikeHistory() {
 
       <div className={styles["horizontal-line"]}></div>
 
-      {strikes.map(({ amount, reason, name, date }) => {
-        return (
-          <div
-            key={`${name}-${date}`}
-            className={
-              `${styles['strike-card']} ${styles[`${amount > 0 ? 'added' : 'removed'}`]}`}
-          >
-            <div className={styles["strike-event"]}>
-              <p className={styles["amount"]}>
-                {amount > 0 ? `+${amount}` : amount}
-              </p>
+      <div className={styles['strike-card-list']}>
+        {strikes.map(({ amount, reason, name, date }) => {
+          return (
+            <div
+              key={`${name}-${date}`}
+              className={
+                `${styles['strike-card']} ${styles[`${amount > 0 ? 'added' : 'removed'}`]}`}
+            >
+              <div className={styles["strike-event"]}>
+                <p className={styles["amount"]}>
+                  {amount > 0 ? `+${amount}` : amount}
+                </p>
 
-              <div className={styles["vertical-line"]}></div>
+                <div className={styles["vertical-line"]}></div>
 
-              <div className={styles["strike-content"]}>
-                <p className={styles["reason"]}>{reason}</p>
+                <div className={styles["strike-content"]}>
+                  <p className={styles["reason"]}>{reason}</p>
 
-                <div className={styles["footer"]}>
-                  <div className={styles["update-btns"]}>
-                    <button className={styles["delete-btn"]}>Delete</button>
-                    <button className={styles["edit-btn"]}>Edit</button>
-                  </div>
+                  <div className={styles["footer"]}>
+                    <div className={styles["update-btns"]}>
+                      <button className={styles["delete-btn"]}>Delete</button>
+                      <button className={styles["edit-btn"]}>Edit</button>
+                    </div>
 
-                  <div className={styles["meta"]}>
-                    <span className={styles["name"]}>{name}</span>
-                    <span className={styles["date"]}>{date}</span>
+                    <div className={styles["meta"]}>
+                      <span className={styles["name"]}>{name}</span>
+                      <span className={styles["date"]}>{date}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

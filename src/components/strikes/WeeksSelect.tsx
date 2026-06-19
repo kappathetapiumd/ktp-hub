@@ -13,7 +13,7 @@ export default function Weeks() {
   useEffect(() => {
     setActiveWeek(getCurrentWeek(weeks, dayjs()));
   }, []);
-  
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const isMouseDown = useRef(false);
   const hasDragged = useRef(false);
@@ -38,7 +38,7 @@ export default function Weeks() {
 
     if (Math.abs(distance) > 5 && !hasDragged.current) {
       hasDragged.current = true;
-      element.classList.add('dragging');
+      element.classList.add(styles['dragging']);
     }
 
     if (hasDragged.current) {
@@ -50,7 +50,7 @@ export default function Weeks() {
   function stopDragging() {
     isMouseDown.current = false;
     hasDragged.current = false;
-    scrollRef.current?.classList.remove('dragging');
+    scrollRef.current?.classList.remove(styles['dragging']);
   }
 
   return (
@@ -63,7 +63,7 @@ export default function Weeks() {
       onMouseLeave={stopDragging}
     >
       <div className={styles["weeks-container"]}>
-        {weeks.map((week, index) => {          
+        {weeks.map((week, index) => {
           return (
             <button
               onClick={() => {
