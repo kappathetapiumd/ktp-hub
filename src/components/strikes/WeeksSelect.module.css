@@ -3,6 +3,8 @@
   scrollbar-width: none;
   cursor: grab;
   user-select: none;
+
+  padding: 5px;
   /* Firefox */
 }
 

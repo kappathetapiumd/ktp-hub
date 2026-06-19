@@ -1,0 +1,136 @@
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-5);
+  background: rgba(255, 255, 255, 0.045);
+  border-right: 1px solid var(--color-border);
+  backdrop-filter: blur(16px);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.total-strikes {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text);
+
+  margin-left: 10px;
+}
+
+.total-count {
+  margin-left: 73px;
+  color: var(--color-primary-light);
+}
+
+.total-count.single-digit {
+  margin-left: 78px;
+}
+
+.close-nav {
+  display: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.close-nav:hover {
+  background: rgba(255, 255, 255, 0.11);
+  transform: translateY(-1px);
+}
+
+.pledge-list {
+  display: grid;
+  gap: var(--spacing-3);
+  overflow-y: auto;
+  padding-right: 2px;
+
+  scrollbar-width: none;
+}
+
+.pledge-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.pledge-card.green {
+  background: rgba(34, 197, 94, 0.20);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.pledge-card.yellow {
+  background: rgba(234, 179, 8, 0.20);
+  border-color: rgba(234, 179, 8, 0.35);
+}
+
+.pledge-card.red {
+  background: rgba(220, 38, 38, 0.20);
+  border-color: rgba(220, 38, 38, 0.35);
+}
+
+.name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+}  
+
+.strike-count {
+  min-width: 34px;
+  padding: 0.25rem 0.55rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}  
+
+@media (max-width: 520px) {
+  .sidebar {
+    position: fixed;
+    z-index: 50;
+    width: min(82vw, 280px);
+    height: 100dvh;
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .close-nav {
+    display: flex;
+  }
+
+  .total-count {
+    margin-left: 7px;
+  }
+
+  .total-count.single-digit {
+    margin-left: 12px;
+  }
+}

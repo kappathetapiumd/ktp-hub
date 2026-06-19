@@ -1,4 +1,4 @@
-import './StrikeHistory.modules.css';
+import styles from './StrikeHistory.module.css';
 
 const strikes = [{
   amount: 1,
@@ -31,40 +31,39 @@ const totalAmount = 5;
 
 export default function StrikeHistory() {
   return (
-    <div className="strike-history-container">
-      <h1 className="week-amount">
+    <div className={styles["strike-history-container"]}>
+      <h1 className={styles["week-amount"]}>
         Strikes: <span>{totalAmount > 0 ? `+${totalAmount}` : totalAmount}</span>
       </h1>
 
-      <div className="horizontal-line"></div>
+      <div className={styles["horizontal-line"]}></div>
 
       {strikes.map(({ amount, reason, name, date }) => {
         return (
           <div
             key={`${name}-${date}`}
             className={
-              `strike-card ${amount > 0 ? 'added' : 'removed'}`
-            }
+              `${styles['strike-card']} ${styles[`${amount > 0 ? 'added' : 'removed'}`]}`}
           >
-            <div className="strike-event">
-              <p className="amount">
+            <div className={styles["strike-event"]}>
+              <p className={styles["amount"]}>
                 {amount > 0 ? `+${amount}` : amount}
               </p>
 
-              <div className="vertical-line"></div>
+              <div className={styles["vertical-line"]}></div>
 
-              <div className="strike-content">
-                <p className="reason">{reason}</p>
+              <div className={styles["strike-content"]}>
+                <p className={styles["reason"]}>{reason}</p>
 
-                <div className="footer">
-                  <div className="update-btns">
-                    <button className="delete-btn">Delete</button>
-                    <button className="edit-btn">Edit</button>
+                <div className={styles["footer"]}>
+                  <div className={styles["update-btns"]}>
+                    <button className={styles["delete-btn"]}>Delete</button>
+                    <button className={styles["edit-btn"]}>Edit</button>
                   </div>
 
-                  <div className="meta">
-                    <span className="name">{name}</span>
-                    <span className="date">{date}</span>
+                  <div className={styles["meta"]}>
+                    <span className={styles["name"]}>{name}</span>
+                    <span className={styles["date"]}>{date}</span>
                   </div>
                 </div>
               </div>

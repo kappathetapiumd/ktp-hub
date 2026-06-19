@@ -1,3 +1,5 @@
+import styles from './PledgeSideBar.module.css';
+
 const pledges = [{
   name: 'Rishi Sinu Pillai',
   strikes: 8
@@ -24,26 +26,35 @@ const pledges = [{
   strikes: 0
 }];
 
-const totalStrikes = 0;
-
-// I moved onto developing the UI for a side bar that will contain all the pledges and each of their total counts, plus a cumulative count of all their strikes
+const totalStrikes = 10;
 
 export default function PledgeSideBar() {
   return (
-    <>
-      <div>
-        <h1>Total Count: {strikes}</h1>
+    <div className={styles['sidebar']}>
+      <div className={styles['header']}>
+        <h1 className={styles['total-strikes']}>
+          <span>Total Strikes:</span>
+          <span className={`${styles['total-count']} 
+            ${totalStrikes < 10 ? styles['single-digit'] : ''}`}
+          >{totalStrikes}</span>
+        </h1>
+        <button className={styles["close-nav"]}>
+          <i className={styles["fa-solid fa-xmark"]}></i>
+        </button>
       </div>
-      <div className="pledge-class-container">
-        {pledges.map(({name, strikes}) => {
-          return(
-            <div className="pledge-container">
-              <span className="name">{name}</span>
-              <span className="strike-count">{strikes}</span>
+
+      <div className={styles["pledge-list"]}>
+        {pledges.map(({ name, strikes }) => {
+          return (
+            <div key={name} className={`${styles['pledge-card']} 
+              ${styles[`${strikes >= 6 ? 'red' : strikes >= 3 ? 'yellow' : 'green'}`]}`}
+            >
+              <span className={styles["name"]}>{name}</span>
+              <span className={styles["strike-count"]}>{strikes}</span>
             </div>
           );
         })}
       </div>
-    </>
+    </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import NetworkBackground from './NetworkBackground';
-import './Login.modules.css';
+import styles from './Login.module.css';
 
 export default function LoginPage() {
   const [name, setName] = useState<string>('');
@@ -36,15 +36,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="login-container">
+    <div className={styles["login-container"]}>
       <NetworkBackground />
 
-      <section className="login-content">
+      <section className={styles["login-content"]}>
         <h1>Κ Θ Π</h1>
 
-        <div className="login-input">
+        <div className={styles["login-input"]}>
           {!isLogin && (
-            <div className="input-group">
+            <div className={styles["input-group"]}>
               <p>Name</p>
               <input
                 value={name}
@@ -55,7 +55,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className="input-group">
+          <div className={styles["input-group"]}>
             <p>Email</p>
             <input
               value={email}
@@ -66,7 +66,7 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="input-group">
+          <div className={styles["input-group"]}>
             <p>Password</p>
             <input
               value={password}
@@ -77,19 +77,19 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="login-btns-container">
+          <div className={styles["login-btns-container"]}>
             <button
               onClick={handleAuth}
-              className="submit-btn"
+              className={styles["submit-btn"]}
               disabled={isLogin ? (invalidLogin) : (invalidLogin || !validRegister)}>
               {isLogin ? 'Sign in' : 'Register'}
             </button>
-            <p className="account-container">
+            <p className={styles["account-container"]}>
               {isLogin
                 ? "Don't have an account? "
                 : 'Already have an account? '
               }
-              <a onClick={() => setIsLogin(!isLogin)} className="switch-link">
+              <a onClick={() => setIsLogin(!isLogin)} className={styles["switch-link"]}>
                 {isLogin ? 'Register' : 'Sign in'}
               </a>
             </p>

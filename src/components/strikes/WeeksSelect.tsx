@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
-import './WeeksSelect.modules.css';
+import styles from './WeeksSelect.module.css';
 
 const weeks = [
   "3/2/26 - 3/8/26", "3/9/26 - 3/15/26", "3/16/26 - 3/22/26", "3/23/26 - 3/29/26", "3/30/26 - 4/5/26",
@@ -56,13 +56,13 @@ export default function Weeks() {
   return (
     <div
       ref={scrollRef}
-      className={'weeks-scroll'}
+      className={styles['weeks-scroll']}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={stopDragging}
       onMouseLeave={stopDragging}
     >
-      <div className="weeks-container">
+      <div className={styles["weeks-container"]}>
         {weeks.map((week, index) => {          
           return (
             <button
@@ -71,10 +71,10 @@ export default function Weeks() {
                 setActiveWeek(week);
               }}
               key={week + index}
-              className={`week-btn ${activeWeek === week ? 'active' : ''}`}
+              className={`${styles['week-btn']} ${styles[`${activeWeek === week ? 'active' : ''}`]}`}
             >
-              <span className="week-label">Week {index + 1}</span>
-              <span className="week-dates">{formatWeek(week)}</span>
+              <span className={styles["week-label"]}>Week {index + 1}</span>
+              <span className={styles["week-dates"]}>{formatWeek(week)}</span>
             </button>
           );
         })}
