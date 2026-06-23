@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import styles from './StrikeHistory.module.css';
-import type { StrikeHistory } from '@/lib/strikes';
+import type { Strike } from '@/lib/strikes';
 
 const strikes = [{
   id: 1,
@@ -36,45 +36,33 @@ const strikes = [{
 }];
 
 type Props = {
-  selectedPledge: string,
-  selectedWeek: string
+  strikeHistory: Strike[];
+  totalStrikesPerWeek: number;
+  setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setStrikeId: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function StrikeHistory({ selectedPledge, selectedWeek }: Props) {
-  const [strikeHistory, setStrikeHistory] = useState<StrikeHistory[]>([]);
+export default function StrikeHistory(
+  { strikeHistory, totalStrikesPerWeek, setShowDeleteModal, setShowEditModal, setStrikeId }: Props
+) {
+  function handleDelete(id: string) {
+    setStrikeId(id);
+    setShowDeleteModal(true);
+  }
 
-  useEffect(() => {
-    if (!selectedPledge || !selectedWeek) return;
-
-    loadStrikeHistory();
-
-    async function loadStrikeHistory() {
-      const params = new URLSearchParams({
-        pledgeId: selectedPledge,
-        week: selectedWeek
-        // week: '6/20/26 - 6/27/26'
-      });
-
-      const response = await fetch(`/api/strikes?${params.toString()}`);
-
-      if (!response.ok) return;
-
-      const strikeHistory: StrikeHistory[] = await response.json();
-      strikeHistory.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
-      setStrikeHistory(strikeHistory);
-    }
-  }, [selectedPledge, selectedWeek]);
-
-  const totalStrikes = strikeHistory.reduce(
-    (sum, strike) => sum + strike.amount,
-    0
-  );
+  function handleEdit(id: string) {
+    setStrikeId(id);
+    setShowEditModal(true);
+  }
 
   return (
     <div className={styles["strike-history-container"]}>
       <h1 className={styles["week-amount"]}>
-        Strikes: <span>{totalStrikes > 0 ? `+${totalStrikes}` : totalStrikes}</span>
+        Strikes: 
+        <span>
+          {totalStrikesPerWeek > 0 ? `+${totalStrikesPerWeek}` : totalStrikesPerWeek}
+        </span>
       </h1>
 
       <div className={styles["horizontal-line"]}></div>
@@ -99,8 +87,18 @@ export default function StrikeHistory({ selectedPledge, selectedWeek }: Props) {
 
                   <div className={styles["footer"]}>
                     <div className={styles["update-btns"]}>
-                      <button className={styles["delete-btn"]}>Delete</button>
-                      <button className={styles["edit-btn"]}>Edit</button>
+                      <button
+                        onClick={() => handleDelete(id)}
+                        className={styles["delete-btn"]}
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => handleEdit(id)}
+                        className={styles["edit-btn"]}
+                      >
+                        Edit
+                      </button>
                     </div>
 
                     <div className={styles["meta"]}>

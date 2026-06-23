@@ -15,7 +15,7 @@ export default function PledgeSideBar({ pledges, totalStrikes, selectedPledge, s
   const updateParam = useUpdateParam();
   
   function changePledge(id: string) {
-    updateParam('pledgeId', id);
+    // updateParam('pledgeId', id);
     setSelectedPledge(id);
   }
 

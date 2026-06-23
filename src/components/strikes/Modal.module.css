@@ -1,0 +1,141 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: grid;
+  place-items: center;
+
+  padding: var(--spacing-4);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+.strike-modal {
+  z-index: 150;
+}
+
+.modal-container {
+  width: min(100%, 22rem);
+
+  display: grid;
+  gap: var(--spacing-4);
+
+  padding: var(--spacing-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-lg);
+
+  text-align: center;
+}
+
+.message {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.confirmation-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-3);
+}
+
+.confirmation-btns button {
+  padding: 0.75rem 1rem;
+
+  border: none;
+  border-radius: var(--radius-md);
+
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.confirmation-btns button:hover {
+  transform: translateY(-1px);
+}
+
+.confirmation-btns button:active {
+  transform: translateY(0);
+}
+
+.close-btn {
+  grid-column: 1 / -1;
+  justify-self: center;
+  
+  width: 100%;
+
+  color: var(--color-bg);
+  background: var(--color-primary);
+}
+
+.close-btn:hover {
+  opacity: 0.9;
+}
+
+.yes-btn {
+  color: var(--color-bg);
+  background: var(--color-primary);
+}
+
+.yes-btn:hover {
+  opacity: 0.9;
+}
+
+.cancel-btn {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-border);
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.strike-content {
+  display: grid;
+  grid-template-columns: 1fr 72px;
+  gap: var(--spacing-2);
+}
+
+.reason-input,
+.amount-input {
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+  font: inherit;
+
+  min-height: 64px;
+  padding: var(--spacing-3);
+  outline: none;
+
+  border-radius: var(--radius-lg);
+}
+
+.reason-input {
+  resize: none;
+  text-align: left;
+  line-height: 1.4;
+
+  scrollbar-width: none;
+}
+
+.amount-input {
+  text-align: right;
+}
+
+.reason-input::placeholder,
+.amount-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.reason-input:focus,
+.amount-input:focus {
+  border-color: var(--color-primary-light);
+}

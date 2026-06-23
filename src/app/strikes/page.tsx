@@ -8,13 +8,20 @@ import PledgeSideBar from '@/components/strikes/PledgeSideBar';
 import StrikeInput from '@/components/strikes/StrikeInput';
 import WeeksSelect from "@/components/strikes/WeeksSelect";
 import StrikeHistory from '@/components/strikes/StrikeHistory';
+import { DeleteModal, EditModal, ZeroStrikesModal } from '@/components/strikes/Modal';
 import styles from './page.module.css';
 import type { Pledge } from '@/lib/pledges';
+import type { Strike } from '@/lib/strikes';
 
 export default function Strikes() {
   const [pledges, setPledges] = useState<Pledge[]>([]);
+  const [strikeHistory, setStrikeHistory] = useState<Strike[]>([]);
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedPledge, setSelectedPledge] = useState('');
+  const [showStrikesModal, setShowStrikesModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [strikeId, setStrikeId] = useState('');
 
   useEffect(() => {
     loadPledges();
@@ -29,17 +36,76 @@ export default function Strikes() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!selectedPledge) return;
+
+    loadStrikeHistory();
+
+    async function loadStrikeHistory() {
+      const params = new URLSearchParams({
+        pledgeId: selectedPledge,
+        // week: selectedWeek
+        week: '6/20/26 - 6/27/26'
+      });
+
+      const response = await fetch(`/api/strikes?${params.toString()}`);
+
+      if (!response.ok) return;
+
+      const strikeHistory: Strike[] = await response.json();
+
+      setStrikeHistory(strikeHistory);
+    }
+  }, [selectedPledge, selectedWeek]);
+
   const isMobile = useMediaQuery({ maxWidth: 520 });
 
   const totalStrikes = pledges.reduce(
-    (sum: number, pledge: Pledge) => sum + pledge.strikes,
+    (sum, pledge) => sum + pledge.strikes,
     0
   );
+
+  const totalStrikesPerWeek = strikeHistory.reduce(
+    (sum, strike) => sum + strike.amount,
+    0
+  );
+
+  const currentPledge = pledges.find(pledge => pledge.id === selectedPledge);
 
   return (
     <>
       {/* might dtm - possibly get rid of this, also kinda buggy on ipad, make sure to uninstall react-responsive package too */}
-      {!isMobile && <NetworkBackground /> }
+      {!isMobile && <NetworkBackground />}
+
+      {showStrikesModal &&
+        <ZeroStrikesModal
+          currentPledge={currentPledge}
+          showModal={setShowStrikesModal}
+        />
+      }
+
+      {showDeleteModal &&
+        <DeleteModal
+          strikeId={strikeId}
+          setStrikeHistory={setStrikeHistory}
+          setPledges={setPledges}
+          selectedPledge={selectedPledge}
+          showModal={setShowDeleteModal}
+        />
+      }
+
+      {showEditModal &&
+        <EditModal
+          strikeId={strikeId}
+          strikeHistory={strikeHistory}
+          setStrikeHistory={setStrikeHistory}
+          pledges={pledges}
+          setPledges={setPledges}
+          selectedPledge={selectedPledge}
+          showModal={setShowEditModal}
+          setShowStrikesModal={setShowStrikesModal}
+        />
+      }
 
       <main className={styles['dashboard']}>
 
@@ -57,7 +123,9 @@ export default function Strikes() {
             <StrikeInput
               pledges={pledges}
               setPledges={setPledges}
+              setStrikeHistory={setStrikeHistory}
               selectedPledge={selectedPledge}
+              setShowStrikesModal={setShowStrikesModal}
             />
             <WeeksSelect
               selectedWeek={selectedWeek}
@@ -67,8 +135,11 @@ export default function Strikes() {
 
           <div className={styles['history-wrapper']}>
             <StrikeHistory
-              selectedPledge={selectedPledge}
-              selectedWeek={selectedWeek}
+              strikeHistory={strikeHistory}
+              totalStrikesPerWeek={totalStrikesPerWeek}
+              setShowDeleteModal={setShowDeleteModal}
+              setShowEditModal={setShowEditModal}
+              setStrikeId={setStrikeId}
             />
           </div>
         </section>

@@ -25,7 +25,7 @@ export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
   useEffect(() => {
     const currentWeek = getCurrentWeek(weeks, dayjs());
     setSelectedWeek(currentWeek);
-    updateParam('week', currentWeek);
+    // updateParam('week', currentWeek);
   }, []);
 
   function handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
@@ -77,7 +77,7 @@ export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
               <button
                 onClick={() => {
                   if (hasDragged.current) return;
-                  updateParam('week', week);
+                  // updateParam('week', week);
                   setSelectedWeek(week);
                 }}
                 key={week + index}
