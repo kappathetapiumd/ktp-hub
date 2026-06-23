@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useUpdateParam } from '@/lib/params';
 import styles from './PledgeSideBar.module.css';
 import type { Pledge } from '@/lib/pledges';
 
@@ -12,12 +11,6 @@ type Props = {
 
 export default function PledgeSideBar({ pledges, totalStrikes, selectedPledge, setSelectedPledge }: Props) {
   const [showSideBar, setShowSideBar] = useState(true);
-  const updateParam = useUpdateParam();
-  
-  function changePledge(id: string) {
-    // updateParam('pledgeId', id);
-    setSelectedPledge(id);
-  }
 
   return (
     <>
@@ -41,7 +34,7 @@ export default function PledgeSideBar({ pledges, totalStrikes, selectedPledge, s
           {pledges.map(({ id, name, strikes }) => {
             return (
               <div
-                onClick={() => changePledge(id)}
+                onClick={() => setSelectedPledge(id)}
                 key={id}
                 className={`${styles['pledge-card']} 
                   ${styles[`${strikes >= 6 ? 'red' : strikes >= 3 ? 'yellow' : 'green'}`]}

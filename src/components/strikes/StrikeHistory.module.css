@@ -55,6 +55,18 @@
   display: none;
 }
 
+.info-message {
+  margin: auto;
+
+  color: var(--color-text-muted);
+  font-size: 1.4rem;
+  font-weight: 600;
+  font-style: italic;
+  text-align: center;
+
+  opacity: 0.95;
+}
+
 .strike-card {
   flex: 0 0 auto;
 

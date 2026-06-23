@@ -16,7 +16,6 @@ type Props = {
 /*
 ************** TODO **************
 - can't add strike if current date is past last date
-- edit/delete functionality
 - message if no strike history? -> StrikeHistory.jsx if (!selectedPledge) then 'Please select a pledge'
 - auto create weeks based on start and end date
 - key={} for WeeksSelect

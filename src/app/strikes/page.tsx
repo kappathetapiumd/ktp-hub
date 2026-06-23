@@ -140,6 +140,7 @@ export default function Strikes() {
               setShowDeleteModal={setShowDeleteModal}
               setShowEditModal={setShowEditModal}
               setStrikeId={setStrikeId}
+              selectedPledge={selectedPledge}
             />
           </div>
         </section>
