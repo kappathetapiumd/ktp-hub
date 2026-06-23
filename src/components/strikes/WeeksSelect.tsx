@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import dayjs from 'dayjs';
 import styles from './WeeksSelect.module.css';
 
@@ -7,9 +7,12 @@ const weeks = [
   "4/6/26 - 4/12/26", "4/13/26 - 4/19/26", "4/20/26 - 4/26/26", "4/27/26 - 5/3/26", "5/4/26 - 5/8/26"
 ];
 
-export default function Weeks() {
-  const [activeWeek, setActiveWeek] = useState('');
+type Props = {
+  activeWeek: string,
+  setActiveWeek: React.Dispatch<React.SetStateAction<string>>
+}
 
+export default function WeeksSelect({ activeWeek, setActiveWeek }: Props) {
   useEffect(() => {
     setActiveWeek(getCurrentWeek(weeks, dayjs()));
   }, []);

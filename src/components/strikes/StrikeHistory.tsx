@@ -29,7 +29,12 @@ const strikes = [{
 
 const totalAmount = 5;
 
-export default function StrikeHistory() {
+type Props = {
+  activePledge: string,
+  activeWeek: string
+}
+
+export default function StrikeHistory({ activePledge, activeWeek }: Props) {
   return (
     <div className={styles["strike-history-container"]}>
       <h1 className={styles["week-amount"]}>
