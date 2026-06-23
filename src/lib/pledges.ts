@@ -1,8 +1,14 @@
 import prisma from './prisma';
 
+export type Pledge = {
+  id: string;
+  name: string;
+  strikes: number;
+}
+
 export async function getPledges() {
   const pledges = await prisma.user.findMany({
-    where: {role: 'PLEDGE'},
+    where: { role: 'PLEDGE' },
     include: { pledgeStrikeEvents: true }
   });
 

@@ -1,40 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useUpdateParam } from '@/lib/params';
 import styles from './PledgeSideBar.module.css';
+import type { Pledge } from '@/lib/pledges';
 
 type Props = {
-  activePledge: string,
-  setActivePledge: React.Dispatch<React.SetStateAction<string>>
+  pledges: Pledge[],
+  totalStrikes: number,
+  selectedPledge: string,
+  setSelectedPledge: React.Dispatch<React.SetStateAction<string>>
 }
 
-type Pledge = {
-  id: string,
-  name: string,
-  strikes: number
-}
-
-export default function PledgeSideBar({ activePledge, setActivePledge }: Props) {
-  const [pledges, setPledges] = useState([]);
-  const [totalStrikes, setTotalStrikes] = useState(0);
+export default function PledgeSideBar({ pledges, totalStrikes, selectedPledge, setSelectedPledge }: Props) {
   const [showSideBar, setShowSideBar] = useState(true);
-
-  useEffect(() => {
-    getPledges();
-
-    async function getPledges() {
-      const response = await fetch('/api/pledges');
-
-      if (!response.ok) return;
-
-      const pledges = await response.json();
-      setPledges(pledges);
-      setActivePledge(pledges[0].id)
-
-      setTotalStrikes(pledges.reduce(
-        (sum: number, pledge: Pledge) => sum + pledge.strikes,
-        0
-      ));
-    }
-  }, []);
+  const updateParam = useUpdateParam();
+  
+  function changePledge(id: string) {
+    updateParam('pledgeId', id);
+    setSelectedPledge(id);
+  }
 
   return (
     <>
@@ -58,11 +41,11 @@ export default function PledgeSideBar({ activePledge, setActivePledge }: Props) 
           {pledges.map(({ id, name, strikes }) => {
             return (
               <div
-                onClick={() => setActivePledge(id)}
+                onClick={() => changePledge(id)}
                 key={id}
                 className={`${styles['pledge-card']} 
                   ${styles[`${strikes >= 6 ? 'red' : strikes >= 3 ? 'yellow' : 'green'}`]}
-                  ${styles[`${activePledge === id ? 'active' : ''}`]}`
+                  ${styles[`${selectedPledge === id ? 'active' : ''}`]}`
                 }
               >
                 <span className={styles["name"]}>{name}</span>

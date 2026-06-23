@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import dayjs from 'dayjs';
+import { useUpdateParam } from '@/lib/params';
 import styles from './WeeksSelect.module.css';
 
 const weeks = [
@@ -8,20 +9,24 @@ const weeks = [
 ];
 
 type Props = {
-  activeWeek: string,
-  setActiveWeek: React.Dispatch<React.SetStateAction<string>>
+  selectedWeek: string,
+  setSelectedWeek: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function WeeksSelect({ activeWeek, setActiveWeek }: Props) {
-  useEffect(() => {
-    setActiveWeek(getCurrentWeek(weeks, dayjs()));
-  }, []);
-
+export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isMouseDown = useRef(false);
   const hasDragged = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
+
+  const updateParam = useUpdateParam();
+
+  useEffect(() => {
+    const currentWeek = getCurrentWeek(weeks, dayjs());
+    setSelectedWeek(currentWeek);
+    updateParam('week', currentWeek);
+  }, []);
 
   function handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
     const element = scrollRef.current;
@@ -72,10 +77,11 @@ export default function WeeksSelect({ activeWeek, setActiveWeek }: Props) {
               <button
                 onClick={() => {
                   if (hasDragged.current) return;
-                  setActiveWeek(week);
+                  updateParam('week', week);
+                  setSelectedWeek(week);
                 }}
                 key={week + index}
-                className={`${styles['week-btn']} ${styles[`${activeWeek === week ? 'active' : ''}`]}`}
+                className={`${styles['week-btn']} ${styles[`${selectedWeek === week ? 'active' : ''}`]}`}
               >
                 <span className={styles["week-label"]}>Week {index + 1}</span>
                 <span className={styles["week-dates"]}>{formatWeek(week)}</span>

@@ -2,21 +2,39 @@
 
 import { useMediaQuery } from 'react-responsive';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NetworkBackground from '@/components/login/NetworkBackground';
 import PledgeSideBar from '@/components/strikes/PledgeSideBar';
 import StrikeInput from '@/components/strikes/StrikeInput';
 import WeeksSelect from "@/components/strikes/WeeksSelect";
 import StrikeHistory from '@/components/strikes/StrikeHistory';
 import styles from './page.module.css';
+import type { Pledge } from '@/lib/pledges';
 
 export default function Strikes() {
-  const [reason, setReason] = useState('');
-  const [amount, setAmount] = useState('');
-  const [activeWeek, setActiveWeek] = useState('');
-  const [activePledge, setActivePledge] = useState('');
+  const [pledges, setPledges] = useState<Pledge[]>([]);
+  const [selectedWeek, setSelectedWeek] = useState('');
+  const [selectedPledge, setSelectedPledge] = useState('');
+
+  useEffect(() => {
+    loadPledges();
+
+    async function loadPledges() {
+      const response = await fetch('/api/pledges');
+
+      if (!response.ok) return;
+
+      const pledges = await response.json();
+      setPledges(pledges);
+    }
+  }, []);
 
   const isMobile = useMediaQuery({ maxWidth: 520 });
+
+  const totalStrikes = pledges.reduce(
+    (sum: number, pledge: Pledge) => sum + pledge.strikes,
+    0
+  );
 
   return (
     <>
@@ -27,29 +45,30 @@ export default function Strikes() {
 
         <aside className={styles['sidebar']}>
           <PledgeSideBar
-            activePledge={activePledge}
-            setActivePledge={setActivePledge}
+            pledges={pledges}
+            totalStrikes={totalStrikes}
+            selectedPledge={selectedPledge}
+            setSelectedPledge={setSelectedPledge}
           />
         </aside>
 
         <section className={styles['dashboard-main']}>
           <div className={styles['dashboard-controls']}>
             <StrikeInput
-              reason={reason}
-              setReason={setReason}
-              amount={amount}
-              setAmount={setAmount}
+              pledges={pledges}
+              setPledges={setPledges}
+              selectedPledge={selectedPledge}
             />
             <WeeksSelect
-              activeWeek={activeWeek}
-              setActiveWeek={setActiveWeek}
+              selectedWeek={selectedWeek}
+              setSelectedWeek={setSelectedWeek}
             />
           </div>
 
           <div className={styles['history-wrapper']}>
             <StrikeHistory
-              activePledge={activePledge}
-              activeWeek={activeWeek}
+              selectedPledge={selectedPledge}
+              selectedWeek={selectedWeek}
             />
           </div>
         </section>

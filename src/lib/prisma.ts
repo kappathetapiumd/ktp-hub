@@ -85,4 +85,4 @@ async function test() {
   await prisma.strikeEvent.createMany({ data: strikes, skipDuplicates: true });
 }
 
-test().catch(console.error).finally(() => prisma.$disconnect);
+// test().catch(console.error).finally(() => prisma.$disconnect);
