@@ -39,10 +39,50 @@ const pledges = [{
   name: 'Nimmesh Sharma',
   passwordHash: 'test',
   role: 'PLEDGE' as const
-},]
+}, {
+  email: 'nshyam@terpmail.umd.edu',
+  name: 'Nikhil Shyam',
+  passwordHash: 'test',
+  role: 'BROTHER' as const
+}];
+
+const myId = 'cmqpyd1pc0006860wn1act4nr';
+
+const strikes = [{
+  amount: 6,
+  createdById: 'nikhil',
+  pledgeId: 'rishi',
+  reason: ''
+}, {
+  amount: 2,
+  createdById: 'nikhil',
+  pledgeId: 'eva',
+  reason: ''
+}, {
+  amount: 3,
+  createdById: 'nikhil',
+  pledgeId: 'mahitha',
+  reason: ''
+}, {
+  amount: 1,
+  createdById: 'nikhil',
+  pledgeId: 'angad',
+  reason: ''
+}, {
+  amount: 0,
+  createdById: 'nikhil',
+  pledgeId: 'vidhu',
+  reason: ''
+}, {
+  amount: 4,
+  createdById: 'nikhil',
+  pledgeId: 'nimeesh',
+  reason: ''
+}]
 
 async function test() {
   await prisma.user.createMany({ data: pledges, skipDuplicates: true });
+  await prisma.strikeEvent.createMany({ data: strikes, skipDuplicates: true });
 }
 
 test().catch(console.error).finally(() => prisma.$disconnect);

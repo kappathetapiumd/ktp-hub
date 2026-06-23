@@ -1,44 +1,39 @@
 import { useEffect, useState } from 'react';
 import styles from './PledgeSideBar.module.css';
 
-const pledges = [{
-  name: 'Rishi Sinu Pillai',
-  strikes: 8
-}, {
-  name: 'Emma Kim',
-  strikes: 3
-}, {
-  name: 'Kayal Saravanan',
-  strikes: 2
-}, {
-  name: 'Eliakim St. Germain',
-  strikes: 1
-}, {
-  name: 'Arshia Mamidanna',
-  strikes: 1
-}, {
-  name: 'Arya Patel',
-  strikes: 6
-}, {
-  name: 'Nimmesh Sharma',
-  strikes: 5
-}, {
-  name: 'Devin Gaines',
-  strikes: 0
-}];
-
-const totalStrikes = 10;
-
 type Props = {
   activePledge: string,
   setActivePledge: React.Dispatch<React.SetStateAction<string>>
 }
 
+type Pledge = {
+  id: string,
+  name: string,
+  strikes: number
+}
+
 export default function PledgeSideBar({ activePledge, setActivePledge }: Props) {
+  const [pledges, setPledges] = useState([]);
+  const [totalStrikes, setTotalStrikes] = useState(0);
   const [showSideBar, setShowSideBar] = useState(true);
 
   useEffect(() => {
-    setActivePledge(pledges[0].name);
+    getPledges();
+
+    async function getPledges() {
+      const response = await fetch('/api/pledges');
+
+      if (!response.ok) return;
+
+      const pledges = await response.json();
+      setPledges(pledges);
+      setActivePledge(pledges[0].id)
+
+      setTotalStrikes(pledges.reduce(
+        (sum: number, pledge: Pledge) => sum + pledge.strikes,
+        0
+      ));
+    }
   }, []);
 
   return (
@@ -60,13 +55,14 @@ export default function PledgeSideBar({ activePledge, setActivePledge }: Props) 
         </div>
 
         <div className={styles["pledge-list"]}>
-          {pledges.map(({ name, strikes }) => {
+          {pledges.map(({ id, name, strikes }) => {
             return (
               <div
-                onClick={() => setActivePledge(name)}
-                key={name}
+                onClick={() => setActivePledge(id)}
+                key={id}
                 className={`${styles['pledge-card']} 
-                  ${styles[`${strikes >= 6 ? 'red' : strikes >= 3 ? 'yellow' : 'green'}`]}`
+                  ${styles[`${strikes >= 6 ? 'red' : strikes >= 3 ? 'yellow' : 'green'}`]}
+                  ${styles[`${activePledge === id ? 'active' : ''}`]}`
                 }
               >
                 <span className={styles["name"]}>{name}</span>
