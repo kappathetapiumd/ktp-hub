@@ -22,6 +22,7 @@ export default function Strikes() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [strikeId, setStrikeId] = useState('');
+  const [showSideBar, setShowSideBar] = useState(true);
 
   // load the list of pledges
   useEffect(() => {
@@ -116,10 +117,15 @@ export default function Strikes() {
             totalStrikes={totalStrikes}
             selectedPledge={selectedPledge}
             setSelectedPledge={setSelectedPledge}
+            showSideBar={showSideBar}
+            setShowSideBar={setShowSideBar}
           />
         </aside>
 
-        <section className={styles['dashboard-main']}>
+        <section
+          onClick={() => isMobile && setShowSideBar(false)}
+          className={styles['dashboard-main']}
+        >
           <div className={styles['dashboard-controls']}>
             <StrikeInput
               pledges={pledges}

@@ -1,4 +1,4 @@
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import styles from './ButtonList.module.css';
 
 type Props = {
@@ -9,6 +9,8 @@ type Props = {
 }
 
 export default function ButtonList({ isUpdating, setIsUpdating, isDeleting, setIsDeleting }: Props) {
+  const router = useRouter();
+
   function toggleUpdating() {
     if (isDeleting || !isUpdating) {
       setIsUpdating(true);
@@ -47,7 +49,7 @@ export default function ButtonList({ isUpdating, setIsUpdating, isDeleting, setI
         <i className="fa-regular fa-calendar"></i>
       </button>
 
-      <button className={styles['strikes-btn']}>
+      <button onClick={() => router.push('/strikes')} className={styles['strikes-btn']}>
         <i className="fa-solid fa-tachograph-digital"></i>
       </button>
     </div>

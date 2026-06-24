@@ -6,17 +6,24 @@ body {
 
 .users-container {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
 
   height: 100svh;
   min-height: 0;
   overflow: hidden;
 }
 
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+
+  padding: var(--spacing-5) var(--spacing-5) 0;
+}
+
 .user-list-container {
   min-height: 0;
   overflow: hidden;
-  padding: var(--spacing-5);
+  padding: var(--spacing-4) var(--spacing-5) var(--spacing-5);
 }
 
 .button-list-container {
@@ -27,6 +34,10 @@ body {
 }
 
 @media (max-width: 520px) {
+  .search-bar-container {
+    padding: var(--spacing-3) var(--spacing-3) 0;
+  }
+
   .user-list-container {
     padding: var(--spacing-3);
   }

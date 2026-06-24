@@ -34,6 +34,7 @@ export default function SearchBar({ users, setUsers }: Props) {
       value={search}
       placeholder='Search...'
       className={styles['search-bar']}
+      suppressHydrationWarning
     />
   );
 }

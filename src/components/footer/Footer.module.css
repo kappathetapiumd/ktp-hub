@@ -1,6 +1,6 @@
 .footer {
   position: fixed;
-  bottom: 12px;
+  bottom: 6px;
   right: 16px;
 
   z-index: 45;
@@ -22,7 +22,7 @@
 
 @media (max-width: 768px) {
   .footer {
-    bottom: calc(12px + env(safe-area-inset-bottom));
+    bottom: calc(1px + env(safe-area-inset-bottom));
     right: 12px;
   }
 

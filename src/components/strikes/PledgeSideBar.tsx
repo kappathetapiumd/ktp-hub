@@ -1,16 +1,22 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './PledgeSideBar.module.css';
 import type { Pledge } from '@/lib/pledges';
 
 type Props = {
-  pledges: Pledge[],
-  totalStrikes: number,
-  selectedPledge: string,
-  setSelectedPledge: React.Dispatch<React.SetStateAction<string>>
+  pledges: Pledge[];
+  totalStrikes: number;
+  selectedPledge: string;
+  setSelectedPledge: React.Dispatch<React.SetStateAction<string>>;
+  showSideBar: boolean;
+  setShowSideBar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function PledgeSideBar({ pledges, totalStrikes, selectedPledge, setSelectedPledge }: Props) {
-  const [showSideBar, setShowSideBar] = useState(true);
+export default function PledgeSideBar(
+  { pledges, totalStrikes, selectedPledge, setSelectedPledge, showSideBar, setShowSideBar }: Props
+) {
+  const router = useRouter();
+  // const [showSideBar, setShowSideBar] = useState(true);
 
   return (
     <>
@@ -53,6 +59,13 @@ export default function PledgeSideBar({ pledges, totalStrikes, selectedPledge, s
         className={styles['open-sidebar']}
       >
         <i className="fa-solid fa-bars"></i>
+      </button>
+
+      <button
+        onClick={() => router.push('/users')}
+        className={styles['users-btn']}
+      >
+        <i className="fa-solid fa-tachograph-digital"></i>
       </button>
     </>
   );

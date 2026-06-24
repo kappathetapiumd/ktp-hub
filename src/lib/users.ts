@@ -59,10 +59,8 @@ export async function filterUsers(search: string) {
     (role !== 'PCP_PCVP' ? role.toLowerCase() : 'pcp/pcvp').includes(query.toLowerCase())
   );
 
-  const isMembershipSearch =
-    ['membership', 'committee'].some(word =>
-      query.toLowerCase().includes(word)
-    );
+  const isMembershipSearch = 
+    ['membership', 'committee', 'mc'].some(word => word.includes(query.toLowerCase()));
 
   const filteredUsers = await prisma.user.findMany({
     where: {
@@ -82,7 +80,7 @@ export async function filterUsers(search: string) {
     },
   });
 
-  return filteredUsers;
+  return sortUsers(filteredUsers);
 }
 
 // export async function deleteInactiveUsers() {
