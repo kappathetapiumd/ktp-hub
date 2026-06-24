@@ -208,4 +208,8 @@
   .strike-history-container {
     margin-right: 0px
   }
+
+  .info-message {
+    margin-top: 25vh;
+  }
 }

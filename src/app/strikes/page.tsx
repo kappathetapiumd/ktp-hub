@@ -46,8 +46,8 @@ export default function Strikes() {
     async function loadStrikeHistory() {
       const params = new URLSearchParams({
         pledgeId: selectedPledge,
-        // week: selectedWeek
-        week: '6/20/26 - 6/27/26' // delete for final
+        week: selectedWeek
+        // week: '6/20/26 - 6/27/26' // delete for final
       });
 
       const response = await fetch(`/api/strikes?${params.toString()}`);
