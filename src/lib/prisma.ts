@@ -46,7 +46,37 @@ const pledges = [{
   role: 'BROTHER' as const
 }];
 
-const myId = 'cmqpyd1pc0006860wn1act4nr';
+const users = [{
+  email: 'hpadgett@terpmail.umd.edu',
+  name: 'Harrison Padgett',
+  passwordHash: 'test',
+  role: 'OWNER' as const,
+  membershipCommittee: true
+}, {
+  email: 'asamaga@terpmail.umd.edu',
+  name: 'Amogh Samaga',
+  passwordHash: 'test',
+  role: 'BROTHER' as const,
+  membershipCommittee: true
+}, {
+  email: 'cmathew5@terpmail.umd.edu',
+  name: 'Christa Mathew',
+  passwordHash: 'test',
+  role: 'BROTHER' as const,
+  membershipCommittee: false
+}, {
+  email: 'echo1236@terpmail.umd.edu',
+  name: 'Emma Cho',
+  passwordHash: 'test',
+  role: 'PCP_PCVP' as const,
+  membershipCommittee: false
+}, {
+  email: 'pverma1@terpmail.umd.edu',
+  name: 'Pratham Verma',
+  passwordHash: 'test',
+  role: 'NONE' as const,
+  membershipCommittee: false
+}];
 
 const strikes = [{
   amount: 6,
@@ -81,8 +111,9 @@ const strikes = [{
 }]
 
 async function test() {
-  await prisma.user.createMany({ data: pledges, skipDuplicates: true });
-  await prisma.strikeEvent.createMany({ data: strikes, skipDuplicates: true });
+  // await prisma.user.createMany({ data: pledges, skipDuplicates: true });
+  // await prisma.strikeEvent.createMany({ data: strikes, skipDuplicates: true });
+  // await prisma.user.createMany({ data: users, skipDuplicates: true });
 }
 
 // test().catch(console.error).finally(() => prisma.$disconnect);

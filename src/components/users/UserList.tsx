@@ -1,52 +1,33 @@
 import styles from './UserList.module.css';
+import type { User } from '@/lib/users';
 
-const users = [{
-  id: '1',
-  email: 'nshyam@terpmail.umd.edu',
-  name: 'Nikhil Shyam',
-  role: 'ADMIN',
-  membershipCommittee: true
-}, {
-  id: '2',
-  email: 'at@terpmail.umd.edu',
-  name: 'Amaar Trisal',
-  role: 'BROTHER',
-  membershipCommittee: true
-}, {
-  id: '3',
-  email: 'as@terpmail.umd.edu',
-  name: 'Ajay Singaraju',
-  role: 'BROTHER',
-  membershipCommittee: false
-}, {
-  id: '4',
-  email: 'ec@terpmail.umd.edu',
-  name: 'Emma Cho',
-  role: 'PCP_PCVP',
-  membershipCommittee: false
-}, {
-  id: '5',
-  email: 'rp@terpmail.umd.edu',
-  name: 'Rishi Sinu Pillai',
-  role: 'PLEDGE',
-  membershipCommittee: false
-}, {
-  id: '6',
-  email: 'pv@terpmail.umd.edu',
-  name: 'Pratham Verma',
-  role: 'NONE',
-  membershipCommittee: false
-}];
+type Props = {
+  users: User[];
+  isUpdating: boolean;
+  isDeleting: boolean;
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+}
 
-// add OWNER to prisma schema
+export default function UserList({ users, isUpdating, isDeleting, setUsers }: Props) {
+  function handleModification() {
+    if (!isUpdating && !isDeleting) return;
+  }
 
-export default function UserList() {
   return (
     <div className={styles['user-list']}>
       {users.map(({ id, email, name, role, membershipCommittee }) => (
-        <div key={id} className={styles['user-card']}>
+        <div
+          key={id}
+          onClick={handleModification}
+          className={`
+            ${styles['user-card']}
+            ${isUpdating || isDeleting ? styles['active'] : ''}
+            ${isDeleting ? styles['delete'] : ''}
+            ${isUpdating ? styles['update'] : ''}
+          `}
+        >
           <div className={styles['user-info']}>
-            <span className={styles['name']}>{name}</span>
+            <span className={`${styles['name']} ${styles[`${role.toLowerCase()}`]}`}>{name}</span>
             <span className={styles['email']}>{email}</span>
           </div>
 
@@ -54,7 +35,10 @@ export default function UserList() {
             {role !== 'PCP_PCVP' ? role : 'PCP/PCVP'}
           </span>
 
-          <button className={styles['membership-toggle']}>
+          <button
+            disabled={role !== 'BROTHER'}
+            className={styles['membership-toggle']}
+          >
             <i className={`fa-${membershipCommittee ? 'solid fa-square-check' : 'regular fa-square'}`}></i>
           </button>
         </div>
