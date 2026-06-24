@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import styles from './WeeksSelect.module.css';
 
-const weeks = [
-  "3/2/26 - 3/8/26", "3/9/26 - 3/15/26", "3/16/26 - 3/22/26", "3/23/26 - 3/29/26", "3/30/26 - 4/5/26",
-  "4/6/26 - 4/12/26", "4/13/26 - 4/19/26", "4/20/26 - 4/26/26", "4/27/26 - 5/3/26", "5/4/26 - 5/8/26"
-];
+// const weeks = [
+//   "3/2/26 - 3/8/26", "3/9/26 - 3/15/26", "3/16/26 - 3/22/26", "3/23/26 - 3/29/26", "3/30/26 - 4/5/26",
+//   "4/6/26 - 4/12/26", "4/13/26 - 4/19/26", "4/20/26 - 4/26/26", "4/27/26 - 5/3/26", "5/4/26 - 5/8/26"
+// ];
 
 type Props = {
   selectedWeek: string,
@@ -13,17 +13,31 @@ type Props = {
 }
 
 export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
+  const [weeks, setWeeks] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isMouseDown = useRef(false);
   const hasDragged = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
+  useEffect(() => {
+    loadWeeks();
+
+    async function loadWeeks() {
+      const response = await fetch('/api/weeks');
+
+      if (!response.ok) return;
+
+      const weeks = await response.json();
+      setWeeks(weeks);
+    }
+  }, []);
+
   // select the current week based on today
   useEffect(() => {
     const currentWeek = getCurrentWeek(weeks, dayjs());
     setSelectedWeek(currentWeek);
-  }, []);
+  }, [weeks]);
 
   // start horizontal scroll functionality
   function handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
@@ -96,6 +110,8 @@ function formatWeek(week: string) {
 }
 
 function getCurrentWeek(weeks: string[], today: dayjs.Dayjs) {
+  if (weeks.length === 0) return '';
+
   return [...weeks].reverse().find(week => {
     const [start] = week.split(' - ');
     const startOfWeek = dayjs(start);

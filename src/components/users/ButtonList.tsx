@@ -6,9 +6,12 @@ type Props = {
   setIsUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   isDeleting: boolean;
   setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowWeekModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ButtonList({ isUpdating, setIsUpdating, isDeleting, setIsDeleting }: Props) {
+export default function ButtonList(
+  { isUpdating, setIsUpdating, isDeleting, setIsDeleting, setShowWeekModal }: Props
+) {
   const router = useRouter();
 
   function toggleUpdating() {
@@ -45,7 +48,7 @@ export default function ButtonList({ isUpdating, setIsUpdating, isDeleting, setI
         <i className="fa-solid fa-trash"></i>
       </button>
 
-      <button className={styles['weeks-btn']}>
+      <button onClick={() => setShowWeekModal(true)} className={styles['weeks-btn']}>
         <i className="fa-regular fa-calendar"></i>
       </button>
 

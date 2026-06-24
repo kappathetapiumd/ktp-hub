@@ -5,7 +5,7 @@ import UserList from '@/components/users/UserList';
 import ButtonList from '@/components/users/ButtonList';
 import styles from './page.module.css';
 import type { User } from '@/lib/users';
-import { DeleteModal, UpdateModal } from '@/components/users/Modal';
+import { DeleteModal, UpdateModal, WeekModal } from '@/components/users/Modal';
 import SearchBar from '@/components/users/SearchBar';
 
 export default function Users() {
@@ -15,6 +15,7 @@ export default function Users() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showWeekModal, setShowWeekModal] = useState(false);
 
   useEffect(() => {
     loadUsers();
@@ -49,6 +50,12 @@ export default function Users() {
         />
       }
 
+      {showWeekModal &&
+        <WeekModal
+          showModal={setShowWeekModal}
+        />
+      }
+
       <div className={styles['users-container']}>
         <div className={styles['search-bar-container']}>
           <SearchBar
@@ -75,6 +82,7 @@ export default function Users() {
             setIsUpdating={setIsUpdating}
             isDeleting={isDeleting}
             setIsDeleting={setIsDeleting}
+            setShowWeekModal={setShowWeekModal}
           />
         </div>
       </div>
