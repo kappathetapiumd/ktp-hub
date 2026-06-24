@@ -78,7 +78,7 @@ export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
                 setSelectedWeek(week);
               }}
               key={week + index}
-              className={`${styles['week-btn']} ${styles[`${selectedWeek === week ? 'active' : ''}`]}`}
+              className={`${styles['week-btn']} ${selectedWeek === week ? styles['active'] : ''}`}
             >
               <span className={styles["week-label"]}>Week {index + 1}</span>
               <span className={styles["week-dates"]}>{formatWeek(week)}</span>

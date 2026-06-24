@@ -1,0 +1,67 @@
+.btn-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-4);
+}
+
+.btn-list button {
+  display: grid;
+  place-items: center;
+
+  width: 58px;
+  height: 58px;
+
+  border: none;
+  border-radius: 999px;
+
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+
+  transition:
+    transform 150ms ease,
+    opacity 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.btn-list button:hover {
+  transform: translateY(-2px);
+}
+
+.btn-list button:active {
+  transform: translateY(0);
+}
+
+.update-btn {
+  background: #3b82f6;
+}
+
+.delete-btn {
+  background: #ef4444;
+}
+
+.weeks-btn {
+  background: #8b5cf6;
+}
+
+.strikes-btn {
+  background: #14b8a6;
+}
+
+.update-btn.active {
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.25),
+    0 0 18px rgba(59, 130, 246, 0.35);
+
+  transform: scale(1.05);
+}
+
+.delete-btn.active {
+  box-shadow:
+    0 0 0 3px rgba(239, 68, 68, 0.25),
+    0 0 18px rgba(239, 68, 68, 0.35);
+
+  transform: scale(1.05);
+}

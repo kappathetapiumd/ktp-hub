@@ -14,7 +14,7 @@ export default function PledgeSideBar({ pledges, totalStrikes, selectedPledge, s
 
   return (
     <>
-      <div className={`${styles['sidebar']} ${styles[`${!showSideBar ? 'hide-bar' : ''}`]}`}>
+      <div className={`${styles['sidebar']} ${!showSideBar ? styles['hide-bar'] : ''}`}>
         <div className={styles['header']}>
           <h1 className={styles['total-strikes']}>
             <span>Total Strikes:</span>
@@ -50,7 +50,7 @@ export default function PledgeSideBar({ pledges, totalStrikes, selectedPledge, s
 
       <button
         onClick={() => setShowSideBar(true)}
-        className={`${styles['open-sidebar']}`}
+        className={styles['open-sidebar']}
       >
         <i className="fa-solid fa-bars"></i>
       </button>

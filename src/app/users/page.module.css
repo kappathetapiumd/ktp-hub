@@ -1,0 +1,38 @@
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.users-container {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+
+  height: 100svh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.user-list-container {
+  min-height: 0;
+  overflow: hidden;
+  padding: var(--spacing-5);
+}
+
+.button-list-container {
+  display: flex;
+  justify-content: center;
+
+  padding: var(--spacing-4) 0 calc(var(--spacing-4) + env(safe-area-inset-bottom));
+}
+
+@media (max-width: 520px) {
+  .user-list-container {
+    padding: var(--spacing-3);
+  }
+
+  .button-list-container {
+    padding: var(--spacing-3) 0;
+    margin-bottom: 25px;
+  }
+}

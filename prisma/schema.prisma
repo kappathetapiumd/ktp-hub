@@ -13,11 +13,12 @@ datasource db {
 }
 
 enum Role {
-  NONE
+  OWNER
   ADMIN
   BROTHER
-  PLEDGE
   PCP_PCVP
+  PLEDGE
+  NONE
 }
 
 model User {
@@ -51,4 +52,12 @@ model StrikeEvent {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model StrikeTermConfig {
+  id        String   @id @default(cuid())
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
