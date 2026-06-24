@@ -16,7 +16,6 @@ type Props = {
 /*
 ************** TODO **************
 - can't add strike if current date is past last date
-- message if no strike history? -> StrikeHistory.jsx if (!selectedPledge) then 'Please select a pledge'
 - auto create weeks based on start and end date
 - key={} for WeeksSelect
 - disable buttons whenever making requests !!!!!!
@@ -30,6 +29,7 @@ export default function StrikeInput({ pledges, setPledges, setStrikeHistory, sel
   async function addStrike() {
     // when logging in, each user will have a name, id, etc. so look into simplifying my prisma
 
+    // if total strikes for a pledge will be negative, don't add the strike
     const currentPledge = pledges.find(pledge => pledge.id === selectedPledge)!;
     if (currentPledge.strikes + Number(amount) < 0) {
       setShowStrikesModal(true);
@@ -51,6 +51,7 @@ export default function StrikeInput({ pledges, setPledges, setStrikeHistory, sel
 
     const strikeEvent = await response.json();
 
+    // update pledges array to rerender pledge list with correct strike counts
     setPledges(prev => 
       prev.map((pledge) =>
         pledge.id === selectedPledge
@@ -58,6 +59,7 @@ export default function StrikeInput({ pledges, setPledges, setStrikeHistory, sel
           : pledge
     ));
 
+    // update strikeHistory array to rerender with the new strike
     setStrikeHistory(prev => [{
       id: strikeEvent.id,
       amount: Number(amount),

@@ -19,11 +19,13 @@ export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
+  // select the current week based on today
   useEffect(() => {
     const currentWeek = getCurrentWeek(weeks, dayjs());
     setSelectedWeek(currentWeek);
   }, []);
 
+  // start horizontal scroll functionality
   function handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
     const element = scrollRef.current;
     if (!element) return;
@@ -56,6 +58,7 @@ export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
     hasDragged.current = false;
     scrollRef.current?.classList.remove(styles['dragging']);
   }
+  // end horizontal scroll functionality
 
   return (
     <div className={styles['weeks-frame']}>
@@ -68,21 +71,19 @@ export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
         onMouseLeave={stopDragging}
       >
         <div className={styles["weeks-container"]}>
-          {weeks.map((week, index) => {
-            return (
-              <button
-                onClick={() => {
-                  if (hasDragged.current) return;
-                  setSelectedWeek(week);
-                }}
-                key={week + index}
-                className={`${styles['week-btn']} ${styles[`${selectedWeek === week ? 'active' : ''}`]}`}
-              >
-                <span className={styles["week-label"]}>Week {index + 1}</span>
-                <span className={styles["week-dates"]}>{formatWeek(week)}</span>
-              </button>
-            );
-          })}
+          {weeks.map((week, index) => (
+            <button
+              onClick={() => {
+                if (hasDragged.current) return;
+                setSelectedWeek(week);
+              }}
+              key={week + index}
+              className={`${styles['week-btn']} ${styles[`${selectedWeek === week ? 'active' : ''}`]}`}
+            >
+              <span className={styles["week-label"]}>Week {index + 1}</span>
+              <span className={styles["week-dates"]}>{formatWeek(week)}</span>
+            </button>
+          ))}
         </div>
       </div>
     </div>

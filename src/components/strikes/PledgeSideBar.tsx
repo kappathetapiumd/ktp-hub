@@ -31,21 +31,20 @@ export default function PledgeSideBar({ pledges, totalStrikes, selectedPledge, s
         </div>
 
         <div className={styles["pledge-list"]}>
-          {pledges.map(({ id, name, strikes }) => {
-            return (
-              <div
-                onClick={() => setSelectedPledge(id)}
-                key={id}
-                className={`${styles['pledge-card']} 
-                  ${styles[`${strikes >= 6 ? 'red' : strikes >= 3 ? 'yellow' : 'green'}`]}
-                  ${styles[`${selectedPledge === id ? 'active' : ''}`]}`
-                }
-              >
-                <span className={styles["name"]}>{name}</span>
-                <span className={styles["strike-count"]}>{strikes}</span>
-              </div>
-            );
-          })}
+          {pledges.map(({ id, name, strikes }) => (
+            <div
+              onClick={() => setSelectedPledge(id)}
+              key={id}
+              className={`
+                ${styles['pledge-card']} 
+                ${styles[`${strikes >= 6 ? 'red' : strikes >= 3 ? 'yellow' : 'green'}`]}
+                ${styles[`${selectedPledge === id ? 'active' : ''}`]}
+              `}
+            >
+              <span className={styles["name"]}>{name}</span>
+              <span className={styles["strike-count"]}>{strikes}</span>
+            </div>
+          ))}
         </div>
       </div>
 

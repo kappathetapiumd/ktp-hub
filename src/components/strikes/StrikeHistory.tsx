@@ -1,39 +1,6 @@
-import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import styles from './StrikeHistory.module.css';
 import type { Strike } from '@/lib/strikes';
-
-const strikes = [{
-  id: 1,
-  amount: 1,
-  reason: "didn't follow up on pverma's interview again",
-  createdBy: "Nikhil Shyam",
-  createdAt: "03/22 • 11:35 PM"
-}, {
-  id: 2,
-  amount: 3,
-  reason: "no visor",
-  createdBy: "Soumya Jailwala",
-  createdAt: "03/23 • 7:04 PM"
-}, {
-  id: 3,
-  amount: -1,
-  reason: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut asperiores in enim vero sed aspernatur alias autem natus, saepe fuga cum ut pariatur dolorum magni optio officiis incidunt. Vitae, dolore? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus vero molestias labore mollitia officiis provident aspernatur. Distinctio tenetur at similique assumenda deleniti, doloribus recusandae adipisci minima officiis. Culpa, beatae dignissimos? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus vero molestias labore mollitia officiis provident aspernatur. Distinctio tenetur at similique assumenda deleniti, doloribus recusandae adipisci minima officiis. Culpa, beatae dignissimos? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus vero molestias labore mollitia officiis provident aspernatur. Distinctio tenetur at similique assumenda deleniti, doloribus recusandae adipisci minima officiis. Culpa, beatae dignissimos? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus vero molestias labore mollitia officiis provident aspernatur. Distinctio tenetur at similique assumenda deleniti, doloribus recusandae adipisci minima officiis. Culpa, beatae dignissimos?",
-  createdBy: "Aditya Hardikar",
-  createdAt: "03/27 • 10:10 AM"
-}, {
-  id: 4,
-  amount: 1,
-  reason: "didn't follow up on vermaedit's interview again",
-  createdBy: "Nikhil Shyam",
-  createdAt: "03/29 • 4:36 PM"
-}, {
-  id: 5,
-  amount: 1,
-  reason: "not following up with pratham again",
-  createdBy: "Amaar Trisal",
-  createdAt: "03/29 • 4:38 PM"
-}];
 
 type Props = {
   strikeHistory: Strike[];
@@ -73,8 +40,7 @@ export default function StrikeHistory(
           ? <p className={styles['info-message']}>Please select a pledge.</p>
           : strikeHistory.length === 0
           ? <p className={styles['info-message']}>No strikes yet...</p>
-          : strikeHistory.map(({ id, amount, reason, createdBy, createdAt }) => {
-            return (
+          : strikeHistory.map(({ id, amount, reason, createdBy, createdAt }) => (
               <div
                 key={id}
                 className={
@@ -108,15 +74,14 @@ export default function StrikeHistory(
 
                       <div className={styles["meta"]}>
                         <span className={styles["name"]}>{createdBy}</span>
-                        {/* <span className={styles["date"]}>{createdAt}</span> */}
                         <span className={styles["date"]}>{formatDate(createdAt)}</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            );
-        })}
+            ))
+        }
       </div>
     </div>
   );

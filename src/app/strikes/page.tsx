@@ -23,6 +23,7 @@ export default function Strikes() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [strikeId, setStrikeId] = useState('');
 
+  // load the list of pledges
   useEffect(() => {
     loadPledges();
 
@@ -36,6 +37,7 @@ export default function Strikes() {
     }
   }, []);
 
+  // get the strike history any time a new pledge/week is selected
   useEffect(() => {
     if (!selectedPledge) return;
 
@@ -45,14 +47,14 @@ export default function Strikes() {
       const params = new URLSearchParams({
         pledgeId: selectedPledge,
         // week: selectedWeek
-        week: '6/20/26 - 6/27/26'
+        week: '6/20/26 - 6/27/26' // delete for final
       });
 
       const response = await fetch(`/api/strikes?${params.toString()}`);
 
       if (!response.ok) return;
 
-      const strikeHistory: Strike[] = await response.json();
+      const strikeHistory = await response.json();
 
       setStrikeHistory(strikeHistory);
     }
