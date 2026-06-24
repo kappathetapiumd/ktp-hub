@@ -1,10 +1,19 @@
-import { deleteUser, getUsers, updateMembership, updateUser } from '@/lib/users';
+import { deleteUser, filterUsers, getUsers, updateMembership, updateUser } from '@/lib/users';
 import { Role } from '@/generated/prisma/enums';
 
-export async function GET() {
-  const users = await getUsers();
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
 
-  return Response.json(users);
+  const search = searchParams.get('search');
+
+  // load original users or no search filter
+  if (!search) {
+    const users = await getUsers();
+    return Response.json(users);
+  }
+
+  const filteredUsers = await filterUsers(search);
+  return Response.json(filteredUsers);
 }
 
 export async function PUT(request: Request) {

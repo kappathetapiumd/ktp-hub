@@ -40,8 +40,6 @@ export function DeleteModal({ userId, setUsers, showModal }: DeleteProps) {
       <div className={styles['modal-container']}>
         <p className={styles['message']}>
           Are you sure you want to delete this user?
-          <br />
-          {`This action can't be undone.`}
         </p>
         
         <div className={styles['confirmation-btns']}>

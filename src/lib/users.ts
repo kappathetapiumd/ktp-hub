@@ -52,6 +52,39 @@ export async function updateUser(id: string, name: string, email: string, role: 
   return updatedUser;
 }
 
+export async function filterUsers(search: string) {
+  const query = search.trim();
+
+  const roleMatches = Object.values(Role).filter(role =>
+    (role !== 'PCP_PCVP' ? role.toLowerCase() : 'pcp/pcvp').includes(query.toLowerCase())
+  );
+
+  const isMembershipSearch =
+    ['membership', 'committee'].some(word =>
+      query.toLowerCase().includes(word)
+    );
+
+  const filteredUsers = await prisma.user.findMany({
+    where: {
+      isActive: true,
+      ...(query && {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { email: { contains: query, mode: 'insensitive' } },
+          ...(roleMatches.length > 0
+            ? [{ role: { in: roleMatches } }]
+            : []),
+          ...(isMembershipSearch
+            ? [{ membershipCommittee: true }]
+            : []),
+        ],
+      }),
+    },
+  });
+
+  return filteredUsers;
+}
+
 // export async function deleteInactiveUsers() {
 //   const deletedUser = await prisma.$transaction(async (tx) => {
 //     await tx.strikeEvent.deleteMany({

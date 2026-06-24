@@ -6,6 +6,7 @@ import ButtonList from '@/components/users/ButtonList';
 import styles from './page.module.css';
 import type { User } from '@/lib/users';
 import { DeleteModal, UpdateModal } from '@/components/users/Modal';
+import SearchBar from '@/components/users/SearchBar';
 
 export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
@@ -49,6 +50,13 @@ export default function Users() {
       }
 
       <div className={styles['users-container']}>
+        <div className={styles['search-bar-container']}>
+          <SearchBar
+            users={users}
+            setUsers={setUsers}
+          />
+        </div>
+
         <div className={styles['user-list-container']}>
           <UserList
             users={users}
