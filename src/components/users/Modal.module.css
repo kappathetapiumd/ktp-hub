@@ -1,0 +1,217 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: grid;
+  place-items: center;
+
+  padding: var(--spacing-4);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+.modal-container {
+  width: min(100%, 22rem);
+
+  display: grid;
+  gap: var(--spacing-4);
+
+  padding: var(--spacing-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-lg);
+
+  text-align: center;
+}
+
+.message {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.confirmation-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-3);
+}
+
+.confirmation-btns button {
+  padding: 0.75rem 1rem;
+
+  border: none;
+  border-radius: var(--radius-md);
+
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.confirmation-btns button:hover {
+  transform: translateY(-1px);
+}
+
+.confirmation-btns button:active {
+  transform: translateY(0);
+}
+
+.yes-btn {
+  color: var(--color-bg);
+  background: var(--color-primary);
+}
+
+.yes-btn:hover {
+  opacity: 0.9;
+}
+
+.cancel-btn {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-border);
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.user-content {
+  position: relative;
+
+  display: grid;
+  gap: var(--spacing-3);
+
+  text-align: left;
+}
+
+.user-content input,
+.role-trigger {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.75rem 0.9rem;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.06);
+
+  font: inherit;
+  outline: none;
+
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.user-content input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.75;
+}
+
+.user-content input:focus,
+.role-trigger:focus {
+  border-color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+}
+
+.role-dropdown {
+  position: relative;
+}
+
+.role-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+
+  cursor: pointer;
+}
+
+.role-trigger i {
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+.role-select {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  z-index: 10;
+
+  width: 100%;
+
+  display: grid;
+  gap: 0.25rem;
+
+  padding: 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-lg);
+
+  overflow: hidden;
+}
+
+.role-select.hide-role-select {
+  display: none;
+}
+
+.role-btn {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+
+  border: none;
+  border-radius: calc(var(--radius-md) - 4px);
+
+  color: var(--color-text);
+  background: transparent;
+
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.role-btn:hover {
+  color: var(--color-bg);
+  background: var(--color-primary);
+  transform: translateX(2px);
+}
+
+.role-btn:active {
+  transform: translateX(0);
+}
+
+.admin {
+  color: #19ff19;
+}
+
+.brother {
+  color: #ff798b;
+}
+
+.pcp_pcvp {
+  color: #3498db;
+}
+
+.pledge {
+  color: #a84300;
+}
+
+.role-trigger i {
+  color: var(--color-text)
+}

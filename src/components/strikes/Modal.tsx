@@ -38,6 +38,7 @@ export function ZeroStrikesModal({ currentPledge, showModal }: ZeroStrikesProps)
             : '.'
           }
         </p>
+
         <div className={styles['confirmation-btns']}>
           <button
             onClick={() => showModal(false)}
@@ -89,6 +90,7 @@ export function DeleteModal(
           <br />
           {`This action can't be undone.`}
         </p>
+
         <div className={styles['confirmation-btns']}>
           <button
             onClick={deleteStrike}
@@ -181,6 +183,7 @@ export function EditModal(
             suppressHydrationWarning
           />
         </div>
+        
         <div className={styles['confirmation-btns']}>
           <button
             onClick={editStrike}

@@ -31,6 +31,8 @@ model User {
 
   membershipCommittee Boolean @default(false)
 
+  isActive     Boolean @default(true)
+
   pledgeStrikeEvents  StrikeEvent[] @relation("PledgeStrikeEvents")
   createdStrikeEvents StrikeEvent[] @relation("CreatedStrikeEvents")
 

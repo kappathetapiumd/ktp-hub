@@ -1,4 +1,6 @@
 import prisma from './prisma';
+import { sortUsers } from './utils';
+import { Role } from '@/generated/prisma/enums';
 
 export type User = {
   id: string;
@@ -9,18 +11,64 @@ export type User = {
 }
 
 export async function getUsers() {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    where: { isActive: true }
+  });
 
-  const roleOrder: Record<string, number> = {
-    'OWNER': 1,
-    'ADMIN': 2,
-    'BROTHER': 3,
-    'PCP_PCVP': 4,
-    'PLEDGE': 5,
-    'NONE': 6
-  }
-
-  users.sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
-
-  return users;
+  return sortUsers(users);
 }
+
+export async function updateMembership(id: string, membershipCommittee: boolean) {
+  const updatedUser = await prisma.user.update({
+    where: { id },
+    data: { membershipCommittee }
+  });
+
+  return updatedUser;
+}
+
+export async function deleteUser(id: string) {
+  const deletedUser = await prisma.user.update({
+    where: { id },
+    data: { isActive: false }
+  });
+
+  return deletedUser;
+}
+
+export async function updateUser(id: string, name: string, email: string, role: Role) {
+  const membershipCommittee = role.toString() === 'ADMIN'
+
+  const updatedUser = await prisma.user.update({
+    where: { id },
+    data: {
+      name,
+      email,
+      role,
+      membershipCommittee
+    }
+  });
+
+  return updatedUser;
+}
+
+// export async function deleteInactiveUsers() {
+//   const deletedUser = await prisma.$transaction(async (tx) => {
+//     await tx.strikeEvent.deleteMany({
+//       where: {
+//         'OR': [
+//           { pledgeId: id },
+//           { createdById: id }
+//         ]
+//       }
+//     });
+
+//     const deletedUser = await tx.user.delete({
+//       where: { id }
+//     });
+
+//     return deletedUser;
+//   })
+
+//   return deletedUser;
+// }

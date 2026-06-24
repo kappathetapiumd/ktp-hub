@@ -110,7 +110,6 @@ export default function Strikes() {
       }
 
       <main className={styles['dashboard']}>
-
         <aside className={styles['sidebar']}>
           <PledgeSideBar
             pledges={pledges}
