@@ -1,18 +1,19 @@
-import { deleteUser, filterUsers, getUsers, updateMembership, updateUser } from '@/lib/users';
+import { filterUsers, getUsers, setUserInactive, updateMembership, updateUser } from '@/lib/users';
 import { Role } from '@/generated/prisma/enums';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
   const search = searchParams.get('search');
+  const isActive = true;
 
   // load original users or no search filter
   if (!search) {
-    const users = await getUsers();
+    const users = await getUsers(isActive);
     return Response.json(users);
   }
 
-  const filteredUsers = await filterUsers(search);
+  const filteredUsers = await filterUsers(search, isActive);
   return Response.json(filteredUsers);
 }
 
@@ -37,7 +38,7 @@ export async function DELETE(request: Request) {
 
   if (!userId) return;
 
-  const deletedUser = await deleteUser(userId);
+  const inactiveUser = await setUserInactive(userId);
 
-  return Response.json(deletedUser);
+  return Response.json(inactiveUser);
 }

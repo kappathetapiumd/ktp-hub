@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './PledgeSideBar.module.css';
 import type { Pledge } from '@/lib/pledges';
@@ -16,8 +15,7 @@ export default function PledgeSideBar(
   { pledges, totalStrikes, selectedPledge, setSelectedPledge, showSideBar, setShowSideBar }: Props
 ) {
   const router = useRouter();
-  // const [showSideBar, setShowSideBar] = useState(true);
-
+  
   return (
     <>
       <div className={`${styles['sidebar']} ${!showSideBar ? styles['hide-bar'] : ''}`}>

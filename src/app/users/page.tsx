@@ -1,14 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import UserList from '@/components/users/UserList';
 import ButtonList from '@/components/users/ButtonList';
 import styles from './page.module.css';
 import type { User } from '@/lib/users';
-import { DeleteModal, UpdateModal, WeekModal } from '@/components/users/Modal';
+import DeleteModal from '@/components/users/modal/DeleteModal';
+import UpdateModal from '@/components/users/modal/UpdateModal';
+import WeekModal from '@/components/users/modal/WeekModal';
 import SearchBar from '@/components/users/SearchBar';
 
 export default function Users() {
+  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [userId, setUserId] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
@@ -16,6 +20,7 @@ export default function Users() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showWeekModal, setShowWeekModal] = useState(false);
+  const isActive = true;
 
   useEffect(() => {
     loadUsers();
@@ -38,6 +43,8 @@ export default function Users() {
           userId={userId}
           setUsers={setUsers}
           showModal={setShowDeleteModal}
+          isActive={isActive}
+          deleteAll={false}
         />
       }
 
@@ -59,7 +66,7 @@ export default function Users() {
       <div className={styles['users-container']}>
         <div className={styles['search-bar-container']}>
           <SearchBar
-            users={users}
+            isActive={isActive}
             setUsers={setUsers}
           />
         </div>
@@ -82,10 +89,18 @@ export default function Users() {
             setIsUpdating={setIsUpdating}
             isDeleting={isDeleting}
             setIsDeleting={setIsDeleting}
-            setShowWeekModal={setShowWeekModal}
+            setShowModal={setShowWeekModal}
+            isActive={isActive}
           />
         </div>
       </div>
+
+      <button
+        onClick={() => router.push('/users/deleted')}
+        className={styles['users-btn']}
+      >
+        <i className="fa-solid fa-user"></i>
+      </button>
     </>
   );
 }

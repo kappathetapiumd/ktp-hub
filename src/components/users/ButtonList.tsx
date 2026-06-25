@@ -6,11 +6,12 @@ type Props = {
   setIsUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   isDeleting: boolean;
   setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowWeekModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isActive: boolean;
 }
 
 export default function ButtonList(
-  { isUpdating, setIsUpdating, isDeleting, setIsDeleting, setShowWeekModal }: Props
+  { isUpdating, setIsUpdating, isDeleting, setIsDeleting, setShowModal, isActive }: Props
 ) {
   const router = useRouter();
 
@@ -48,8 +49,10 @@ export default function ButtonList(
         <i className="fa-solid fa-trash"></i>
       </button>
 
-      <button onClick={() => setShowWeekModal(true)} className={styles['weeks-btn']}>
-        <i className="fa-regular fa-calendar"></i>
+      <button onClick={() => setShowModal(true)} className={styles['weeks-btn']}>
+        {isActive
+          ? <i className="fa-regular fa-calendar"></i>
+          : <i className="fa-solid fa-dumpster"></i>}
       </button>
 
       <button onClick={() => router.push('/strikes')} className={styles['strikes-btn']}>

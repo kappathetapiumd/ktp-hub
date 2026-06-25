@@ -16,7 +16,7 @@ export default function UserList(
 ) {
   function handleModification(id: string) {
     if (!isUpdating && !isDeleting) return;
-
+    
     setUserId(id);
 
     if (isDeleting)

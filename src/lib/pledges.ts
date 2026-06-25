@@ -8,7 +8,13 @@ export type Pledge = {
 
 export async function getPledges() {
   const pledges = await prisma.user.findMany({
-    where: { role: 'PLEDGE' },
+    where: {
+      OR: [
+        { role: 'PLEDGE' },
+        { role: 'PCP_PCVP' }
+      ],
+      isActive: true
+    },
     include: { pledgeStrikeEvents: true }
   });
 
@@ -20,6 +26,13 @@ export async function getPledges() {
       0
     )
   }));
+
+  pledgesWithTotals.sort((a, b) => {
+    const aLastName = a.name.split(' ')[1];
+    const bLastName = b.name.split(' ')[1];
+    
+    return aLastName.localeCompare(bLastName);
+  })
 
   return pledgesWithTotals;
 }

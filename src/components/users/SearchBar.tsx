@@ -3,11 +3,11 @@ import styles from './SearchBar.module.css';
 import type { User } from '@/lib/users';
 
 type Props = {
-  users: User[];
+  isActive: boolean,
   setUsers: React.Dispatch<React.SetStateAction<User[]>>
 }
 
-export default function SearchBar({ users, setUsers }: Props) {
+export default function SearchBar({ isActive, setUsers }: Props) {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function SearchBar({ users, setUsers }: Props) {
         search,
       });
 
-      const response = await fetch(`/api/users?${params.toString()}`);
+      const response = await fetch(`/api/users${!isActive ? '/deleted' : ''}?${params.toString()}`);
 
       if (!response.ok) return;
 
