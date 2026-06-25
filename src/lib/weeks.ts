@@ -3,30 +3,38 @@ import dayjs from 'dayjs';
 
 export async function createStrikeTerm(startDate: string, endDate: string) {
   const strikeTerm = await prisma.$transaction(async (tx) => {
-    await tx.strikeTermConfig.updateMany({
-      where: { active: true },
-      data: { active: false }
-    });
+    const oldStrikeTerm = await tx.strikeTerm.findFirst();
 
-    const strikeTerm = await tx.strikeTermConfig.create({
+    if (oldStrikeTerm) {
+      await tx.strikeEvent.deleteMany({
+        where: {
+          createdAt: {
+            gte: oldStrikeTerm.startDate,
+            lte: oldStrikeTerm.endDate
+          }
+        }
+      });
+
+      await tx.strikeTerm.deleteMany();
+    }
+
+    const newStrikeTerm = await tx.strikeTerm.create({
       data: {
         startDate: new Date(startDate),
         endDate: new Date(endDate)
       }
     });
 
-    return strikeTerm;
+    return newStrikeTerm;
   });
 
   return strikeTerm;
 }
 
 export async function getWeeks() {
-  const strikeTerm = await prisma.strikeTermConfig.findFirst({
-    where: { active: true }
-  });
+  const strikeTerm = await prisma.strikeTerm.findFirst();
 
-  if (!strikeTerm) return;
+  if (!strikeTerm) return [];
 
   const { startDate, endDate } = strikeTerm;
   const weeks = generateWeeks(startDate, endDate);

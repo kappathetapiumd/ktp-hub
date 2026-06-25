@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   const pledgeId = searchParams.get('pledgeId');
   const week = searchParams.get('week');
 
-  if (!pledgeId || !week) return;
+  if (!pledgeId || !week) return Response.json([]);
 
   const strikeHistory = await getStrikeHistory(pledgeId, week);
   

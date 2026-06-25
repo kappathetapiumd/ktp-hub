@@ -96,10 +96,10 @@ export default function Users() {
       </div>
 
       <button
-        onClick={() => router.push('/users/deleted')}
-        className={styles['users-btn']}
+        onClick={() => router.push('/strikes')}
+        className={styles['dashboard-btn']}
       >
-        <i className="fa-solid fa-user"></i>
+        <i className="fa-solid fa-tachograph-digital"></i>
       </button>
     </>
   );

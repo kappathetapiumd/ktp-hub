@@ -55,8 +55,11 @@ export default function ButtonList(
           : <i className="fa-solid fa-dumpster"></i>}
       </button>
 
-      <button onClick={() => router.push('/strikes')} className={styles['strikes-btn']}>
-        <i className="fa-solid fa-tachograph-digital"></i>
+      <button
+        onClick={() => isActive ? router.push('/users/deleted') : router.push('/users')}
+        className={styles['users-btn']}
+      >
+        <i className={`fa-solid fa-users${isActive ? '-slash' : ''}`}></i>
       </button>
     </div>
   );

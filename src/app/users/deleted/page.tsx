@@ -104,10 +104,10 @@ export default function DeletedUsers() {
       }
 
       <button
-        onClick={() => router.push('/users')}
-        className={styles['users-btn']}
+        onClick={() => router.push('/strikes')}
+        className={styles['dashboard-btn']}
       >
-        <i className="fa-solid fa-users"></i>
+        <i className="fa-solid fa-tachograph-digital"></i>
       </button>
     </>
   );

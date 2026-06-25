@@ -33,7 +33,7 @@ body {
   padding: var(--spacing-4) 0 calc(var(--spacing-4) + env(safe-area-inset-bottom));
 }
 
-.users-btn {
+.dashboard-btn {
   position: fixed;
   left: var(--spacing-4);
   bottom: var(--spacing-4);
@@ -46,7 +46,7 @@ body {
   width: 48px;
   height: 48px;
 
-  color: #ef4444;
+  color: var(--color-text);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--color-border);
   border-radius: 999px;
@@ -57,7 +57,7 @@ body {
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.users-btn:hover {
+.dashboard-btn:hover {
   background: rgba(255, 255, 255, 0.11);
   transform: translateY(-1px);
 }
@@ -76,7 +76,8 @@ body {
     margin-bottom: 25px;
   }
 
-  .users-btn {
-    display: none;
+  .dashboard-btn {
+    width: 42px;
+    height: 42px;
   }
 }

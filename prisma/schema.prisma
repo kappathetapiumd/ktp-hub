@@ -56,13 +56,11 @@ model StrikeEvent {
   updatedAt   DateTime @updatedAt
 }
 
-model StrikeTermConfig {
+model StrikeTerm {
   id        String   @id @default(cuid())
   
   startDate DateTime
   endDate   DateTime
-  
-  active    Boolean  @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
