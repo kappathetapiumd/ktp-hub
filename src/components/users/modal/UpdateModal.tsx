@@ -1,7 +1,10 @@
 import { useState } from 'react';
+
 import { sortUsers } from '@/lib/utils';
-import styles from './Modal.module.css';
+
 import type { User } from '@/lib/users';
+
+import styles from './Modal.module.css';
 
 type Props = {
   userId: string;
@@ -10,7 +13,9 @@ type Props = {
   showModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function UpdateModal({ userId, users, setUsers, showModal }: Props) {
+export default function UpdateModal(
+  { userId, users, setUsers, showModal }: Props
+) {
   const user = users.find(user => user.id === userId)!;
 
   const [name, setName] = useState(user.name);

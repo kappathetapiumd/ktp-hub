@@ -2,16 +2,19 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import UserList from '@/components/users/UserList';
-import ButtonList from '@/components/users/ButtonList';
-import styles from './page.module.css';
-import type { User } from '@/lib/users';
+
 import DeleteModal from '@/components/users/modal/DeleteModal';
 import UpdateModal from '@/components/users/modal/UpdateModal';
 import WeekModal from '@/components/users/modal/WeekModal';
 import SearchBar from '@/components/users/SearchBar';
+import UserList from '@/components/users/UserList';
+import ButtonList from '@/components/users/ButtonList';
 
-export default function Users() {
+import type { User } from '@/lib/users';
+
+import styles from './page.module.css';
+
+export default function UserDashboard() {
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [userId, setUserId] = useState('');

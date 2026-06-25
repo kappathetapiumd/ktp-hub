@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
-import styles from './Login.module.css';
+import { useEffect, useRef } from 'react';
+
+import styles from './NetworkBackground.module.css';
 
 export default function NetworkBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -129,5 +130,5 @@ export default function NetworkBackground() {
     }
   }, []);
 
-  return <canvas className={styles["network-canvas"]} ref={canvasRef} />;
+  return <canvas className={styles['network-canvas']} ref={canvasRef} />;
 }

@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
-import styles from './StrikeHistory.module.css';
+
 import type { Strike } from '@/lib/strikes';
+
+import styles from './StrikeHistory.module.css';
 
 type Props = {
   strikeHistory: Strike[];
@@ -12,7 +14,14 @@ type Props = {
 }
 
 export default function StrikeHistory(
-  { strikeHistory, totalStrikesPerWeek, setShowDeleteModal, setShowEditModal, setStrikeId, selectedPledge }: Props
+  {
+    strikeHistory,
+    totalStrikesPerWeek,
+    setShowDeleteModal,
+    setShowEditModal,
+    setStrikeId,
+    selectedPledge
+  }: Props
 ) {
   function handleDelete(id: string) {
     setStrikeId(id);
@@ -29,7 +38,10 @@ export default function StrikeHistory(
       <h1 className={styles["week-amount"]}>
         Strikes: 
         <span>
-          {totalStrikesPerWeek > 0 ? `+${totalStrikesPerWeek}` : totalStrikesPerWeek}
+          {totalStrikesPerWeek > 0
+            ? `+${totalStrikesPerWeek}`
+            : totalStrikesPerWeek
+          }
         </span>
       </h1>
 
@@ -43,8 +55,10 @@ export default function StrikeHistory(
           : strikeHistory.map(({ id, amount, reason, createdBy, createdAt }) => (
               <div
                 key={id}
-                className={
-                  `${styles['strike-card']} ${styles[`${amount > 0 ? 'added' : 'removed'}`]}`}
+                className={`
+                  ${styles['strike-card']}
+                  ${styles[`${amount > 0 ? 'added' : 'removed'}`]}
+                `}
               >
                 <div className={styles["strike-event"]}>
                   <p className={styles["amount"]}>
@@ -73,8 +87,12 @@ export default function StrikeHistory(
                       </div>
 
                       <div className={styles["meta"]}>
-                        <span className={styles["name"]}>{createdBy}</span>
-                        <span className={styles["date"]}>{formatDate(createdAt)}</span>
+                        <span className={styles["name"]}>
+                          {createdBy}
+                        </span>
+                        <span className={styles["date"]}>
+                          {formatDate(createdAt)}
+                        </span>
                       </div>
                     </div>
                   </div>

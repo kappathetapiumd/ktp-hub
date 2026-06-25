@@ -1,14 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import dayjs from 'dayjs';
+
 import styles from './WeeksSelect.module.css';
 
 type Props = {
+  weeks: string[],
+  setWeeks: React.Dispatch<React.SetStateAction<string[]>>
   selectedWeek: string,
   setSelectedWeek: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
-  const [weeks, setWeeks] = useState<string[]>([]);
+export default function WeeksSelect(
+  { weeks, setWeeks, selectedWeek, setSelectedWeek }: Props
+) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isMouseDown = useRef(false);
   const hasDragged = useRef(false);
@@ -82,12 +86,15 @@ export default function WeeksSelect({ selectedWeek, setSelectedWeek }: Props) {
         <div className={styles["weeks-container"]}>
           {weeks.map((week, index) => (
             <button
+              key={week}
               onClick={() => {
                 if (hasDragged.current) return;
                 setSelectedWeek(week);
               }}
-              key={week + index}
-              className={`${styles['week-btn']} ${selectedWeek === week ? styles['active'] : ''}`}
+              className={`
+                ${styles['week-btn']}
+                ${selectedWeek === week ? styles['active'] : ''}
+              `}
             >
               <span className={styles["week-label"]}>Week {index + 1}</span>
               <span className={styles["week-dates"]}>{formatWeek(week)}</span>
@@ -105,7 +112,7 @@ function formatWeek(week: string) {
 }
 
 function getCurrentWeek(weeks: string[], today: dayjs.Dayjs) {
-  if (weeks.length === 0) return '';
+  if (!weeks || weeks.length === 0) return '';
 
   return [...weeks].reverse().find(week => {
     const [start] = week.split(' - ');

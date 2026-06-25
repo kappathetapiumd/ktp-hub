@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import styles from './StrikeInput.module.css';
+
+import { invalidStrike } from '@/lib/utils';
+
 import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
+
+import styles from './StrikeInput.module.css';
 
 // Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro officiis natus dolor vero repellat rem, autem quod dolorem amet ratione est voluptas, harum perspiciatis nobis sequi magni, eum corrupti praesentium.
 
@@ -13,19 +17,25 @@ type Props = {
   selectedPledge: string;
   setShowStrikesModal: React.Dispatch<React.SetStateAction<boolean>>;
   selectedWeek: string;
+  weeks: string[];
 }
 
 /*
 ************** TODO **************
 - can't add strike if current date is past last date
-- auto create weeks based on start and end date
-- key={} for WeeksSelect
-- disable buttons whenever making requests !!!!!!
 */
 
 
 export default function StrikeInput(
-  { pledges, setPledges, setStrikeHistory, selectedPledge, setShowStrikesModal, selectedWeek }: Props
+  {
+    pledges,
+    setPledges,
+    setStrikeHistory,
+    selectedPledge,
+    setShowStrikesModal,
+    selectedWeek,
+    weeks
+  }: Props
 ) {
   const [reason, setReason] = useState('');
   const [amount, setAmount] = useState('');
@@ -78,8 +88,6 @@ export default function StrikeInput(
     setAmount('');
   }
 
-  const invalidStrike = !reason || !/^-?[1-9]\d*$/.test(amount);
-
   return (
     <div className={styles['strike-input-container']}>
       <div className={styles['strike-content']}>
@@ -105,7 +113,7 @@ export default function StrikeInput(
 
       <button
         onClick={addStrike}
-        disabled={invalidStrike}
+        disabled={invalidStrike(reason, amount, selectedPledge, weeks)}
         className={styles['add-btn']}
       >
         <i className="fa-solid fa-plus"></i>

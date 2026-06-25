@@ -1,4 +1,4 @@
-import { getPledges } from "@/lib/pledges";
+import { getPledges } from '@/lib/pledges';
 
 export async function GET() {
   const pledges = await getPledges();

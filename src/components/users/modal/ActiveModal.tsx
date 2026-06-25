@@ -1,5 +1,6 @@
-import styles from './Modal.module.css';
 import type { User } from '@/lib/users';
+
+import styles from './Modal.module.css';
 
 type Props = {
   userId: string;

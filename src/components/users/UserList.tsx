@@ -1,5 +1,6 @@
-import styles from './UserList.module.css';
 import type { User } from '@/lib/users';
+
+import styles from './UserList.module.css';
 
 type Props = {
   users: User[];
@@ -12,7 +13,15 @@ type Props = {
 }
 
 export default function UserList(
-  { users, setUserId, isUpdating, isDeleting, setShowDeleteModal, setShowUpdateModal, setUsers }: Props
+  {
+    users,
+    setUserId,
+    isUpdating,
+    isDeleting,
+    setShowDeleteModal,
+    setShowUpdateModal,
+    setUsers
+  }: Props
 ) {
   function handleModification(id: string) {
     if (!isUpdating && !isDeleting) return;
@@ -62,11 +71,17 @@ export default function UserList(
           `}
         >
           <div className={styles['user-info']}>
-            <span className={`${styles['name']} ${styles[`${role.toLowerCase()}`]}`}>{name}</span>
+            <span
+              className={`${styles['name']} ${styles[`${role.toLowerCase()}`]}`}
+            >
+              {name}
+            </span>
             <span className={styles['email']}>{email}</span>
           </div>
 
-          <span className={`${styles['role']} ${styles[`${role.toLowerCase()}`]}`}>
+          <span
+            className={`${styles['role']} ${styles[`${role.toLowerCase()}`]}`}
+          >
             {role !== 'PCP_PCVP' ? role : 'PCP/PCVP'}
           </span>
 
@@ -75,7 +90,14 @@ export default function UserList(
             disabled={role !== 'BROTHER' || isUpdating || isDeleting}
             className={styles['membership-toggle']}
           >
-            <i className={`fa-${membershipCommittee ? 'solid fa-square-check' : 'regular fa-square'}`}></i>
+            <i
+              className={`
+                fa-${membershipCommittee
+                  ? 'solid fa-square-check'
+                  : 'regular fa-square'}
+              `}
+            >
+            </i>
           </button>
         </div>
       ))}

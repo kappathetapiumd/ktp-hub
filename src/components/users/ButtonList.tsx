@@ -1,4 +1,5 @@
 import { useRouter } from 'next/navigation';
+
 import styles from './ButtonList.module.css';
 
 type Props = {
@@ -11,7 +12,14 @@ type Props = {
 }
 
 export default function ButtonList(
-  { isUpdating, setIsUpdating, isDeleting, setIsDeleting, setShowModal, isActive }: Props
+  {
+    isUpdating,
+    setIsUpdating,
+    isDeleting,
+    setIsDeleting,
+    setShowModal,
+    isActive
+  }: Props
 ) {
   const router = useRouter();
 
@@ -37,26 +45,38 @@ export default function ButtonList(
     <div className={styles['btn-list']}>
       <button
         onClick={toggleUpdating}
-        className={`${styles['update-btn']} ${isUpdating ? styles['active']: ''}`}
+        className={`
+          ${styles['update-btn']}
+          ${isUpdating ? styles['active']: ''}
+        `}
       >
         <i className="fa-solid fa-pen"></i>
       </button>
 
       <button
         onClick={toggleDeleting}
-        className={`${styles['delete-btn']} ${isDeleting ? styles['active'] : ''}`}
+        className={`
+          ${styles['delete-btn']}
+          ${isDeleting ? styles['active'] : ''}
+        `}
       >
         <i className="fa-solid fa-trash"></i>
       </button>
 
-      <button onClick={() => setShowModal(true)} className={styles['weeks-btn']}>
+      <button
+        onClick={() => setShowModal(true)}
+        className={styles['weeks-btn']}
+      >
         {isActive
           ? <i className="fa-regular fa-calendar"></i>
           : <i className="fa-solid fa-dumpster"></i>}
       </button>
 
       <button
-        onClick={() => isActive ? router.push('/users/deleted') : router.push('/users')}
+        onClick={() => isActive
+          ? router.push('/users/deleted')
+          : router.push('/users')
+        }
         className={styles['users-btn']}
       >
         <i className={`fa-solid fa-users${isActive ? '-slash' : ''}`}></i>

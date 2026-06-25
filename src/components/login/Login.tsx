@@ -1,8 +1,8 @@
-'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import NetworkBackground from './NetworkBackground';
+
+import NetworkBackground from '../background/NetworkBackground';
+
 import styles from './Login.module.css';
 
 export default function LoginPage() {
@@ -81,7 +81,10 @@ export default function LoginPage() {
             <button
               onClick={handleAuth}
               className={styles["submit-btn"]}
-              disabled={isLogin ? (invalidLogin) : (invalidLogin || !validRegister)}>
+              disabled={
+                isLogin ? (invalidLogin) : (invalidLogin || !validRegister)
+              }
+            >
               {isLogin ? 'Sign in' : 'Register'}
             </button>
             <p className={styles["account-container"]}>
@@ -89,7 +92,10 @@ export default function LoginPage() {
                 ? "Don't have an account? "
                 : 'Already have an account? '
               }
-              <a onClick={() => setIsLogin(!isLogin)} className={styles["switch-link"]}>
+              <a
+                onClick={() => setIsLogin(!isLogin)}
+                className={styles["switch-link"]}
+              >
                 {isLogin ? 'Register' : 'Sign in'}
               </a>
             </p>

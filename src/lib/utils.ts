@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import type { User } from './users';
 
 export function sortUsers(users: User[]) {
@@ -22,4 +24,20 @@ export function sortUsers(users: User[]) {
   });
 
   return users;
+}
+
+export function invalidStrike(
+  reason: string,
+  amount: string,
+  selectedPledge: string,
+  weeks: string[] | undefined
+) {
+  if (!reason || !/^-?[1-9]\d*$/.test(amount) || !selectedPledge || !weeks)
+    return true;
+
+  const today = dayjs();
+  const startDate = dayjs(weeks[0].split(' - ')[0]);
+  const endDate = dayjs(weeks[weeks.length - 1].split(' - ')[1]);
+
+  return today.isBefore(startDate) || today.isAfter(endDate);
 }

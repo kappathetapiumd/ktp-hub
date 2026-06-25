@@ -1,4 +1,4 @@
-import prisma from "./prisma";
+import prisma from './prisma';
 
 export type Strike = {
   id: string;
@@ -8,7 +8,9 @@ export type Strike = {
   createdBy: string;
 }
 
-export async function addStrike(pledgeId: string, createdById: string, amount: number, reason: string) {
+export async function addStrike(
+  pledgeId: string, createdById: string, amount: number, reason: string
+) {
   const { id, createdAt, createdBy } = await prisma.strikeEvent.create({
     data: {
       pledgeId,
@@ -19,7 +21,13 @@ export async function addStrike(pledgeId: string, createdById: string, amount: n
     include: { createdBy: true }
   });
 
-  return { id, amount, reason, createdAt: createdAt.toISOString(), createdBy: createdBy.name };
+  return {
+    id,
+    amount,
+    reason,
+    createdAt: createdAt.toISOString(),
+    createdBy: createdBy.name
+  };
 }
 
 export async function getStrikeHistory(pledgeId: string, week: string) {

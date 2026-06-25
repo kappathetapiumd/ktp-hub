@@ -1,21 +1,26 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-import { useEffect, useState } from 'react';
-import NetworkBackground from '@/components/login/NetworkBackground';
+import NetworkBackground from '@/components/background/NetworkBackground';
+import ZeroStrikesModal from '@/components/strikes/modal/ZeroStrikesModal';
+import DeleteModal from '@/components/strikes/modal/DeleteModal';
+import EditModal from '@/components/strikes/modal/EditModal';
 import PledgeSideBar from '@/components/strikes/PledgeSideBar';
 import StrikeInput from '@/components/strikes/StrikeInput';
 import WeeksSelect from "@/components/strikes/WeeksSelect";
 import StrikeHistory from '@/components/strikes/StrikeHistory';
-import { DeleteModal, EditModal, ZeroStrikesModal } from '@/components/strikes/Modal';
-import styles from './page.module.css';
+
 import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
 
-export default function Strikes() {
+import styles from './page.module.css';
+
+export default function StrikeDashboard() {
   const [pledges, setPledges] = useState<Pledge[]>([]);
   const [strikeHistory, setStrikeHistory] = useState<Strike[]>([]);
+  const [weeks, setWeeks] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedPledge, setSelectedPledge] = useState('');
   const [showStrikesModal, setShowStrikesModal] = useState(false);
@@ -48,7 +53,6 @@ export default function Strikes() {
       const params = new URLSearchParams({
         pledgeId: selectedPledge,
         week: selectedWeek
-        // week: '6/20/26 - 6/27/26' // delete for final
       });
 
       const response = await fetch(`/api/strikes?${params.toString()}`);
@@ -107,6 +111,7 @@ export default function Strikes() {
           selectedPledge={selectedPledge}
           showModal={setShowEditModal}
           setShowStrikesModal={setShowStrikesModal}
+          weeks={weeks}
         />
       }
 
@@ -134,8 +139,11 @@ export default function Strikes() {
               selectedPledge={selectedPledge}
               setShowStrikesModal={setShowStrikesModal}
               selectedWeek={selectedWeek}
+              weeks={weeks}
             />
             <WeeksSelect
+              weeks={weeks}
+              setWeeks={setWeeks}
               selectedWeek={selectedWeek}
               setSelectedWeek={setSelectedWeek}
             />

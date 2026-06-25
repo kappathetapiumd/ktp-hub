@@ -1,4 +1,5 @@
 import prisma from './prisma';
+
 import { sortUsers } from './utils';
 import { Role } from '@/generated/prisma/enums';
 
@@ -22,11 +23,12 @@ export async function filterUsers(search: string, isActive: boolean) {
   const query = search.trim();
 
   const roleMatches = Object.values(Role).filter(role =>
-    (role !== 'PCP_PCVP' ? role.toLowerCase() : 'pcp/pcvp').includes(query.toLowerCase())
+    (role !== 'PCP_PCVP' ? role.toLowerCase() : 'pcp/pcvp')
+      .includes(query.toLowerCase())
   );
 
-  const isMembershipSearch = 
-    ['membership', 'committee', 'mc'].some(word => word.includes(query.toLowerCase()));
+  const isMembershipSearch = ['membership', 'committee', 'mc']
+    .some(word => word.includes(query.toLowerCase()));
 
   const filteredUsers = await prisma.user.findMany({
     where: {
@@ -49,7 +51,9 @@ export async function filterUsers(search: string, isActive: boolean) {
   return sortUsers(filteredUsers);
 }
 
-export async function updateMembership(id: string, membershipCommittee: boolean) {
+export async function updateMembership(
+  id: string, membershipCommittee: boolean
+) {
   const updatedUser = await prisma.user.update({
     where: { id },
     data: { membershipCommittee }
@@ -67,7 +71,9 @@ export async function setUserInactive(id: string) {
   return inactiveUser;
 }  
 
-export async function updateUser(id: string, name: string, email: string, role: Role) {
+export async function updateUser(
+  id: string, name: string, email: string, role: Role
+) {
   const membershipCommittee = role.toString() === 'ADMIN'
 
   const updatedUser = await prisma.user.update({

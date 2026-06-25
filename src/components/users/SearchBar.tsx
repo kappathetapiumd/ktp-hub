@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import styles from './SearchBar.module.css';
+
 import type { User } from '@/lib/users';
+
+import styles from './SearchBar.module.css';
 
 type Props = {
   isActive: boolean,
@@ -16,7 +18,9 @@ export default function SearchBar({ isActive, setUsers }: Props) {
         search,
       });
 
-      const response = await fetch(`/api/users${!isActive ? '/deleted' : ''}?${params.toString()}`);
+      const response = await fetch(
+        `/api/users${!isActive ? '/deleted' : ''}?${params.toString()}`
+      );
 
       if (!response.ok) return;
 

@@ -1,5 +1,6 @@
-import styles from './Modal.module.css';
 import type { User } from '@/lib/users';
+
+import styles from './Modal.module.css';
 
 type Props = {
   userId: string;
@@ -9,16 +10,19 @@ type Props = {
   deleteAll: boolean;
 }
 
-export default function DeleteModal({ userId, setUsers, showModal, isActive, deleteAll }: Props) {
+export default function DeleteModal(
+  { userId, setUsers, showModal, isActive, deleteAll }: Props
+) {
   async function deleteUser() {
     const params = new URLSearchParams({
       userId,
       deleteAll: deleteAll.toString()
     });
 
-    const response = await fetch(`/api/users${!isActive ? '/deleted' : ''}?${params.toString()}`, {
-      method: 'DELETE'
-    });
+    const response = await fetch(
+      `/api/users${!isActive ? '/deleted' : ''}?${params.toString()}`,
+      { method: 'DELETE' }
+    );
 
     if (!response.ok) return;
 

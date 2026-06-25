@@ -1,7 +1,9 @@
-import Head from "./head";
+import type { Metadata } from 'next';
+
+import Head from './head';
 import Footer from '@/components/footer/Footer';
-import type { Metadata } from "next";
-import "./globals.css";
+
+import './globals.css';
 
 export const metadata: Metadata = {
   title: "Strike Sheet",

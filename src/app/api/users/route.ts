@@ -1,5 +1,6 @@
 import { filterUsers, getUsers, setUserInactive, updateMembership, updateUser } from '@/lib/users';
-import { Role } from '@/generated/prisma/enums';
+
+import type { Role } from '@/generated/prisma/enums';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

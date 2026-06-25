@@ -1,6 +1,8 @@
 import { useRouter } from 'next/navigation';
-import styles from './PledgeSideBar.module.css';
+
 import type { Pledge } from '@/lib/pledges';
+
+import styles from './PledgeSideBar.module.css';
 
 type Props = {
   pledges: Pledge[];
@@ -12,13 +14,25 @@ type Props = {
 }
 
 export default function PledgeSideBar(
-  { pledges, totalStrikes, selectedPledge, setSelectedPledge, showSideBar, setShowSideBar }: Props
+  {
+    pledges,
+    totalStrikes,
+    selectedPledge,
+    setSelectedPledge,
+    showSideBar,
+    setShowSideBar
+  }: Props
 ) {
   const router = useRouter();
   
   return (
     <>
-      <div className={`${styles['sidebar']} ${!showSideBar ? styles['hide-bar'] : ''}`}>
+      <div
+        className={`
+          ${styles['sidebar']}
+          ${!showSideBar ? styles['hide-bar'] : ''}
+        `}
+      >
         <div className={styles['header']}>
           <h1 className={styles['total-strikes']}>
             <span>Total Strikes:</span>
@@ -41,7 +55,9 @@ export default function PledgeSideBar(
               key={id}
               className={`
                 ${styles['pledge-card']} 
-                ${styles[`${strikes >= 6 ? 'red' : strikes >= 3 ? 'yellow' : 'green'}`]}
+                ${styles[
+                  `${strikes >= 6 ? 'red' : strikes >= 3 ? 'yellow' : 'green'}`
+                ]}
                 ${styles[`${selectedPledge === id ? 'active' : ''}`]}
               `}
             >
