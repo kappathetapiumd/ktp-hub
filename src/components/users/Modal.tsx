@@ -251,7 +251,7 @@ export function WeekModal({ showModal }: WeekProps) {
             disabled={invalidDates(startDate, endDate)}
             className={styles['yes-btn']}
           >
-            Create Interval
+            Create Term
           </button>
           <button
             onClick={() => showModal(false)}

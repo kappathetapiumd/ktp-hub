@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import dayjs from 'dayjs';
 import styles from './StrikeInput.module.css';
 import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
@@ -11,6 +12,7 @@ type Props = {
   setStrikeHistory: React.Dispatch<React.SetStateAction<Strike[]>>;
   selectedPledge: string;
   setShowStrikesModal: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedWeek: string;
 }
 
 /*
@@ -22,7 +24,9 @@ type Props = {
 */
 
 
-export default function StrikeInput({ pledges, setPledges, setStrikeHistory, selectedPledge, setShowStrikesModal }: Props) {
+export default function StrikeInput(
+  { pledges, setPledges, setStrikeHistory, selectedPledge, setShowStrikesModal, selectedWeek }: Props
+) {
   const [reason, setReason] = useState('');
   const [amount, setAmount] = useState('');
 
@@ -59,14 +63,16 @@ export default function StrikeInput({ pledges, setPledges, setStrikeHistory, sel
           : pledge
     ));
 
-    // update strikeHistory array to rerender with the new strike
-    setStrikeHistory(prev => [{
-      id: strikeEvent.id,
-      amount: Number(amount),
-      reason,
-      createdAt: strikeEvent.createdAt,
-      createdBy: strikeEvent.createdBy
-    }, ...prev]);
+    // update strikeHistory array to rerender with the new strike only if it's the current week
+    if (addedToThisWeek(selectedWeek)) {
+      setStrikeHistory(prev => [{
+        id: strikeEvent.id,
+        amount: Number(amount),
+        reason,
+        createdAt: strikeEvent.createdAt,
+        createdBy: strikeEvent.createdBy
+      }, ...prev]);
+    }
 
     setReason('');
     setAmount('');
@@ -106,4 +112,15 @@ export default function StrikeInput({ pledges, setPledges, setStrikeHistory, sel
       </button>
     </div>
   );
+}
+
+function addedToThisWeek(selectedWeek: string) {
+  const [start, end] = selectedWeek.split(' - ');
+
+  const today = dayjs();
+  const startDate = dayjs(start);
+  const endDate = dayjs(end);
+
+  return (today.isAfter(startDate) && today.isBefore(endDate))
+    || today.isSame(startDate) || today.isSame(endDate);
 }

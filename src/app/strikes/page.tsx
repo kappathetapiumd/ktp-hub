@@ -133,6 +133,7 @@ export default function Strikes() {
               setStrikeHistory={setStrikeHistory}
               selectedPledge={selectedPledge}
               setShowStrikesModal={setShowStrikesModal}
+              selectedWeek={selectedWeek}
             />
             <WeeksSelect
               selectedWeek={selectedWeek}
