@@ -1,10 +1,12 @@
 import { useRouter } from 'next/navigation';
 
 import type { Pledge } from '@/lib/pledges';
+import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './PledgeSideBar.module.css';
 
 type Props = {
+  user: CurrentUser;
   pledges: Pledge[];
   totalStrikes: number;
   selectedPledge: string;
@@ -15,6 +17,7 @@ type Props = {
 
 export default function PledgeSideBar(
   {
+    user,
     pledges,
     totalStrikes,
     selectedPledge,
@@ -24,6 +27,7 @@ export default function PledgeSideBar(
   }: Props
 ) {
   const router = useRouter();
+  console.log(pledges);
   
   return (
     <>
@@ -75,12 +79,15 @@ export default function PledgeSideBar(
         <i className="fa-solid fa-bars"></i>
       </button>
 
-      <button
-        onClick={() => router.push('/users')}
-        className={styles['users-btn']}
-      >
-        <i className="fa-solid fa-tachograph-digital"></i>
-      </button>
+      
+      {(user.role === 'ADMIN' || user.role === 'OWNER') &&
+        <button
+          onClick={() => router.push('/users')}
+          className={styles['users-btn']}
+        >
+          <i className="fa-solid fa-tachograph-digital"></i>
+        </button>
+      }
     </>
   );
 }

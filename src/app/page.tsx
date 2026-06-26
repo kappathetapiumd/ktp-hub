@@ -1,9 +1,14 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import Login from '@/components/login/Login';
+import LoginPage from '@/components/login/LoginPage';
 
-export default function Home() {
-  return (
-    <Login />
-  );
+import { getCurrentUser } from '@/lib/auth/currentUser';
+
+export default async function Page() {
+  const client  = await getCurrentUser();
+
+  if (client && client.role !== 'NONE')
+    redirect('/strikes');
+
+  return <LoginPage />;
 }

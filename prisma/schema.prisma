@@ -22,22 +22,18 @@ enum Role {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
-  passwordHash String
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String
+  hashedPassword  String
+  salt            String
 
-  role         Role     @default(NONE)
-
+  role                Role     @default(NONE)
   membershipCommittee Boolean @default(false)
-
-  isActive     Boolean @default(true)
+  isActive            Boolean @default(true)
 
   pledgeStrikeEvents  StrikeEvent[] @relation("PledgeStrikeEvents")
   createdStrikeEvents StrikeEvent[] @relation("CreatedStrikeEvents")
-
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
 }
 
 model StrikeEvent {
@@ -53,7 +49,6 @@ model StrikeEvent {
   reason      String
 
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model StrikeTerm {
@@ -61,7 +56,13 @@ model StrikeTerm {
   
   startDate DateTime
   endDate   DateTime
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Session {
+  sessionId           String  @id @unique
+  userId              String
+  role                Role
+  membershipCommittee Boolean
+
+  expiresAt   DateTime
 }

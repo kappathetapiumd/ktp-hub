@@ -5,12 +5,14 @@ import { invalidStrike } from '@/lib/utils';
 
 import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
+import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './StrikeInput.module.css';
 
 // Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro officiis natus dolor vero repellat rem, autem quod dolorem amet ratione est voluptas, harum perspiciatis nobis sequi magni, eum corrupti praesentium.
 
 type Props = {
+  user: CurrentUser;
   pledges: Pledge[];
   setPledges: React.Dispatch<React.SetStateAction<Pledge[]>>;
   setStrikeHistory: React.Dispatch<React.SetStateAction<Strike[]>>;
@@ -28,6 +30,7 @@ type Props = {
 
 export default function StrikeInput(
   {
+    user,
     pledges,
     setPledges,
     setStrikeHistory,
@@ -55,7 +58,7 @@ export default function StrikeInput(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         pledgeId: selectedPledge,
-        createdById: 'nikhil',
+        createdById: user.id,
         amount: Number(amount),
         reason
       })
@@ -80,13 +83,17 @@ export default function StrikeInput(
         amount: Number(amount),
         reason,
         createdAt: strikeEvent.createdAt,
-        createdBy: strikeEvent.createdBy
+        createdBy: strikeEvent.createdBy,
+        createdById: strikeEvent.createdById
       }, ...prev]);
     }
 
     setReason('');
     setAmount('');
   }
+
+  // if not on membership committee, can't add strike
+  if (!user.membershipCommittee) return <></>;
 
   return (
     <div className={styles['strike-input-container']}>

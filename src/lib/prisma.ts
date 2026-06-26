@@ -12,68 +12,80 @@ export default prisma;
 const pledges = [{
   email: 'rsinupil@terpmail.umd.edu',
   name: 'Rishi Sinu Pillai',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'PLEDGE' as const
 }, {
   email: 'egriebl@terpmail.umd.edu',
   name: 'Eva Griebl',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'PLEDGE' as const
 }, {
   email: 'mjasti12@terpmail.umd.edu',
   name: 'Mahitha Jasti',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'PLEDGE' as const
 }, {
   email: 'ashah150@terpmail.umd.edu',
   name: 'Angad Shah',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'PLEDGE' as const
 }, {
   email: 'vsampath@terpmail.umd.edu',
   name: 'Vidhu Sampath',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'PLEDGE' as const
 }, {
   email: 'nimeesh@terpmail.umd.edu',
   name: 'Nimmesh Sharma',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'PLEDGE' as const
 }, {
   email: 'nshyam@terpmail.umd.edu',
   name: 'Nikhil Shyam',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'BROTHER' as const
 }];
 
 const users = [{
   email: 'hpadgett@terpmail.umd.edu',
   name: 'Harrison Padgett',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'OWNER' as const,
   membershipCommittee: true
 }, {
   email: 'asamaga@terpmail.umd.edu',
   name: 'Amogh Samaga',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'BROTHER' as const,
   membershipCommittee: true
 }, {
   email: 'cmathew5@terpmail.umd.edu',
   name: 'Christa Mathew',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'BROTHER' as const,
   membershipCommittee: false
 }, {
   email: 'echo1236@terpmail.umd.edu',
   name: 'Emma Cho',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'PCP_PCVP' as const,
   membershipCommittee: false
 }, {
   email: 'pverma1@terpmail.umd.edu',
   name: 'Pratham Verma',
-  passwordHash: 'test',
+  hashedPassword: 'test',
+  salt: 'test',
   role: 'NONE' as const,
   membershipCommittee: false
 }];

@@ -13,8 +13,8 @@ export type User = {
 
 export async function getUsers(isActive: boolean) {
   const users = await prisma.user.findMany({
-    where: { isActive }
-  });  
+    where: { isActive },
+  });
   
   return sortUsers(users);
 }  
@@ -45,7 +45,7 @@ export async function filterUsers(search: string, isActive: boolean) {
             : []),
         ],
       }),
-    },
+    }
   });
 
   return sortUsers(filteredUsers);
@@ -54,39 +54,61 @@ export async function filterUsers(search: string, isActive: boolean) {
 export async function updateMembership(
   id: string, membershipCommittee: boolean
 ) {
-  const updatedUser = await prisma.user.update({
-    where: { id },
-    data: { membershipCommittee }
-  });    
-  
-  return updatedUser;
+  await prisma.$transaction(async (tx) => {
+    await tx.user.update({
+        where: { id },
+        data: { membershipCommittee },
+    });
+
+    // update sessions
+    await tx.session.updateMany({
+      where: { userId: id },
+      data: { membershipCommittee }
+    });
+  });
 }  
 
 export async function setUserInactive(id: string) {
-  const inactiveUser = await prisma.user.update({
-    where: { id },
-    data: { isActive: false }
-  });  
+  await prisma.$transaction(async (tx) => {
+    await tx.user.update({
+      where: { id },
+      data: { isActive: false },
+    });
 
-  return inactiveUser;
+    // delete sessions
+    await tx.session.deleteMany({
+      where: { userId: id }
+    });
+  });
 }  
 
 export async function updateUser(
   id: string, name: string, email: string, role: Role
 ) {
-  const membershipCommittee = role.toString() === 'ADMIN'
+  const membershipCommittee = role === 'ADMIN';
 
-  const updatedUser = await prisma.user.update({
-    where: { id },
-    data: {
-      name,
-      email,
-      role,
-      membershipCommittee
-    }  
-  });  
+  await prisma.$transaction(async (tx) => {
+    await tx.user.update({
+      where: { id },
+      data: {
+        name,
+        email,
+        role,
+        membershipCommittee
+      }
+    });
 
-  return updatedUser;
+    // update sessions
+    await tx.session.updateMany({
+      where: { userId: id },
+      data: { 
+        role,
+        membershipCommittee
+      }
+    });
+  });
+
+  return membershipCommittee;
 }  
 
 export async function deleteInactiveUser(id: string) {

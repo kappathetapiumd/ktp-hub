@@ -1,10 +1,12 @@
 import dayjs from 'dayjs';
 
 import type { Strike } from '@/lib/strikes';
+import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './StrikeHistory.module.css';
 
 type Props = {
+  user: CurrentUser;
   strikeHistory: Strike[];
   totalStrikesPerWeek: number;
   setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,6 +17,7 @@ type Props = {
 
 export default function StrikeHistory(
   {
+    user,
     strikeHistory,
     totalStrikesPerWeek,
     setShowDeleteModal,
@@ -33,6 +36,11 @@ export default function StrikeHistory(
     setShowEditModal(true);
   }
 
+  const canViewHistory = user.role === 'PCP_PCVP' || user.role === 'BROTHER'
+    || user.membershipCommittee;
+
+  // console.log(strikeHistory);
+
   return (
     <div className={styles["strike-history-container"]}>
       <h1 className={styles["week-amount"]}>
@@ -48,11 +56,17 @@ export default function StrikeHistory(
       <div className={styles["horizontal-line"]}></div>
 
       <div className={styles['strike-card-list']}>
-        {!selectedPledge
+        {!canViewHistory
+          ? <p className={styles['info-message']}>
+              {`Pledges can't view Strike History.`}
+            </p>
+          : !selectedPledge
           ? <p className={styles['info-message']}>Please select a pledge.</p>
           : strikeHistory.length === 0
           ? <p className={styles['info-message']}>No strikes yet...</p>
-          : strikeHistory.map(({ id, amount, reason, createdBy, createdAt }) => (
+          : strikeHistory.map((
+              { id, amount, reason, createdBy, createdAt, createdById }
+            ) => (
               <div
                 key={id}
                 className={`
@@ -72,18 +86,24 @@ export default function StrikeHistory(
 
                     <div className={styles["footer"]}>
                       <div className={styles["update-btns"]}>
-                        <button
-                          onClick={() => handleDelete(id)}
-                          className={styles["delete-btn"]}
-                        >
-                          Delete
-                        </button>
-                        <button
-                          onClick={() => handleEdit(id)}
-                          className={styles["edit-btn"]}
-                        >
-                          Edit
-                        </button>
+                        {user.membershipCommittee &&
+                          <>
+                              <button
+                              onClick={() => handleDelete(id)}
+                              className={styles["delete-btn"]}
+                            >
+                              Delete
+                            </button>
+                            {user.id === createdById &&
+                              <button
+                                onClick={() => handleEdit(id)}
+                                className={styles["edit-btn"]}
+                              >
+                                Edit
+                              </button>
+                            }
+                          </>
+                        }
                       </div>
 
                       <div className={styles["meta"]}>

@@ -6,6 +6,7 @@ export type Strike = {
   reason: string;
   createdAt: string;
   createdBy: string;
+  createdById: string;
 }
 
 export async function addStrike(
@@ -26,7 +27,8 @@ export async function addStrike(
     amount,
     reason,
     createdAt: createdAt.toISOString(),
-    createdBy: createdBy.name
+    createdBy: createdBy.name,
+    createdById
   };
 }
 
@@ -44,7 +46,9 @@ export async function getStrikeHistory(pledgeId: string, week: string) {
       },
     },
     orderBy: { createdAt: 'desc' },
-    include: { createdBy: true }
+    include: {
+      createdBy: true
+    }
   });
 
   const strikeHistory = strikeEvents.map((strike) => ({
@@ -52,28 +56,25 @@ export async function getStrikeHistory(pledgeId: string, week: string) {
     amount: strike.amount,
     reason: strike.reason,
     createdAt: strike.createdAt,
-    createdBy: strike.createdBy.name
+    createdBy: strike.createdBy.name,
+    createdById: strike.createdById
   }))
 
   return strikeHistory;
 }
 
 export async function deleteStrike(id: string) {
-  const deletedStrike = await prisma.strikeEvent.delete({
+  await prisma.strikeEvent.delete({
     where: { id }
   });
-
-  return deletedStrike;
 }
 
 export async function updateStrike(id: string, amount: number, reason: string) {
-  const updatedStrike = await prisma.strikeEvent.update({
+  await prisma.strikeEvent.update({
     where: { id },
     data: {
       amount,
       reason
     }
   });
-
-  return updatedStrike;
 }

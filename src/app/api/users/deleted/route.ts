@@ -1,6 +1,12 @@
 import { deleteAllInactiveUsers, deleteInactiveUser, filterUsers, getUsers, setUserActive } from '@/lib/users';
+import { getCurrentUser } from '@/lib/auth/currentUser';
 
 export async function GET(request: Request) {
+  const client = await getCurrentUser();
+
+  if (!client || client.role !== 'OWNER')
+    return Response.json({ error: 'Unauthorized' });
+
   const { searchParams } = new URL(request.url);
 
   const search = searchParams.get('search');
@@ -17,6 +23,11 @@ export async function GET(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const client = await getCurrentUser();
+
+  if (!client || client.role !== 'OWNER')
+    return Response.json({ error: 'Unauthorized' });
+
   const { searchParams } = new URL(request.url);
 
   const userId = searchParams.get('userId');
@@ -29,11 +40,18 @@ export async function DELETE(request: Request) {
     return Response.json(deletedUser);
   }
 
-  const deletedUsers = await deleteAllInactiveUsers();
-  return Response.json(deletedUsers);
+  if (deleteAll === 'true') {
+    const deletedUsers = await deleteAllInactiveUsers();
+    return Response.json(deletedUsers);
+  }
 }
 
 export async function PUT(request: Request) {
+  const client = await getCurrentUser();
+
+  if (!client || client.role !== 'OWNER')
+    return Response.json({ error: 'Unauthorized' });
+
   const { userId } = await request.json();
 
   const activeUser = await setUserActive(userId);

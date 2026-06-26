@@ -1,8 +1,10 @@
 import type { User } from '@/lib/users';
+import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './UserList.module.css';
 
 type Props = {
+  user: CurrentUser;
   users: User[];
   setUserId: React.Dispatch<React.SetStateAction<string>>;
   isUpdating: boolean;
@@ -14,6 +16,7 @@ type Props = {
 
 export default function UserList(
   {
+    user,
     users,
     setUserId,
     isUpdating,
@@ -59,48 +62,55 @@ export default function UserList(
 
   return (
     <div className={styles['user-list']}>
-      {users.map(({ id, email, name, role, membershipCommittee }) => (
-        <div
-          key={id}
-          onClick={() => handleModification(id)}
-          className={`
-            ${styles['user-card']}
-            ${isUpdating || isDeleting ? styles['active'] : ''}
-            ${isDeleting ? styles['delete'] : ''}
-            ${isUpdating ? styles['update'] : ''}
-          `}
-        >
-          <div className={styles['user-info']}>
+      {users.map(({ id, email, name, role, membershipCommittee }) => {
+        const canModify = role !== 'OWNER'
+          && !(user.role === 'ADMIN' && role === 'ADMIN')
+
+        return (
+          <div
+            key={id}
+            onClick={() => canModify ? handleModification(id) : {}}
+            className={`
+              ${styles['user-card']}
+              ${canModify ? `
+                ${isUpdating || isDeleting ? styles['active'] : ''}
+                ${isDeleting ? styles['delete'] : ''}
+                ${isUpdating ? styles['update'] : ''}`
+              : ''}
+            `}
+          >
+            <div className={styles['user-info']}>
+              <span
+                className={`${styles['name']} ${styles[`${role.toLowerCase()}`]}`}
+              >
+                {name}
+              </span>
+              <span className={styles['email']}>{email}</span>
+            </div>
+
             <span
-              className={`${styles['name']} ${styles[`${role.toLowerCase()}`]}`}
+              className={`${styles['role']} ${styles[`${role.toLowerCase()}`]}`}
             >
-              {name}
+              {role !== 'PCP_PCVP' ? role : 'PCP/PCVP'}
             </span>
-            <span className={styles['email']}>{email}</span>
-          </div>
 
-          <span
-            className={`${styles['role']} ${styles[`${role.toLowerCase()}`]}`}
-          >
-            {role !== 'PCP_PCVP' ? role : 'PCP/PCVP'}
-          </span>
-
-          <button
-            onClick={() => updateMembership(id, membershipCommittee)}
-            disabled={role !== 'BROTHER' || isUpdating || isDeleting}
-            className={styles['membership-toggle']}
-          >
-            <i
-              className={`
-                fa-${membershipCommittee
-                  ? 'solid fa-square-check'
-                  : 'regular fa-square'}
-              `}
+            <button
+              onClick={() => updateMembership(id, membershipCommittee)}
+              disabled={role !== 'BROTHER' || isUpdating || isDeleting}
+              className={styles['membership-toggle']}
             >
-            </i>
-          </button>
-        </div>
-      ))}
+              <i
+                className={`
+                  fa-${membershipCommittee
+                    ? 'solid fa-square-check'
+                    : 'regular fa-square'}
+                `}
+              >
+              </i>
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }

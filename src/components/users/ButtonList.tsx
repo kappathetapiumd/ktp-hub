@@ -1,8 +1,11 @@
 import { useRouter } from 'next/navigation';
 
+import type { CurrentUser } from '@/lib/auth/currentUser';
+
 import styles from './ButtonList.module.css';
 
 type Props = {
+  user: CurrentUser
   isUpdating: boolean;
   setIsUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   isDeleting: boolean;
@@ -13,6 +16,7 @@ type Props = {
 
 export default function ButtonList(
   {
+    user,
     isUpdating,
     setIsUpdating,
     isDeleting,
@@ -63,24 +67,28 @@ export default function ButtonList(
         <i className="fa-solid fa-trash"></i>
       </button>
 
-      <button
-        onClick={() => setShowModal(true)}
-        className={styles['weeks-btn']}
-      >
-        {isActive
-          ? <i className="fa-regular fa-calendar"></i>
-          : <i className="fa-solid fa-dumpster"></i>}
-      </button>
+      {user.role === 'OWNER' &&
+        <>
+          <button
+            onClick={() => setShowModal(true)}
+            className={styles['weeks-btn']}
+          >
+            {isActive
+              ? <i className="fa-regular fa-calendar"></i>
+              : <i className="fa-solid fa-dumpster"></i>}
+          </button>
 
-      <button
-        onClick={() => isActive
-          ? router.push('/users/deleted')
-          : router.push('/users')
-        }
-        className={styles['users-btn']}
-      >
-        <i className={`fa-solid fa-users${isActive ? '-slash' : ''}`}></i>
-      </button>
+          <button
+            onClick={() => isActive
+              ? router.push('/users/deleted')
+              : router.push('/users')
+            }
+            className={styles['users-btn']}
+          >
+            <i className={`fa-solid fa-users${isActive ? '-slash' : ''}`}></i>
+          </button>
+        </>
+      }
     </div>
   );
 }

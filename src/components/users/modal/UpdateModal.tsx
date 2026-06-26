@@ -3,10 +3,12 @@ import { useState } from 'react';
 import { sortUsers } from '@/lib/utils';
 
 import type { User } from '@/lib/users';
+import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './Modal.module.css';
 
 type Props = {
+  user: CurrentUser
   userId: string;
   users: User[];
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
@@ -14,13 +16,13 @@ type Props = {
 }
 
 export default function UpdateModal(
-  { userId, users, setUsers, showModal }: Props
+  { user, userId, users, setUsers, showModal }: Props
 ) {
-  const user = users.find(user => user.id === userId)!;
+  const selectedUser = users.find(user => user.id === userId)!;
 
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
-  const [role, setRole] = useState(user.role);
+  const [name, setName] = useState(selectedUser.name);
+  const [email, setEmail] = useState(selectedUser.email);
+  const [role, setRole] = useState(selectedUser.role);
   const [showRoleSelect, setShowRowSelect] = useState(false);
 
   function changeRole(role: string) {
@@ -98,12 +100,14 @@ export default function UpdateModal(
                 ${!showRoleSelect ? styles['hide-role-select'] : ''}
               `}
             >
-              <button
-                onClick={() => changeRole('ADMIN')}
-                className={`${styles['role-btn']} ${styles['admin']}`}
-              >
-                ADMIN
-              </button>
+              {user.role === 'OWNER' &&
+                <button
+                  onClick={() => changeRole('ADMIN')}
+                  className={`${styles['role-btn']} ${styles['admin']}`}
+                >
+                  ADMIN
+                </button>
+              }
               <button
                 onClick={() => changeRole('BROTHER')}
                 className={`${styles['role-btn']} ${styles['brother']}`}

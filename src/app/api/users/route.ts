@@ -1,8 +1,14 @@
 import { filterUsers, getUsers, setUserInactive, updateMembership, updateUser } from '@/lib/users';
+import { getCurrentUser } from '@/lib/auth/currentUser';
 
 import type { Role } from '@/generated/prisma/enums';
 
 export async function GET(request: Request) {
+  const client = await getCurrentUser();
+
+  if (!client || !(client.role === 'OWNER' || client.role === 'ADMIN'))
+    return Response.json({ error: 'Unauthorized' });
+
   const { searchParams } = new URL(request.url);
 
   const search = searchParams.get('search');
@@ -19,12 +25,17 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const client = await getCurrentUser();
+
+  if (!client || !(client.role === 'OWNER' || client.role === 'ADMIN'))
+    return Response.json({ error: 'Unauthorized' });
+
   const { id, name, email, role, membershipCommittee } = await request.json();
 
   // clicking checkbox
   if (membershipCommittee !== undefined) {
-    const updatedUser = await updateMembership(id, membershipCommittee);
-    return Response.json(updatedUser);
+    await updateMembership(id, membershipCommittee);
+    return Response.json({ success: true });
   }
 
   // updating user
@@ -33,13 +44,18 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const client = await getCurrentUser();
+
+  if (!client || !(client.role === 'OWNER' || client.role === 'ADMIN'))
+    return Response.json({ error: 'Unauthorized' });
+    
   const { searchParams } = new URL(request.url);
 
   const userId = searchParams.get('userId');
 
   if (!userId) return;
 
-  const inactiveUser = await setUserInactive(userId);
+  await setUserInactive(userId);
 
-  return Response.json(inactiveUser);
+  return Response.json({ success: true });
 }

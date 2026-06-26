@@ -1,117 +1,19 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Dashboard from './Dashboard';
 
-import DeleteModal from '@/components/users/modal/DeleteModal';
-import ActiveModal from '@/components/users/modal/ActiveModal';
-import SearchBar from '@/components/users/SearchBar';
-import UserList from '@/components/users/UserList';
-import ButtonList from '@/components/users/ButtonList';
+import { convertToUser, getCurrentUser } from '@/lib/auth/currentUser';
 
-import type { User } from '@/lib/users';
+export default async function DeletedUserDashboard() {
+  const client = await getCurrentUser();
 
-import styles from './page.module.css';
+  if (!client || client.role === 'NONE')
+    redirect('/');
 
-export default function DeletedUserDashboard() {
-  const router = useRouter();
-  const [users, setUsers] = useState<User[]>([]);
-  const [userId, setUserId] = useState('');
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showActiveModal, setShowActiveModal] = useState(false);
-  const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
-  const isActive = false;
+  if (client.role !== 'OWNER')
+    redirect('/strikes');
 
-  useEffect(() => {
-    loadUsers();
+  const user = await convertToUser(client);
 
-    async function loadUsers() {
-      const response = await fetch('/api/users/deleted');
-
-      if (!response.ok) return;
-
-      const users = await response.json();
-
-      setUsers(users);
-    }
-  }, []);
-
-  return (
-    <>
-      {showDeleteModal &&
-        <DeleteModal
-          userId={userId}
-          setUsers={setUsers}
-          showModal={setShowDeleteModal}
-          isActive={isActive}
-          deleteAll={false}
-        />
-      }
-
-      {showActiveModal &&
-        <ActiveModal
-          userId={userId}
-          setUsers={setUsers}
-          showModal={setShowActiveModal}
-        />
-      }
-
-      {showDeleteAllModal &&
-        <DeleteModal
-          userId={userId}
-          setUsers={setUsers}
-          showModal={setShowDeleteAllModal}
-          isActive={isActive}
-          deleteAll={true}
-        />
-      }
-
-      {users.length > 0 ?
-        <div className={styles['users-container']}>
-          <div className={styles['search-bar-container']}>
-            <SearchBar
-              isActive={isActive}
-              setUsers={setUsers}
-            />
-          </div>
-
-          <div className={styles['user-list-container']}>
-            <UserList
-              users={users}
-              setUserId={setUserId}
-              isUpdating={isUpdating}
-              isDeleting={isDeleting}
-              setShowDeleteModal={setShowDeleteModal}
-              setShowUpdateModal={setShowActiveModal}
-              setUsers={setUsers}
-            />
-          </div>
-
-          <div className={styles['button-list-container']}>
-            <ButtonList
-              isUpdating={isUpdating}
-              setIsUpdating={setIsUpdating}
-              isDeleting={isDeleting}
-              setIsDeleting={setIsDeleting}
-              setShowModal={setShowDeleteAllModal}
-              isActive={isActive}
-            />
-          </div>
-        </div>
-
-        :
-        
-        <p className={styles['info-message']}>No deleted users.</p>
-      }
-
-      <button
-        onClick={() => router.push('/strikes')}
-        className={styles['dashboard-btn']}
-      >
-        <i className="fa-solid fa-tachograph-digital"></i>
-      </button>
-    </>
-  );
+  return <Dashboard user={user} />
 }
