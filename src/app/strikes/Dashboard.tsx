@@ -43,8 +43,22 @@ export default function Dashboard({ user }: Props) {
 
       if (!response.ok) return;
 
-      const pledges = await response.json();
+      const pledges: Pledge[] = await response.json();
       setPledges(pledges);
+    }
+  }, []);
+
+  // load the weeksD
+  useEffect(() => {
+    loadWeeks();
+
+    async function loadWeeks() {
+      const response = await fetch('/api/weeks');
+
+      if (!response.ok) return;
+
+      const weeks = await response.json();
+      setWeeks(weeks);
     }
   }, []);
 
@@ -150,7 +164,6 @@ export default function Dashboard({ user }: Props) {
             />
             <WeeksSelect
               weeks={weeks}
-              setWeeks={setWeeks}
               selectedWeek={selectedWeek}
               setSelectedWeek={setSelectedWeek}
             />

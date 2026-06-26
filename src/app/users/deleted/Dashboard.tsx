@@ -45,6 +45,14 @@ export default function Dashboard({ user }: Props) {
 
   return (
     <>
+      {showActiveModal &&
+        <ActiveModal
+          userId={userId}
+          setUsers={setUsers}
+          showModal={setShowActiveModal}
+        />
+      }
+
       {showDeleteModal &&
         <DeleteModal
           userId={userId}
@@ -52,15 +60,7 @@ export default function Dashboard({ user }: Props) {
           showModal={setShowDeleteModal}
           isActive={isActive}
           deleteAll={false}
-        />
-      }
-
-      {showActiveModal &&
-        <ActiveModal
-          userId={userId}
-          setUsers={setUsers}
-          showModal={setShowActiveModal}
-        />
+        />    
       }
 
       {showDeleteAllModal &&

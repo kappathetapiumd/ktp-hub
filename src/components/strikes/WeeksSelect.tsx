@@ -5,32 +5,18 @@ import styles from './WeeksSelect.module.css';
 
 type Props = {
   weeks: string[],
-  setWeeks: React.Dispatch<React.SetStateAction<string[]>>
   selectedWeek: string,
   setSelectedWeek: React.Dispatch<React.SetStateAction<string>>
 }
 
 export default function WeeksSelect(
-  { weeks, setWeeks, selectedWeek, setSelectedWeek }: Props
+  { weeks, selectedWeek, setSelectedWeek }: Props
 ) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isMouseDown = useRef(false);
   const hasDragged = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
-
-  useEffect(() => {
-    loadWeeks();
-
-    async function loadWeeks() {
-      const response = await fetch('/api/weeks');
-
-      if (!response.ok) return;
-
-      const weeks = await response.json();
-      setWeeks(weeks);
-    }
-  }, []);
 
   // select the current week based on today
   useEffect(() => {

@@ -39,8 +39,6 @@ export default function StrikeHistory(
   const canViewHistory = user.role === 'PCP_PCVP' || user.role === 'BROTHER'
     || user.membershipCommittee;
 
-  // console.log(strikeHistory);
-
   return (
     <div className={styles["strike-history-container"]}>
       <h1 className={styles["week-amount"]}>
@@ -94,7 +92,9 @@ export default function StrikeHistory(
                             >
                               Delete
                             </button>
-                            {user.id === createdById &&
+                            {(user.id === createdById
+                              || user.role === 'ADMIN'
+                              || user.role === 'OWNER') &&
                               <button
                                 onClick={() => handleEdit(id)}
                                 className={styles["edit-btn"]}

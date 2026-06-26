@@ -27,7 +27,6 @@ export default function PledgeSideBar(
   }: Props
 ) {
   const router = useRouter();
-  console.log(pledges);
   
   return (
     <>

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { invalidStrike } from '@/lib/utils';
 
@@ -36,12 +36,13 @@ export default function EditModal(
 
   const [reason, setReason] = useState(strike.reason);
   const [amount, setAmount] = useState(strike.amount.toString());
-  const originalAmount = useRef(strike.amount);
+  const originalAmount = strike.amount;
 
   async function editStrike() {
-    // if the updated strike amount will cause a pledge to have negative strikes, don't update
     const currentPledge = pledges.find(pledge => pledge.id === selectedPledge)!;
-    if (currentPledge.strikes + - originalAmount.current + Number(amount) < 0) {
+    
+    // if the updated strike amount will cause a pledge to have negative strikes, don't update
+    if (currentPledge.strikes - originalAmount + Number(amount) < 0) {
       setShowStrikesModal(true);
       return;
     }
@@ -72,7 +73,7 @@ export default function EditModal(
         pledge.id === selectedPledge
           ? {
               ...pledge,
-              strikes: pledge.strikes - originalAmount.current + Number(amount)
+              strikes: pledge.strikes - originalAmount + Number(amount)
             }
           : pledge
       ));

@@ -25,7 +25,7 @@ export default function DeleteModal(
 
     if (!response.ok) return;
 
-    const deletedStrike = await response.json();
+    const { amount: deletedAmount } = await response.json();
 
     // remove the deleted strikeEvent from strikeHistory array to rerender
     setStrikeHistory(prev => prev.filter(strike => strike.id !== strikeId));
@@ -34,7 +34,7 @@ export default function DeleteModal(
     setPledges(prev =>
       prev.map(pledge =>
         pledge.id === selectedPledge
-          ? { ...pledge, strikes: pledge.strikes - deletedStrike.amount }
+          ? { ...pledge, strikes: pledge.strikes - deletedAmount }
           : pledge
       ));
 

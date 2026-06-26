@@ -14,6 +14,11 @@ export type User = {
 export async function getUsers(isActive: boolean) {
   const users = await prisma.user.findMany({
     where: { isActive },
+    omit: {
+      hashedPassword: true,
+      salt: true,
+      isActive: true,
+    }
   });
   
   return sortUsers(users);
@@ -45,6 +50,11 @@ export async function filterUsers(search: string, isActive: boolean) {
             : []),
         ],
       }),
+    },
+    omit: {
+      hashedPassword: true,
+      salt: true,
+      isActive: true
     }
   });
 
@@ -55,7 +65,7 @@ export async function updateMembership(
   id: string, membershipCommittee: boolean
 ) {
   await prisma.$transaction(async (tx) => {
-    await tx.user.update({
+    await tx.user.updateMany({
         where: { id },
         data: { membershipCommittee },
     });
@@ -70,7 +80,7 @@ export async function updateMembership(
 
 export async function setUserInactive(id: string) {
   await prisma.$transaction(async (tx) => {
-    await tx.user.update({
+    await tx.user.updateMany({
       where: { id },
       data: { isActive: false },
     });
@@ -87,15 +97,16 @@ export async function updateUser(
 ) {
   const membershipCommittee = role === 'ADMIN';
 
-  await prisma.$transaction(async (tx) => {
-    await tx.user.update({
+  const updatedUser = await prisma.$transaction(async (tx) => {
+    const updatedUser = await tx.user.update({
       where: { id },
       data: {
         name,
         email,
         role,
         membershipCommittee
-      }
+      },
+      select: { membershipCommittee: true }
     });
 
     // update sessions
@@ -106,13 +117,15 @@ export async function updateUser(
         membershipCommittee
       }
     });
+
+    return updatedUser;
   });
 
-  return membershipCommittee;
+  return updatedUser;
 }  
 
 export async function deleteInactiveUser(id: string) {
-  const deletedUser = await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     await tx.strikeEvent.deleteMany({
       where: {
         'OR': [
@@ -122,29 +135,24 @@ export async function deleteInactiveUser(id: string) {
       }
     });
 
-    const deletedUser = await tx.user.delete({
+    await tx.user.deleteMany({
       where: { id }
     });
-
-    return deletedUser;
   })
-
-  return deletedUser;
 }
 
 export async function setUserActive(id: string) {
-  const activeUser = await prisma.user.update({
+  await prisma.user.updateMany({
     where: { id },
     data: { isActive: true }
   });
-
-  return activeUser;
 }
 
 export async function deleteAllInactiveUsers() {
-  const deletedUsers = await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     const inactiveUsers = await tx.user.findMany({
-      where: { isActive: false }
+      where: { isActive: false },
+      select: { id: true }
     });
 
     for (const user of inactiveUsers) {
@@ -157,13 +165,9 @@ export async function deleteAllInactiveUsers() {
         }
       });
 
-      await tx.user.delete({
+      await tx.user.deleteMany({
         where: { id: user.id }
       });
     }
-
-    return inactiveUsers;
   });
-
-  return deletedUsers;
 }

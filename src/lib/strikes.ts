@@ -19,7 +19,17 @@ export async function addStrike(
       amount,
       reason
     },
-    include: { createdBy: true }
+    omit: {
+      pledgeId: true,
+      createdById: true,
+      amount: true,
+      reason: true
+    },
+    include: {
+      createdBy: {
+        select: { name: true }
+      }
+    }
   });
 
   return {
@@ -45,9 +55,12 @@ export async function getStrikeHistory(pledgeId: string, week: string) {
         lte: endDate
       },
     },
+    omit: { pledgeId: true },
     orderBy: { createdAt: 'desc' },
     include: {
-      createdBy: true
+      createdBy: {
+        select: { name: true }
+      }
     }
   });
 
@@ -64,13 +77,16 @@ export async function getStrikeHistory(pledgeId: string, week: string) {
 }
 
 export async function deleteStrike(id: string) {
-  await prisma.strikeEvent.delete({
-    where: { id }
+  const deletedStrike = await prisma.strikeEvent.delete({
+    where: { id },
+    select: { amount: true }
   });
+
+  return deletedStrike;
 }
 
 export async function updateStrike(id: string, amount: number, reason: string) {
-  await prisma.strikeEvent.update({
+  await prisma.strikeEvent.updateMany({
     where: { id },
     data: {
       amount,

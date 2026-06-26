@@ -9,8 +9,6 @@ import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './StrikeInput.module.css';
 
-// Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro officiis natus dolor vero repellat rem, autem quod dolorem amet ratione est voluptas, harum perspiciatis nobis sequi magni, eum corrupti praesentium.
-
 type Props = {
   user: CurrentUser;
   pledges: Pledge[];
@@ -21,12 +19,6 @@ type Props = {
   selectedWeek: string;
   weeks: string[];
 }
-
-/*
-************** TODO **************
-- can't add strike if current date is past last date
-*/
-
 
 export default function StrikeInput(
   {
@@ -44,10 +36,9 @@ export default function StrikeInput(
   const [amount, setAmount] = useState('');
 
   async function addStrike() {
-    // when logging in, each user will have a name, id, etc. so look into simplifying my prisma
-
-    // if total strikes for a pledge will be negative, don't add the strike
     const currentPledge = pledges.find(pledge => pledge.id === selectedPledge)!;
+    
+    // if total strikes for a pledge will be negative, don't add the strike
     if (currentPledge.strikes + Number(amount) < 0) {
       setShowStrikesModal(true);
       return;
@@ -76,7 +67,8 @@ export default function StrikeInput(
           : pledge
     ));
 
-    // update strikeHistory array to rerender with the new strike only if it's the current week
+    // update strikeHistory array to rerender with the new strike only if it's 
+    // the current week
     if (addedToThisWeek(selectedWeek)) {
       setStrikeHistory(prev => [{
         id: strikeEvent.id,

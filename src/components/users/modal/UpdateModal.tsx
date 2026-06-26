@@ -67,7 +67,11 @@ export default function UpdateModal(
   }
 
   return (
-    <div onKeyDown={e => closeRowSelect(e)} className={styles['modal-overlay']}>
+    <div
+      onClick={() => showRoleSelect && setShowRowSelect(false)}
+      onKeyDown={e => closeRowSelect(e)}
+      className={styles['modal-overlay']}
+    >
       <div className={styles['modal-container']}>
         <div className={styles['user-content']}>
           <input

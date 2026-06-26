@@ -13,9 +13,21 @@ export async function getPledges() {
         { role: 'PLEDGE' },
         { role: 'PCP_PCVP' }
       ],
+      isActive: true,
+    },
+    omit: {
+      email: true,
+      hashedPassword: true,
+      salt: true,
+      role: true,
+      membershipCommittee: true,
       isActive: true
     },
-    include: { pledgeStrikeEvents: true }
+    include: {
+      pledgeStrikeEvents: {
+        select: { amount: true }
+      }
+    }
   });
 
   const pledgesWithTotals = pledges.map((pledge) => ({
