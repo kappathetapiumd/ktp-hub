@@ -14,6 +14,8 @@ export default function DeleteModal(
   { userId, setUsers, showModal, isActive, deleteAll }: Props
 ) {
   async function deleteUser() {
+    showModal(false);
+
     const params = new URLSearchParams({
       userId,
       deleteAll: deleteAll.toString()
@@ -33,8 +35,6 @@ export default function DeleteModal(
         prev.filter(user => user.id !== userId)
       );
     }
-
-    showModal(false);
   }
 
   return (

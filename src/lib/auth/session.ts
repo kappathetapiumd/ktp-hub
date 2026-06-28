@@ -40,8 +40,7 @@ async function addSession(
       role: user.role,
       membershipCommittee: user.membershipCommittee,
       expiresAt
-    },
-    select: {}
+    }
   });
 }
 

@@ -17,8 +17,7 @@ export async function createStrikeTerm(startDate: string, endDate: string) {
       data: {
         startDate: new Date(startDate),
         endDate: new Date(endDate)
-      },
-      select: {}
+      }
     });
   });
 }

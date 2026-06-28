@@ -18,6 +18,8 @@ type Props = {
 export default function UpdateModal(
   { user, userId, users, setUsers, showModal }: Props
 ) {
+  showModal(false);
+
   const selectedUser = users.find(user => user.id === userId)!;
 
   const [name, setName] = useState(selectedUser.name);
@@ -62,8 +64,6 @@ export default function UpdateModal(
     setUsers(prev =>
       sortUsers(prev)
     );
-
-    showModal(false);
   }
 
   return (

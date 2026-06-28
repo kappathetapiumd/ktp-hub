@@ -81,6 +81,13 @@ export default function Dashboard({ user }: Props) {
               setUsers={setUsers}
             />
           }
+
+          <button
+            onClick={() => router.push('/strikes')}
+            className={styles['dashboard-btn']}
+          >
+            <i className="fa-solid fa-tachograph-digital"></i>
+          </button>
         </div>
 
         <div className={styles['user-list-container']}>
@@ -114,13 +121,6 @@ export default function Dashboard({ user }: Props) {
           />
         </div>
       </div>
-
-      <button
-        onClick={() => router.push('/strikes')}
-        className={styles['dashboard-btn']}
-      >
-        <i className="fa-solid fa-tachograph-digital"></i>
-      </button>
     </>
   );
 }

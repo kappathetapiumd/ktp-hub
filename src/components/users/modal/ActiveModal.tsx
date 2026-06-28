@@ -10,6 +10,8 @@ type Props = {
 
 export default function ActiveModal({ userId, setUsers, showModal }: Props) {
   async function setUserActive() {
+    showModal(false);
+
     const response = await fetch('/api/users/deleted', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -23,8 +25,6 @@ export default function ActiveModal({ userId, setUsers, showModal }: Props) {
     setUsers(prev =>
       prev.filter(user => user.id !== userId)
     );
-
-    showModal(false);
   }
 
   return (
