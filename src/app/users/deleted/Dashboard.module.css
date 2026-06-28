@@ -78,17 +78,29 @@ body {
 }
 
 @media (max-width: 520px) {
+  .users-container {
+    position: fixed;
+    inset: 0;
+
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
   .search-bar-container {
     padding: var(--spacing-3) var(--spacing-3) 0;
   }
 
   .user-list-container {
+    min-height: 0;
+    overflow: hidden;
     padding: var(--spacing-3);
   }
 
   .button-list-container {
-    padding: var(--spacing-3) 0;
-    margin-bottom: 25px;
+    padding: var(--spacing-3) 0 calc(var(--spacing-3) + env(safe-area-inset-bottom));
+    margin-bottom: 10px;
   }
 
   .dashboard-btn {

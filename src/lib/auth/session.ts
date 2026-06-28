@@ -23,7 +23,7 @@ export async function createUserSession(user: UserSession, cookies: ReadonlyRequ
 
   cookies.set(COOKIE_SESSION_KEY, sessionId, {
     httpOnly: true,
-    secure: true,
+    secure: false, // has to be true for production
     sameSite: 'lax',
     expires: expiresAt,
     path: '/'
@@ -40,7 +40,8 @@ async function addSession(
       role: user.role,
       membershipCommittee: user.membershipCommittee,
       expiresAt
-    }
+    },
+    select: {}
   });
 }
 
@@ -60,7 +61,12 @@ async function getUserSessionById(sessionId: string) {
   });
 
   const user = await prisma.session.findFirst({
-    where: { sessionId }
+    where: { sessionId },
+    select: {
+      userId: true,
+      role: true,
+      membershipCommittee: true
+    }
   });
 
   return user;

@@ -48,28 +48,30 @@
 
 @media (max-width: 520px) {
   .dashboard {
-    height: auto;
-    min-height: 100dvh;
-    overflow: visible;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
 
   .sidebar {
     position: static;
     width: auto;
-    height: auto;
+    height: 0;
     overflow: visible;
   }
 
   .dashboard-main {
-    position: static;
+    position: fixed;
+    inset: 0;
 
     height: auto;
-    min-height: 100dvh;
+    min-height: 0;
 
     padding: var(--spacing-4) 5px;
     gap: var(--spacing-4);
 
-    overflow: visible;
+    overflow: hidden;
 
     margin-left: 0;
   }
@@ -79,11 +81,11 @@
   }
 
   .history-wrapper {
-    min-height: auto;
-    flex: none;
-    overflow: visible;
+    min-height: 0;
+    flex: 1;
+    overflow: hidden;
     padding: 0 5px;
 
-    margin-right: -3px
+    margin-right: -3px;
   }
 }
