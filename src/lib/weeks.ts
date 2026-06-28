@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 export async function createStrikeTerm(startDate: string, endDate: string) {
   await prisma.$transaction(async (tx) => {
     const oldStrikeTerm = await tx.strikeTerm.findFirst({
-      select: {}
+      select: { id: true }
     });
 
     if (oldStrikeTerm !== null) {
