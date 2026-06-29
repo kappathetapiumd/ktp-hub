@@ -4,6 +4,7 @@ import crypto from 'crypto';
 
 import type { Role } from '@/generated/prisma/enums';
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
+import { NextRequest } from 'next/server';
 
 export type UserSession = {
   id: string;
@@ -44,7 +45,9 @@ async function addSession(
   });
 }
 
-export function getUserFromSession(cookies: ReadonlyRequestCookies) {
+export function getUserFromSession(
+  cookies: ReadonlyRequestCookies | NextRequest['cookies']
+) {
   const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
 
   if (!sessionId) return null;

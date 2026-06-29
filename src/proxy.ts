@@ -1,0 +1,133 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+import { getUserFromSession } from '@/lib/auth/session';
+
+// pledges - GET
+// weeks - GET
+// strikes - GET (pledges - only total and total per week)
+const pledgePcpBrotherRoutes =
+  ['/strikes', '/api/strikes', '/api/pledges', '/api/weeks'];
+
+// strikes - POST, PUT, DELETE
+const membershipRoutes = [...pledgePcpBrotherRoutes];
+
+// users - GET, PUT, DELETE
+const adminRoutes = [...membershipRoutes, '/users', '/api/users'];
+
+// weeks - POST
+// users/deleted - GET, PUT, DELETE
+const ownerRoutes = [...adminRoutes, '/users/deleted', '/api/users/deleted'];
+
+export async function proxy(request: NextRequest) {
+  const user = await getUserFromSession(request.cookies);
+  const path = request.nextUrl.pathname;
+  const apiCall = path.startsWith('/api');
+
+  if (path === '/api/auth/signin' || path === '/api/auth/signup')
+    return NextResponse.next();
+
+  if (!user) {
+    if (apiCall)
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    if (path !== '/')
+      return NextResponse.redirect(new URL('/', request.url));
+
+    return NextResponse.next();
+  }
+
+  if (path === '/limbo')
+    return NextResponse.next();
+
+  if (user.role === 'NONE') {
+    return apiCall
+      ? NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      : NextResponse.redirect(new URL('/limbo', request.url));
+  }
+
+  if (user.role === 'OWNER')
+    return ownerAuth(path, apiCall, request);
+
+  if (user.role === 'ADMIN')
+    return adminAuth(path, apiCall, request);  
+
+  if (user.membershipCommittee)
+    return membershipAuth(path, apiCall, request);   
+  
+  if (user.role === 'PLEDGE' || user.role === 'PCP_PCVP'
+    || user.role === 'BROTHER')
+    return brotherPcpAuth(path, apiCall, request);
+
+  return deny('/', apiCall, request);
+}
+
+function brotherPcpAuth(
+  path: string, apiCall: boolean, request: NextRequest
+) {
+  if (!pledgePcpBrotherRoutes.includes(path))
+    return deny('/strikes', apiCall, request);
+
+  if (apiCall && request.method !== 'GET')
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  return NextResponse.next();
+}
+
+function membershipAuth(
+  path: string, apiCall: boolean, request: NextRequest
+) {
+  if (!membershipRoutes.includes(path))
+    return deny('/strikes', apiCall, request);
+
+  if (path === '/api/weeks' && request.method !== 'GET')
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  return NextResponse.next();
+}
+
+function adminAuth(
+  path: string, apiCall: boolean, request: NextRequest
+) {
+  if (!adminRoutes.includes(path))
+    return deny('/strikes', apiCall, request);
+
+  if (path === '/api/weeks' && request.method !== 'GET')
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  if (path === '/api/users' && request.method === 'POST')
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  return NextResponse.next();
+}
+
+function ownerAuth(
+  path: string, apiCall: boolean, request: NextRequest
+) {
+  if (!ownerRoutes.includes(path))
+    return deny('/strikes', apiCall, request);
+
+  if (path === '/api/weeks'
+    && (request.method === 'PUT' || request.method === 'DELETE'))
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  if (path.includes('/api/users') && request.method === 'POST')
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  return NextResponse.next();
+}
+
+function deny(
+  redirect: string, apiCall: boolean, request: NextRequest
+) {
+  if (apiCall)
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  return NextResponse.redirect(new URL(redirect, request.url));
+}
+
+export const config = {
+  matcher : [
+    // skip next js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)'
+  ]
+}

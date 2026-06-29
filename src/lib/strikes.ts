@@ -71,9 +71,14 @@ export async function getStrikeHistory(pledgeId: string, week: string) {
     createdAt: strike.createdAt,
     createdBy: strike.createdBy.name,
     createdById: strike.createdById
-  }))
+  }));
 
-  return strikeHistory;
+  const totalStrikesPerWeek = strikeHistory.reduce(
+    (sum, strike) => sum + strike.amount,
+    0
+  );
+
+  return { strikeHistory, totalStrikesPerWeek };
 }
 
 export async function deleteStrike(id: string) {

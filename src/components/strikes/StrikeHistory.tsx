@@ -36,8 +36,7 @@ export default function StrikeHistory(
     setShowEditModal(true);
   }
 
-  const canViewHistory = user.role === 'PCP_PCVP' || user.role === 'BROTHER'
-    || user.membershipCommittee;
+  const isPledge = user.role === 'PLEDGE';
 
   return (
     <div className={styles["strike-history-container"]}>
@@ -54,12 +53,12 @@ export default function StrikeHistory(
       <div className={styles["horizontal-line"]}></div>
 
       <div className={styles['strike-card-list']}>
-        {!canViewHistory
-          ? <p className={styles['info-message']}>
+        {!selectedPledge
+          ? <p className={styles['info-message']}>Please select a pledge.</p>
+          : isPledge
+          ? < p className={styles['info-message']}>
               {`Pledges can't view Strike History.`}
             </p>
-          : !selectedPledge
-          ? <p className={styles['info-message']}>Please select a pledge.</p>
           : strikeHistory.length === 0
           ? <p className={styles['info-message']}>No strikes yet...</p>
           : strikeHistory.map((

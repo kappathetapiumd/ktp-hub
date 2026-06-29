@@ -16,15 +16,16 @@ import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
 import type { CurrentUser } from '@/lib/auth/currentUser'; 
 
-import styles from './Dashboard.module.css';
+import styles from './StrikeDashboard.module.css';
 
 type Props = {
   user: CurrentUser;
 }
 
-export default function Dashboard({ user }: Props) {
+export default function StrikeDashboard({ user }: Props) {
   const [pledges, setPledges] = useState<Pledge[]>([]);
   const [strikeHistory, setStrikeHistory] = useState<Strike[]>([]);
+  const [totalStrikesPerWeek, setTotalStrikesPerWeek] = useState(0);
   const [weeks, setWeeks] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedPledge, setSelectedPledge] = useState('');
@@ -43,7 +44,7 @@ export default function Dashboard({ user }: Props) {
 
       if (!response.ok) return;
 
-      const pledges: Pledge[] = await response.json();
+      const pledges = await response.json();
       setPledges(pledges);
     }
   }, []);
@@ -78,9 +79,12 @@ export default function Dashboard({ user }: Props) {
 
       if (!response.ok) return;
 
-      const strikeHistory = await response.json();
+      const { strikeHistory, totalStrikesPerWeek } = await response.json();
 
-      setStrikeHistory(strikeHistory);
+      setTotalStrikesPerWeek(totalStrikesPerWeek);
+
+      if (strikeHistory)
+        setStrikeHistory(strikeHistory);
     }
   }, [selectedPledge, selectedWeek]);
 
@@ -88,11 +92,6 @@ export default function Dashboard({ user }: Props) {
 
   const totalStrikes = pledges.reduce(
     (sum, pledge) => sum + pledge.strikes,
-    0
-  );
-
-  const totalStrikesPerWeek = strikeHistory.reduce(
-    (sum, strike) => sum + strike.amount,
     0
   );
 

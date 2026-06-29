@@ -1,16 +1,9 @@
-import { redirect } from 'next/navigation';
-
-import Dashboard from './Dashboard';
+import StrikeDashboard from './StrikeDashboard';
 
 import { convertToUser, getCurrentUser } from '@/lib/auth/currentUser';
 
 export default async function Page() {
-  const client = await getCurrentUser();
+  const user = await convertToUser((await getCurrentUser())!);
 
-  if (!client || client.role === 'NONE')
-    redirect('/');
-
-  const user = await convertToUser(client);
-
-  return <Dashboard user={user} />
+  return <StrikeDashboard user={user} />
 }

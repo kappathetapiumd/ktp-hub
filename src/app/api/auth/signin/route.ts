@@ -10,13 +10,12 @@ export async function POST(request: Request) {
   const user = await getUser(email);
 
   if (!user)
-    return Response.json({ error: 'No user exists with that email.', time: 1.5 });
+    return Response.json({ error: 'No user exists with that email.' });
   
   if (!user.isActive)
     return Response.json({
       error: `This account has been deactivated.
         Please have the owner reinstate the account.`,
-      time: 3.5
     });
 
   const isCorrectPassword = await comparePassword(
@@ -26,7 +25,7 @@ export async function POST(request: Request) {
   );
 
   if (!isCorrectPassword)
-    return Response.json({ error: 'Incorrect password.', time: 1.5 });
+    return Response.json({ error: 'Incorrect password.' });
 
   await createUserSession(user, await cookies());
 

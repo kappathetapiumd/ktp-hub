@@ -1,18 +1,9 @@
-import { redirect } from 'next/navigation';
+import UserDashboard from './UserDashboard';
 
 import { convertToUser, getCurrentUser } from '@/lib/auth/currentUser';
-import Dashboard from './Dashboard';
 
 export default async function Page() {
-  const client = await getCurrentUser();
+  const user = await convertToUser((await getCurrentUser())!);
 
-  if (!client || client.role === 'NONE')
-    redirect('/');
-
-  if (client.role !== 'ADMIN' && client.role !== 'OWNER')
-    redirect('/strikes');
-
-  const user = await convertToUser(client);
-
-  return <Dashboard user={user} />
+  return <UserDashboard user={user} />
 }

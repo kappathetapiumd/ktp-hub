@@ -1,3 +1,5 @@
+import { getCurrentUser } from '@/lib/auth/currentUser';
+import { getUserFromSession } from '@/lib/auth/session';
 import { addStrike, deleteStrike, getStrikeHistory, updateStrike } from '@/lib/strikes';
 
 export async function POST(request: Request) {
@@ -8,7 +10,9 @@ export async function POST(request: Request) {
   return Response.json(newStrikeEvent);
 }
 
-export async function GET(request: Request) {  
+export async function GET(request: Request) {
+  const user = (await getCurrentUser())!;
+
   const { searchParams } = new URL(request.url);
 
   const pledgeId = searchParams.get('pledgeId');
@@ -16,9 +20,15 @@ export async function GET(request: Request) {
 
   if (!pledgeId || !week) return Response.json([]);
 
-  const strikeHistory = await getStrikeHistory(pledgeId, week);
+  const strikeHistoryInfo = await getStrikeHistory(pledgeId, week);
+
+  if (user.role === 'PLEDGE') {
+    return Response.json({
+      totalStrikesPerWeek: strikeHistoryInfo.totalStrikesPerWeek
+    });
+  }
   
-  return Response.json(strikeHistory);
+  return Response.json(strikeHistoryInfo);
 }
 
 export async function DELETE(request: Request) {

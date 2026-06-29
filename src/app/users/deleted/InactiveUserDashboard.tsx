@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import DeleteModal from '@/components/users/modal/DeleteModal';
-import UpdateModal from '@/components/users/modal/UpdateModal';
-import WeekModal from '@/components/users/modal/WeekModal';
+import ActiveModal from '@/components/users/modal/ActiveModal';
 import SearchBar from '@/components/users/SearchBar';
 import UserList from '@/components/users/UserList';
 import ButtonList from '@/components/users/ButtonList';
@@ -13,28 +12,28 @@ import ButtonList from '@/components/users/ButtonList';
 import type { User } from '@/lib/users';
 import type { CurrentUser } from '@/lib/auth/currentUser';
 
-import styles from './Dashboard.module.css';
+import styles from '../UserDashboard.module.css';
 
 type Props = {
   user: CurrentUser
 }
 
-export default function Dashboard({ user }: Props) {
+export default function InactiveUserDashboard({ user }: Props) {
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [userId, setUserId] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [showWeekModal, setShowWeekModal] = useState(false);
-  const isActive = true;
+  const [showActiveModal, setShowActiveModal] = useState(false);
+  const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
+  const isActive = false;
 
   useEffect(() => {
     loadUsers();
 
     async function loadUsers() {
-      const response = await fetch('/api/users');
+      const response = await fetch('/api/users/deleted');
 
       if (!response.ok) return;
 
@@ -46,6 +45,14 @@ export default function Dashboard({ user }: Props) {
 
   return (
     <>
+      {showActiveModal &&
+        <ActiveModal
+          userId={userId}
+          setUsers={setUsers}
+          showModal={setShowActiveModal}
+        />
+      }
+
       {showDeleteModal &&
         <DeleteModal
           userId={userId}
@@ -53,31 +60,27 @@ export default function Dashboard({ user }: Props) {
           showModal={setShowDeleteModal}
           isActive={isActive}
           deleteAll={false}
-        />
+        />    
       }
 
-      {showUpdateModal &&
-        <UpdateModal
-          user={user}
+      {showDeleteAllModal &&
+        <DeleteModal
           userId={userId}
-          users={users}
           setUsers={setUsers}
-          showModal={setShowUpdateModal}
-        />
-      }
-
-      {showWeekModal &&
-        <WeekModal
-          showModal={setShowWeekModal}
+          showModal={setShowDeleteAllModal}
+          isActive={isActive}
+          deleteAll={true}
         />
       }
 
       <div className={styles['users-container']}>
         <div className={styles['search-bar-container']}>
-          <SearchBar
-            isActive={isActive}
-            setUsers={setUsers}
-          />
+          {users.length > 0 &&
+            <SearchBar
+              isActive={isActive}
+              setUsers={setUsers}
+            />
+          }
 
           <button
             onClick={() => router.push('/strikes')}
@@ -88,17 +91,23 @@ export default function Dashboard({ user }: Props) {
         </div>
 
         <div className={styles['user-list-container']}>
-          <UserList
-            user={user}
-            users={users}
-            setUserId={setUserId}
-            isUpdating={isUpdating}
-            isDeleting={isDeleting}
-            setShowDeleteModal={setShowDeleteModal}
-            setShowUpdateModal={setShowUpdateModal}
-            setUsers={setUsers}
-          />
+          {users.length > 0 &&
+            <UserList
+              user={user}
+              users={users}
+              setUserId={setUserId}
+              isUpdating={isUpdating}
+              isDeleting={isDeleting}
+              setShowDeleteModal={setShowDeleteModal}
+              setShowUpdateModal={setShowActiveModal}
+              setUsers={setUsers}
+            />
+          }
         </div>
+        
+        {users.length === 0 && 
+          <p className={styles['info-message']}>No deleted users.</p>
+        }
 
         <div className={styles['button-list-container']}>
           <ButtonList
@@ -107,7 +116,7 @@ export default function Dashboard({ user }: Props) {
             setIsUpdating={setIsUpdating}
             isDeleting={isDeleting}
             setIsDeleting={setIsDeleting}
-            setShowModal={setShowWeekModal}
+            setShowModal={setShowDeleteAllModal}
             isActive={isActive}
           />
         </div>

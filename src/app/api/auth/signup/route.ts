@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const existingUser = await getUser(email);
 
   if (existingUser)
-    return Response.json({ error: 'User already exists.', time: 2 });
+    return Response.json({ error: 'User already exists.' });
 
   const salt = generateSalt();
   const hashedPassword = await hashPassword(password, salt);
