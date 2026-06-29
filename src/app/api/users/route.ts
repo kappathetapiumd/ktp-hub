@@ -1,4 +1,4 @@
-import { filterUsers, getUsers, setUserInactive, updateMembership, updateUser } from '@/lib/users';
+import { filterUsers, getUsers, setUserInactive, updateMembership, updateUser, transferOwnership } from '@/lib/users';
 
 import type { Role } from '@/generated/prisma/enums';
 
@@ -19,11 +19,18 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { id, name, email, role, membershipCommittee } = await request.json();
+  const { id, name, email, role, membershipCommittee, transfer }
+    = await request.json();
 
   // clicking checkbox
   if (membershipCommittee !== undefined) {
     await updateMembership(id, membershipCommittee);
+    return Response.json({ success: true });
+  }
+
+  // transfering ownership
+  if (transfer !== undefined) {
+    await transferOwnership(email);
     return Response.json({ success: true });
   }
 

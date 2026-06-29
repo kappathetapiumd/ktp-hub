@@ -64,6 +64,41 @@ body {
   transform: translateY(-1px);
 }
 
+.ownership-btn {
+  position: fixed;
+  right: 10px;
+  bottom: 35px;
+  z-index: 50;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+  padding: 0 var(--spacing-4);
+
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0;
+  background: #dc2626;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ownership-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.ownership-btn:focus-visible {
+  outline: 3px solid rgba(248, 113, 113, 0.55);
+  outline-offset: 3px;
+}
+
 .info-message {
   position: absolute;
   top: 50%;
@@ -118,5 +153,9 @@ body {
 
     width: 42px;
     height: 42px;
+  }
+
+  .ownership-btn {
+    display: none;
   }
 }

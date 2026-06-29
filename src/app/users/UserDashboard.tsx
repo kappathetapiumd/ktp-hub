@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import DeleteModal from '@/components/users/modal/DeleteModal';
 import UpdateModal from '@/components/users/modal/UpdateModal';
 import WeekModal from '@/components/users/modal/WeekModal';
+import OwnerModal from '@/components/users/modal/OwnerModal';
 import SearchBar from '@/components/users/SearchBar';
 import UserList from '@/components/users/UserList';
 import ButtonList from '@/components/users/ButtonList';
@@ -28,6 +29,7 @@ export default function UserDashboard({ user }: Props) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showWeekModal, setShowWeekModal] = useState(false);
+  const [showOwnerModal, setShowOwnerModal] = useState(false);
   const isActive = true;
 
   useEffect(() => {
@@ -70,6 +72,22 @@ export default function UserDashboard({ user }: Props) {
         <WeekModal
           showModal={setShowWeekModal}
         />
+      }
+
+      {showOwnerModal &&
+        <OwnerModal
+          users={users}
+          showModal={setShowOwnerModal}
+        />
+      }
+
+      {user.role === 'OWNER' &&
+        <button
+          onClick={() => setShowOwnerModal(true)}
+          className={styles['ownership-btn']}
+        >
+          Transfer Ownership
+        </button>
       }
 
       <div className={styles['users-container']}>

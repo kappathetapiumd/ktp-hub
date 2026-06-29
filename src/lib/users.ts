@@ -171,3 +171,28 @@ export async function deleteAllInactiveUsers() {
     }
   });
 }
+
+export async function transferOwnership(email: string) {
+  await prisma.$transaction(async (tx) => {
+    await tx.user.updateMany({
+      where: { role: 'OWNER' },
+      data: { role: 'ADMIN' }
+    });
+
+    const newOwner = await tx.user.update({
+      where: { email },
+      data: { role: 'OWNER', membershipCommittee: true },
+      select: { id: true }
+    });
+
+    await tx.session.updateMany({
+      where: { role: 'OWNER' },
+      data: { role: 'ADMIN' }
+    });
+
+    await tx.session.updateMany({
+      where: { userId: newOwner.id },
+      data: { role: 'OWNER', membershipCommittee: true }
+    });
+  });
+}
