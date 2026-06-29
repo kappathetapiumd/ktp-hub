@@ -35,7 +35,7 @@ export default function LoginPage() {
     } else {
       response = await fetch('/api/auth/signin', {
         method: 'POST',
-        headers: { 'Content-Type': 'applcation/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
           password
@@ -45,17 +45,18 @@ export default function LoginPage() {
 
     if (!response.ok) return;
 
-    const { success, error } = await response.json();
+    const { success, error, role } = await response.json();
 
     if (error) {
-      router.push(`/limbo?message=${error}`);
+      router.push(`/limbo?message=${encodeURIComponent(error)}`);
+      return;
     }
 
     if (success) {
-      if (isLogin)
-        router.push('/strikes');
-      else
+      if (!isLogin || role === 'NONE')
         router.push('/limbo')
+      else
+        router.push('/strikes');
     }
   }
 
@@ -95,6 +96,7 @@ export default function LoginPage() {
             <input
               value={password}
               onChange={e => setPassword(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAuth()}
               type="password"
               placeholder="Password"
               suppressHydrationWarning

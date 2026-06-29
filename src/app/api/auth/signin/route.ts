@@ -29,5 +29,5 @@ export async function POST(request: Request) {
 
   await createUserSession(user, await cookies());
 
-  return Response.json({ success: true });
+  return Response.json({ success: true, role: user.role });
 }

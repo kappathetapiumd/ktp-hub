@@ -22,6 +22,9 @@ export async function proxy(request: NextRequest) {
   const user = await getUserFromSession(request.cookies);
   const path = request.nextUrl.pathname;
   const apiCall = path.startsWith('/api');
+  const loginPage = path === '/';
+  const limboPage = path === '/limbo';
+  const authErrorPage = limboPage && request.nextUrl.searchParams.has('message');
 
   if (path === '/api/auth/signin' || path === '/api/auth/signup')
     return NextResponse.next();
@@ -30,20 +33,24 @@ export async function proxy(request: NextRequest) {
     if (apiCall)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    if (path !== '/')
+    if (!loginPage && !authErrorPage)
       return NextResponse.redirect(new URL('/', request.url));
 
     return NextResponse.next();
   }
 
-  if (path === '/limbo')
-    return NextResponse.next();
-
   if (user.role === 'NONE') {
-    return apiCall
-      ? NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-      : NextResponse.redirect(new URL('/limbo', request.url));
+    if (apiCall)
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+    if (loginPage || limboPage)
+      return NextResponse.next();
+
+    return NextResponse.redirect(new URL('/limbo', request.url));
   }
+
+  if (loginPage || limboPage)
+    return NextResponse.redirect(new URL('/strikes', request.url));
 
   if (user.role === 'OWNER')
     return ownerAuth(path, apiCall, request);
@@ -94,9 +101,6 @@ function adminAuth(
   if (path === '/api/weeks' && request.method !== 'GET')
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  if (path === '/api/users' && request.method === 'POST')
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-
   return NextResponse.next();
 }
 
@@ -105,13 +109,6 @@ function ownerAuth(
 ) {
   if (!ownerRoutes.includes(path))
     return deny('/strikes', apiCall, request);
-
-  if (path === '/api/weeks'
-    && (request.method === 'PUT' || request.method === 'DELETE'))
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-
-  if (path.includes('/api/users') && request.method === 'POST')
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   return NextResponse.next();
 }
