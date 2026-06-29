@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getUserFromSession } from '@/lib/auth/session';
+import { getUserFromSession, updateUserSessionExpiration } from '@/lib/auth/session';
 
 // pledges - GET
 // weeks - GET
@@ -19,6 +19,14 @@ const adminRoutes = [...membershipRoutes, '/users', '/api/users'];
 const ownerRoutes = [...adminRoutes, '/users/deleted', '/api/users/deleted'];
 
 export async function proxy(request: NextRequest) {
+  const response = await proxyAuth(request);
+
+  await updateUserSessionExpiration(request, response);
+
+  return response;
+}
+
+async function proxyAuth(request: NextRequest) {
   const user = await getUserFromSession(request.cookies);
   const path = request.nextUrl.pathname;
   const apiCall = path.startsWith('/api');
@@ -56,11 +64,11 @@ export async function proxy(request: NextRequest) {
     return ownerAuth(path, apiCall, request);
 
   if (user.role === 'ADMIN')
-    return adminAuth(path, apiCall, request);  
+    return adminAuth(path, apiCall, request);
 
   if (user.membershipCommittee)
-    return membershipAuth(path, apiCall, request);   
-  
+    return membershipAuth(path, apiCall, request);
+
   if (user.role === 'PLEDGE' || user.role === 'PCP_PCVP'
     || user.role === 'BROTHER')
     return brotherPcpAuth(path, apiCall, request);

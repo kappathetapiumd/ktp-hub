@@ -1,10 +1,10 @@
 import prisma from '../prisma';
 
 import crypto from 'crypto';
+import { NextRequest, NextResponse } from 'next/server';
 
 import type { Role } from '@/generated/prisma/enums';
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
-import { NextRequest } from 'next/server';
 
 export type UserSession = {
   id: string;
@@ -17,14 +17,14 @@ const COOKIE_SESSION_KEY = 'ktpumd-strike-sheet-session-id';
 export async function createUserSession(user: UserSession, cookies: ReadonlyRequestCookies) {
   const sessionId = crypto.randomBytes(64).toString('hex');
 
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 7);
+  const oneDay = 24 * 60 * 60 * 1000;
+  const expiresAt = new Date(Date.now() + 7 * oneDay);
 
   await addSession(sessionId, user, expiresAt);
 
   cookies.set(COOKIE_SESSION_KEY, sessionId, {
     httpOnly: true,
-    secure: false, // has to be true for production
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     expires: expiresAt,
     path: '/'
@@ -72,4 +72,40 @@ async function getUserSessionById(sessionId: string) {
   });
 
   return user;
+}
+
+export async function updateUserSessionExpiration(
+  request: NextRequest, response: NextResponse
+) {
+  const sessionId = request.cookies.get(COOKIE_SESSION_KEY)?.value;
+
+  if (!sessionId) return;
+
+  const session = await prisma.session.findUnique({
+    where: { sessionId }
+  });
+
+  if (!session || session.expiresAt <= new Date()) {
+    response.cookies.delete(COOKIE_SESSION_KEY);
+    return;
+  }
+
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  if (session.expiresAt.getTime() - Date.now() < oneDay) {
+    const expiresAt = new Date(Date.now() + 7 * oneDay)
+
+    await prisma.session.updateMany({
+      where: { sessionId },
+      data: { expiresAt }
+    });
+
+    response.cookies.set(COOKIE_SESSION_KEY, sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      expires: expiresAt,
+      path: '/'
+    });
+  }
 }
