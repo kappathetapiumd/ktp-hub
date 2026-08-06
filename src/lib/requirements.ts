@@ -115,7 +115,9 @@ export async function clearRequirements() {
 }
 
 export async function getGroupTasks() {
-  const groupTasks = await prisma.groupTask.findMany();
+  const groupTasks = await prisma.groupTask.findMany({
+    orderBy: { name: 'asc' }
+  });
 
   return groupTasks;
 }
