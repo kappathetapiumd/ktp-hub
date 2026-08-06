@@ -71,6 +71,13 @@ export default function PledgeSideBar(
         </div>
 
         <div className={styles['sidebar-actions']}>
+          <button
+            onClick={() => router.push('/links')}
+            className={styles['links-btn']}
+          >
+            <i className="fa-solid fa-link"></i>
+          </button>
+
           {(user.role === 'ADMIN' || user.role === 'OWNER') &&
             <button
               onClick={() => router.push('/users')}

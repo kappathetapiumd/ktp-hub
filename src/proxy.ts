@@ -8,7 +8,7 @@ import { getUserFromSession, updateUserSessionExpiration } from '@/lib/auth/sess
 // requirements - GET
 // requirements/pledge - GET
 const pledgePcpBrotherRoutes = [
-  '/strikes', '/requirements', '/api/strikes', '/api/pledges',
+  '/strikes', '/requirements', '/links', '/api/strikes', '/api/pledges',
   '/api/weeks', '/api/requirements', '/api/requirements/pledge'
 ];
 

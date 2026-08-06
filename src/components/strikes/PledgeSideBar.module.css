@@ -124,11 +124,13 @@
 
 .sidebar-actions {
   flex-shrink: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 48px);
   align-items: center;
   justify-content: space-between;
 }
 
+.links-btn,
 .reqs-btn,
 .users-btn {
   display: flex;
@@ -149,10 +151,19 @@
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.reqs-btn {
-  margin-left: auto;
+.links-btn {
+  grid-column: 1;
 }
 
+.users-btn {
+  grid-column: 2;
+}
+
+.reqs-btn {
+  grid-column: 3;
+}
+
+.links-btn:hover,
 .reqs-btn:hover {
   background: rgba(255, 255, 255, 0.11);
   transform: translateY(-1px);

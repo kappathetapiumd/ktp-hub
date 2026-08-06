@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 
 import UserList from '@/components/requirements/UserList';
 import ClearModal from '@/components/requirements/modal/ClearModal';
+import NetworkBackground from '@/components/background/NetworkBackground';
 
 import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './RequirementDashboard.module.css'
-import NetworkBackground from '@/components/background/NetworkBackground';
 
 type Props = {
   user: CurrentUser;
@@ -155,7 +155,6 @@ export default function RequirementDashboard({ user }: Props) {
       <button
         onClick={() => router.push('/strikes')}
         className={styles['strikes-btn']}
-        aria-label="Return to strikes"
       >
         <i className="fa-solid fa-user-xmark"></i>
       </button>
