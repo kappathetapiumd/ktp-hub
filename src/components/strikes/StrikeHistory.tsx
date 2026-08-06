@@ -83,24 +83,25 @@ export default function StrikeHistory(
 
                     <div className={styles["footer"]}>
                       <div className={styles["update-btns"]}>
-                        {user.membershipCommittee &&
+                        {user.membershipCommittee
+                          && (
+                            user.id === createdById
+                            || user.role === 'ADMIN'
+                            || user.role === 'OWNER'
+                          ) &&
                           <>
-                              <button
+                            <button
                               onClick={() => handleDelete(id)}
                               className={styles["delete-btn"]}
                             >
                               Delete
                             </button>
-                            {(user.id === createdById
-                              || user.role === 'ADMIN'
-                              || user.role === 'OWNER') &&
-                              <button
-                                onClick={() => handleEdit(id)}
-                                className={styles["edit-btn"]}
-                              >
-                                Edit
-                              </button>
-                            }
+                            <button
+                              onClick={() => handleEdit(id)}
+                              className={styles["edit-btn"]}
+                            >
+                              Edit
+                            </button>
                           </>
                         }
                       </div>

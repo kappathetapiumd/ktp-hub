@@ -18,6 +18,10 @@ export async function getUsers(isActive: boolean) {
       hashedPassword: true,
       salt: true,
       isActive: true,
+      philSmallEvent: true,
+      philBigEvent: true,
+      profDevEventA: true,
+      profDevEventB: true
     }
   });
   
@@ -54,7 +58,11 @@ export async function filterUsers(search: string, isActive: boolean) {
     omit: {
       hashedPassword: true,
       salt: true,
-      isActive: true
+      isActive: true,
+      philSmallEvent: true,
+      philBigEvent: true,
+      profDevEventA: true,
+      profDevEventB: true
     }
   });
 
@@ -128,7 +136,7 @@ export async function deleteInactiveUser(id: string) {
   await prisma.$transaction(async (tx) => {
     await tx.strikeEvent.deleteMany({
       where: {
-        'OR': [
+        OR: [
           { pledgeId: id },
           { createdById: id }
         ]

@@ -78,6 +78,12 @@ export default function PledgeSideBar(
         <i className="fa-solid fa-bars"></i>
       </button>
 
+      <button
+        onClick={() => router.push('/requirements')}
+        className={styles['reqs-btn']}
+      >
+        <i className="fa-solid fa-list-check"></i>
+      </button>
       
       {(user.role === 'ADMIN' || user.role === 'OWNER') &&
         <button

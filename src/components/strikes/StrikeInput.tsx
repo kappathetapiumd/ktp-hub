@@ -36,6 +36,9 @@ export default function StrikeInput(
   const [amount, setAmount] = useState('');
 
   async function addStrike() {
+    setReason('');
+    setAmount('');
+    
     const currentPledge = pledges.find(pledge => pledge.id === selectedPledge)!;
     
     // if total strikes for a pledge will be negative, don't add the strike
@@ -79,9 +82,6 @@ export default function StrikeInput(
         createdById: strikeEvent.createdById
       }, ...prev]);
     }
-
-    setReason('');
-    setAmount('');
   }
 
   // if not on membership committee, can't add strike

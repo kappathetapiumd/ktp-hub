@@ -22,40 +22,52 @@ enum Role {
 }
 
 model User {
-  id              String   @id @default(cuid())
-  email           String   @unique
-  name            String
-  hashedPassword  String
-  salt            String
+  id             String @id @default(cuid())
+  email          String @unique
+  name           String
+  hashedPassword String
+  salt           String
 
-  role                Role     @default(NONE)
+  role                Role    @default(NONE)
   membershipCommittee Boolean @default(false)
   isActive            Boolean @default(true)
+
+  philSmallEvent      Boolean @default(false)
+  philBigEvent        Boolean @default(false)
+  profDevEventA       Boolean @default(false)
+  profDevEventB       Boolean @default(false)
 
   pledgeStrikeEvents  StrikeEvent[] @relation("PledgeStrikeEvents")
   createdStrikeEvents StrikeEvent[] @relation("CreatedStrikeEvents")
 }
 
 model StrikeEvent {
-  id          String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  pledgeId   String
-  pledge     User     @relation("PledgeStrikeEvents", fields: [pledgeId], references: [id])
+  pledgeId String
+  pledge   User   @relation("PledgeStrikeEvents", fields: [pledgeId], references: [id])
 
   createdById String
   createdBy   User   @relation("CreatedStrikeEvents", fields: [createdById], references: [id])
 
-  amount      Int
-  reason      String
+  amount Int
+  reason String
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 model StrikeTerm {
-  id        String   @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   startDate DateTime
   endDate   DateTime
+}
+
+model Link {
+  id String @id @default(cuid())
+
+  label String
+  url   String
 }
 
 model Session {
@@ -64,5 +76,5 @@ model Session {
   role                Role
   membershipCommittee Boolean
 
-  expiresAt   DateTime
+  expiresAt DateTime
 }

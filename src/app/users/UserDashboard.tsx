@@ -101,7 +101,7 @@ export default function UserDashboard({ user }: Props) {
             onClick={() => router.push('/strikes')}
             className={styles['dashboard-btn']}
           >
-            <i className="fa-solid fa-tachograph-digital"></i>
+            <i className="fa-solid fa-user-xmark"></i>
           </button>
         </div>
 

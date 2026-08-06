@@ -21,7 +21,11 @@ export async function getPledges() {
       salt: true,
       role: true,
       membershipCommittee: true,
-      isActive: true
+      isActive: true,
+      philSmallEvent: true,
+      philBigEvent: true,
+      profDevEventA: true,
+      profDevEventB: true
     },
     include: {
       pledgeStrikeEvents: {

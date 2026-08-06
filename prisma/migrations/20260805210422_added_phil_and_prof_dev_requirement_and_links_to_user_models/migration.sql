@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "philBigEvent" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "philSmallEvent" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "profDevEventA" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "profDevEventB" BOOLEAN NOT NULL DEFAULT false;

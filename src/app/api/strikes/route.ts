@@ -1,5 +1,4 @@
 import { getCurrentUser } from '@/lib/auth/currentUser';
-import { getUserFromSession } from '@/lib/auth/session';
 import { addStrike, deleteStrike, getStrikeHistory, updateStrike } from '@/lib/strikes';
 
 export async function POST(request: Request) {

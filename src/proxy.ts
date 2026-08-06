@@ -5,13 +5,17 @@ import { getUserFromSession, updateUserSessionExpiration } from '@/lib/auth/sess
 // pledges - GET
 // weeks - GET
 // strikes - GET (pledges - only total and total per week)
-const pledgePcpBrotherRoutes =
-  ['/strikes', '/api/strikes', '/api/pledges', '/api/weeks'];
+// requirements - GET
+const pledgePcpBrotherRoutes = [
+  '/strikes', '/requirements', '/api/strikes',
+  '/api/pledges', '/api/weeks', '/api/requirements'
+];
 
 // strikes - POST, PUT, DELETE
 const membershipRoutes = [...pledgePcpBrotherRoutes];
 
 // users - GET, PUT, DELETE
+// requirements - PUT
 const adminRoutes = [...membershipRoutes, '/users', '/api/users'];
 
 // weeks - POST
@@ -94,7 +98,9 @@ function membershipAuth(
   if (!membershipRoutes.includes(path))
     return deny('/strikes', apiCall, request);
 
-  if (path === '/api/weeks' && request.method !== 'GET')
+  if ((path === '/api/weeks' || path === '/api/requirements')
+    && request.method !== 'GET'
+  )
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   return NextResponse.next();
