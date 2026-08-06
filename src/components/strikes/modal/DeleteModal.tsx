@@ -6,14 +6,20 @@ import styles from './Modal.module.css';
 type Props = {
   strikeId: string;
   setStrikeHistory: React.Dispatch<React.SetStateAction<Strike[]>>;
+  setTotalStrikesPerWeek: React.Dispatch<React.SetStateAction<number>>;
   setPledges: React.Dispatch<React.SetStateAction<Pledge[]>>;
   selectedPledge: string;
   showModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function DeleteModal(
-  { strikeId, setStrikeHistory, setPledges, selectedPledge, showModal }: Props
-) {
+export default function DeleteModal({
+  strikeId,
+  setStrikeHistory,
+  setTotalStrikesPerWeek,
+  setPledges,
+  selectedPledge,
+  showModal
+}: Props) {
   async function deleteStrike() {
     const params = new URLSearchParams({
       strikeId
@@ -29,6 +35,7 @@ export default function DeleteModal(
 
     // remove the deleted strikeEvent from strikeHistory array to rerender
     setStrikeHistory(prev => prev.filter(strike => strike.id !== strikeId));
+    setTotalStrikesPerWeek(prev => prev - deletedAmount);
 
     // update pledges array with correct strike counts to rerender
     setPledges(prev =>

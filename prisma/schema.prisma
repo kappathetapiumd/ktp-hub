@@ -57,10 +57,19 @@ model StrikeEvent {
 }
 
 model StrikeTerm {
+  id          String @id @default(cuid())
+
+  startDate   DateTime
+  endDate     DateTime
+}
+
+model GroupTask {
   id String @id @default(cuid())
 
-  startDate DateTime
-  endDate   DateTime
+  name        String
+  completed   Boolean @default(false)
+
+  createdAt DateTime @default(now())
 }
 
 model Link {
@@ -68,6 +77,8 @@ model Link {
 
   label String
   url   String
+
+  createdAt DateTime @default(now())
 }
 
 model Session {

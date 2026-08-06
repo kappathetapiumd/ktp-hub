@@ -12,7 +12,7 @@ export type UserSession = {
   membershipCommittee: boolean;
 }
 
-const COOKIE_SESSION_KEY = 'ktpumd-strike-sheet-session-id';
+const COOKIE_SESSION_KEY = 'session-id';
 
 export async function createUserSession(user: UserSession, cookies: ReadonlyRequestCookies) {
   const sessionId = crypto.randomBytes(64).toString('hex');

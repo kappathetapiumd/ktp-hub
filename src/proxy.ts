@@ -6,9 +6,10 @@ import { getUserFromSession, updateUserSessionExpiration } from '@/lib/auth/sess
 // weeks - GET
 // strikes - GET (pledges - only total and total per week)
 // requirements - GET
+// requirements/pledge - GET
 const pledgePcpBrotherRoutes = [
-  '/strikes', '/requirements', '/api/strikes',
-  '/api/pledges', '/api/weeks', '/api/requirements'
+  '/strikes', '/requirements', '/api/strikes', '/api/pledges',
+  '/api/weeks', '/api/requirements', '/api/requirements/pledge'
 ];
 
 // strikes - POST, PUT, DELETE
@@ -20,7 +21,11 @@ const adminRoutes = [...membershipRoutes, '/users', '/api/users'];
 
 // weeks - POST
 // users/deleted - GET, PUT, DELETE
+// requirements/pledge - POST, PUT, DELETE
 const ownerRoutes = [...adminRoutes, '/users/deleted', '/api/users/deleted'];
+
+const REDIRECT_COOKIE = 'redirect-path';
+const DEFAULT_REDIRECT = '/strikes';
 
 export async function proxy(request: NextRequest) {
   const response = await proxyAuth(request);
@@ -61,23 +66,41 @@ async function proxyAuth(request: NextRequest) {
     return NextResponse.redirect(new URL('/limbo', request.url));
   }
 
-  if (loginPage || limboPage)
-    return NextResponse.redirect(new URL('/strikes', request.url));
+  const savedPath =
+    request.cookies.get(REDIRECT_COOKIE)?.value ?? DEFAULT_REDIRECT;
+
+  if (loginPage || limboPage) {
+    return NextResponse.redirect(new URL(savedPath, request.url));
+  }
+
+  let response;
 
   if (user.role === 'OWNER')
-    return ownerAuth(path, apiCall, request);
+    response = ownerAuth(path, apiCall, request);
 
-  if (user.role === 'ADMIN')
-    return adminAuth(path, apiCall, request);
+  else if (user.role === 'ADMIN')
+    response = adminAuth(path, apiCall, request);
 
-  if (user.membershipCommittee)
-    return membershipAuth(path, apiCall, request);
+  else if (user.membershipCommittee)
+    response = membershipAuth(path, apiCall, request);
 
-  if (user.role === 'PLEDGE' || user.role === 'PCP_PCVP'
+  else if (user.role === 'PLEDGE' || user.role === 'PCP_PCVP'
     || user.role === 'BROTHER')
-    return brotherPcpAuth(path, apiCall, request);
+    response = brotherPcpAuth(path, apiCall, request);
 
-  return deny('/', apiCall, request);
+  else return deny('/', apiCall, request);
+
+  if (!apiCall && !response.headers.has('location')) {
+    response.cookies.set(REDIRECT_COOKIE, path, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30
+    });
+  }
+
+  return response;
 }
 
 function brotherPcpAuth(
@@ -98,7 +121,7 @@ function membershipAuth(
   if (!membershipRoutes.includes(path))
     return deny('/strikes', apiCall, request);
 
-  if ((path === '/api/weeks' || path === '/api/requirements')
+  if ((path === '/api/weeks' || path.startsWith('/api/requirements'))
     && request.method !== 'GET'
   )
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -112,7 +135,9 @@ function adminAuth(
   if (!adminRoutes.includes(path))
     return deny('/strikes', apiCall, request);
 
-  if (path === '/api/weeks' && request.method !== 'GET')
+  if ((path === '/api/weeks' || path === '/api/requirements/pledge')
+    && request.method !== 'GET'
+  )
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   return NextResponse.next();

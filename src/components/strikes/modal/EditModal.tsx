@@ -11,6 +11,7 @@ type Props = {
   strikeId: string;
   strikeHistory: Strike[];
   setStrikeHistory: React.Dispatch<React.SetStateAction<Strike[]>>;
+  setTotalStrikesPerWeek: React.Dispatch<React.SetStateAction<number>>;
   pledges: Pledge[];
   setPledges: React.Dispatch<React.SetStateAction<Pledge[]>>;
   selectedPledge: string;
@@ -24,6 +25,7 @@ export default function EditModal(
     strikeId,
     strikeHistory,
     setStrikeHistory,
+    setTotalStrikesPerWeek,
     pledges,
     setPledges,
     selectedPledge,
@@ -59,11 +61,13 @@ export default function EditModal(
 
     if (!response.ok) return;
 
+    const updatedAmount = Number(amount);
+
     // update the amount in strikeHistory array to rerender
     setStrikeHistory(prev =>
       prev.map(strike =>
         strike.id === strikeId
-          ? { ...strike, reason: reason, amount: Number(amount) }
+          ? { ...strike, reason, amount: updatedAmount }
           : strike
       ));
 
@@ -73,10 +77,12 @@ export default function EditModal(
         pledge.id === selectedPledge
           ? {
               ...pledge,
-              strikes: pledge.strikes - originalAmount + Number(amount)
+              strikes: pledge.strikes - originalAmount + updatedAmount
             }
           : pledge
-      ));
+    ));
+
+    setTotalStrikesPerWeek(prev => prev - originalAmount + updatedAmount);
 
     showModal(false);
   }

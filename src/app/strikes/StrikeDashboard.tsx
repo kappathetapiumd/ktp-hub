@@ -113,6 +113,7 @@ export default function StrikeDashboard({ user }: Props) {
         <DeleteModal
           strikeId={strikeId}
           setStrikeHistory={setStrikeHistory}
+          setTotalStrikesPerWeek={setTotalStrikesPerWeek}
           setPledges={setPledges}
           selectedPledge={selectedPledge}
           showModal={setShowDeleteModal}
@@ -124,6 +125,7 @@ export default function StrikeDashboard({ user }: Props) {
           strikeId={strikeId}
           strikeHistory={strikeHistory}
           setStrikeHistory={setStrikeHistory}
+          setTotalStrikesPerWeek={setTotalStrikesPerWeek}
           pledges={pledges}
           setPledges={setPledges}
           selectedPledge={selectedPledge}
@@ -156,6 +158,7 @@ export default function StrikeDashboard({ user }: Props) {
               pledges={pledges}
               setPledges={setPledges}
               setStrikeHistory={setStrikeHistory}
+              setTotalStrikesPerWeek={setTotalStrikesPerWeek}
               selectedPledge={selectedPledge}
               setShowStrikesModal={setShowStrikesModal}
               selectedWeek={selectedWeek}

@@ -113,3 +113,30 @@ export async function clearRequirements() {
     }
   });
 }
+
+export async function getGroupTasks() {
+  const groupTasks = await prisma.groupTask.findMany();
+
+  return groupTasks;
+}
+
+export async function createGroupTask(req: string) {
+  const newGroupTask = await prisma.groupTask.create({
+    data: { name: req }
+  });
+
+  return newGroupTask;
+}
+
+export async function toggleGroupTask(id: string, completed: boolean) {
+  await prisma.groupTask.updateMany({
+    where: { id },
+    data: { completed }
+  });
+}
+
+export async function deleteGroupReq(id: string) {
+  await prisma.groupTask.deleteMany({
+    where: { id }
+  });
+}

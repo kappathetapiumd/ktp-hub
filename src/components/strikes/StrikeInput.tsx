@@ -14,6 +14,7 @@ type Props = {
   pledges: Pledge[];
   setPledges: React.Dispatch<React.SetStateAction<Pledge[]>>;
   setStrikeHistory: React.Dispatch<React.SetStateAction<Strike[]>>;
+  setTotalStrikesPerWeek: React.Dispatch<React.SetStateAction<number>>;
   selectedPledge: string;
   setShowStrikesModal: React.Dispatch<React.SetStateAction<boolean>>;
   selectedWeek: string;
@@ -26,6 +27,7 @@ export default function StrikeInput(
     pledges,
     setPledges,
     setStrikeHistory,
+    setTotalStrikesPerWeek,
     selectedPledge,
     setShowStrikesModal,
     selectedWeek,
@@ -36,9 +38,6 @@ export default function StrikeInput(
   const [amount, setAmount] = useState('');
 
   async function addStrike() {
-    setReason('');
-    setAmount('');
-    
     const currentPledge = pledges.find(pledge => pledge.id === selectedPledge)!;
     
     // if total strikes for a pledge will be negative, don't add the strike
@@ -62,6 +61,9 @@ export default function StrikeInput(
 
     const strikeEvent = await response.json();
 
+    setReason('');
+    setAmount('');
+
     // update pledges array to rerender pledge list with correct strike counts
     setPledges(prev => 
       prev.map((pledge) =>
@@ -73,10 +75,11 @@ export default function StrikeInput(
     // update strikeHistory array to rerender with the new strike only if it's 
     // the current week
     if (addedToThisWeek(selectedWeek)) {
+      setTotalStrikesPerWeek(prev => prev + strikeEvent.amount);
       setStrikeHistory(prev => [{
         id: strikeEvent.id,
-        amount: Number(amount),
-        reason,
+        amount: strikeEvent.amount,
+        reason: strikeEvent.reason,
         createdAt: strikeEvent.createdAt,
         createdBy: strikeEvent.createdBy,
         createdById: strikeEvent.createdById
@@ -128,6 +131,6 @@ function addedToThisWeek(selectedWeek: string) {
   const startDate = dayjs(start);
   const endDate = dayjs(end);
 
-  return (today.isAfter(startDate) && today.isBefore(endDate))
-    || today.isSame(startDate) || today.isSame(endDate);
+  return (today.isAfter(startDate, 'day') && today.isBefore(endDate, 'day'))
+    || today.isSame(startDate, 'day') || today.isSame(endDate, 'day');
 }
