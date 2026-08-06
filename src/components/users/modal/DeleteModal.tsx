@@ -39,25 +39,36 @@ export default function DeleteModal(
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={styles['modal-container']}>
-        <p className={styles['message']}>
-          {!isActive
-            ? <>
-                {'WARNING\n\n'}<br /><br />
-                {`This action will delete ${deleteAll ? 'EVERY' : 'the'} user 
-                and all strikes associated with them.`}<br /><br />
-                {'This is PERMANENT.'}
-              </>
-            : 'Are you sure you want to delete this user?'
-          }
-        </p>
+      <div className={`${styles['modal-container']} ${styles['danger-modal']}`}>
+        <div className={styles['modal-heading']}>
+          <span className={styles['modal-icon']}>
+            <i className={`fa-solid ${deleteAll ? 'fa-dumpster' : 'fa-user-minus'}`}></i>
+          </span>
+          <p className={styles['eyebrow']}>
+            {isActive ? 'Archive member' : 'Permanent deletion'}
+          </p>
+          <h2>
+            {deleteAll
+              ? 'Empty the entire archive?'
+              : isActive
+                ? 'Delete this user?'
+                : 'Permanently delete this user?'}
+          </h2>
+          <p className={styles['message']}>
+            {!isActive
+              ? `This will permanently delete ${deleteAll ? 'every archived user' : 'this user'} and all associated strikes. This cannot be undone.`
+              : 'This user will be moved to the archive and can be restored later.'
+            }
+          </p>
+        </div>
 
         <div className={styles['confirmation-btns']}>
           <button
             onClick={deleteUser}
             className={styles['yes-btn']}
           >
-            {isActive ? 'Yes' : 'Confirm'}
+            <i className="fa-solid fa-trash-can"></i>
+            {isActive ? 'Delete user' : 'Delete permanently'}
           </button>
           <button
             onClick={() => showModal(false)}

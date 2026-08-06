@@ -49,6 +49,8 @@ export default function EditModal(
       return;
     }
 
+    showModal(false);
+
     const response = await fetch('/api/strikes', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -83,32 +85,43 @@ export default function EditModal(
     ));
 
     setTotalStrikesPerWeek(prev => prev - originalAmount + updatedAmount);
-
-    showModal(false);
   }
 
   return (
     <div className={styles['modal-overlay']}>
       <div className={styles['modal-container']}>
-        <div className={styles['strike-content']}>
-          <textarea
-            onChange={e => { setReason(e.target.value) }}
-            value={reason}
-            className={styles['reason-input']}
-            placeholder="Reason"
-            rows={1}
-            suppressHydrationWarning
-          />
+        <div className={styles['modal-heading']}>
+          <span className={styles['modal-icon']}><i className="fa-solid fa-pen"></i></span>
+          <p className={styles['eyebrow']}>Strike details</p>
+          <h2>Edit strike</h2>
+          <p className={styles['message']}>Update the reason or adjust the strike amount.</p>
+        </div>
 
-          <input
-            onChange={e => setAmount(e.target.value)}
-            value={amount}
-            type="text"
-            className={styles['amount-input']}
-            inputMode="numeric"
-            placeholder="#"
-            suppressHydrationWarning
-          />
+        <div className={styles['strike-content']}>
+          <label>
+            <span>Reason</span>
+            <textarea
+              onChange={e => { setReason(e.target.value) }}
+              value={reason}
+              className={styles['reason-input']}
+              placeholder="Reason"
+              rows={2}
+              suppressHydrationWarning
+            />
+          </label>
+
+          <label>
+            <span>Amount</span>
+            <input
+              onChange={e => setAmount(e.target.value)}
+              value={amount}
+              type="text"
+              className={styles['amount-input']}
+              inputMode="numeric"
+              placeholder="#"
+              suppressHydrationWarning
+            />
+          </label>
         </div>
 
         <div className={styles['confirmation-btns']}>
@@ -117,6 +130,7 @@ export default function EditModal(
             disabled={invalidStrike(reason, amount, selectedPledge, weeks)}
             className={styles['yes-btn']}
           >
+            <i className="fa-solid fa-check"></i>
             Update
           </button>
           <button

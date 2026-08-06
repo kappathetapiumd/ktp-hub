@@ -1,144 +1,203 @@
 .strike-history-container {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   gap: var(--spacing-3);
-
   height: 100%;
   min-height: 0;
-  padding: 10px 0;
+  padding: 18px 20px 16px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-bg-card) 84%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: 22px;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(18px);
+}
 
-  margin-right: -10px
+.history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  padding-bottom: var(--spacing-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.history-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.history-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 11%, transparent);
+  border-radius: 12px;
+}
+
+.eyebrow {
+  margin: 0 0 1px;
+  color: var(--color-primary);
+  font-size: 0.61rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.history-heading h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
 }
 
 .week-amount {
-  margin: 0 3px;
-
-  font-size: 1.75rem;
-  font-style: italic;
-  font-weight: 600;
-  line-height: 1.2;
-
-  color: var(--color-text);
+  min-width: 48px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  font-weight: 850;
+  text-align: center;
+  border-radius: 10px;
 }
 
-.week-amount span {
-  color: inherit;
-  font: inherit;
-
-  margin-left: 5px;
+.positive {
+  color: #fb7185;
+  background: rgba(225, 29, 72, 0.1);
+  border: 1px solid rgba(251, 113, 133, 0.2);
 }
 
-.horizontal-line {
-  width: 138px;
-  height: 3px;
-
-  margin: 0 3px;
-
-  background: var(--color-border);
-  opacity: 0.6;
+.neutral {
+  color: #5ee6b9;
+  background: rgba(0, 212, 170, 0.09);
+  border: 1px solid rgba(85, 239, 196, 0.18);
 }
 
 .strike-card-list {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding-right: 4px;
-
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3);
-
-  scrollbar-width: none;
-}
-
-.strike-card-list::-webkit-scrollbar {
-  display: none;
+  gap: var(--spacing-2);
+  min-height: 0;
+  padding: 1px 3px 4px 1px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
 }
 
 .info-message {
-  margin: auto;
-
-  color: var(--color-text-muted);
-  font-size: 1.4rem;
-  font-weight: 600;
-  font-style: italic;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  height: 100%;
+  min-height: 170px;
+  padding: var(--spacing-6);
   text-align: center;
+}
 
-  opacity: 0.95;
+.info-message > span {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: var(--spacing-3);
+  color: var(--color-primary);
+  font-size: 1.25rem;
+  background: color-mix(in srgb, var(--color-primary) 9%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--color-primary) 36%, transparent);
+  border-radius: 18px;
+}
+
+.info-message h3 {
+  font-size: 1rem;
+}
+
+.info-message p {
+  max-width: 340px;
+  margin: 4px 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
 }
 
 .strike-card {
+  position: relative;
   flex: 0 0 auto;
-
-  min-height: 7rem;
-  height: auto;
-
+  min-height: 88px;
+  overflow: hidden;
+  background: var(--color-bg-elevated);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-
-  overflow: visible;
-
-  transition: background 150ms ease, border-color 150ms ease;
+  border-radius: 15px;
+  transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.strike-card.added {
-  background: rgba(220, 38, 38, 0.06);
-  border-color: rgba(220, 38, 38, 0.18);
+.strike-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
 }
 
-.strike-card.removed {
-  background: rgba(34, 197, 94, 0.06);
-  border-color: rgba(34, 197, 94, 0.18);
+.strike-card.added::before {
+  background: #fb7185;
+}
+
+.strike-card.removed::before {
+  background: #4ade80;
+}
+
+.strike-card:hover {
+  background: color-mix(in srgb, var(--color-bg-elevated) 94%, var(--color-primary));
+  border-color: color-mix(in srgb, var(--color-primary) 22%, transparent);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
 }
 
 .strike-event {
   display: grid;
-  grid-template-columns: 4.5rem 1px minmax(0, 1fr);
-  min-height: 7rem;
-  padding: var(--spacing-3);
+  grid-template-columns: 64px minmax(0, 1fr);
+  min-height: 88px;
   column-gap: var(--spacing-4);
+  padding: 13px 16px;
 }
 
 .amount {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  display: grid;
+  place-items: center;
+  align-self: center;
+  width: 52px;
+  min-height: 52px;
   margin: 0;
-  font-size: 23px;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 850;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
 }
 
 .added .amount {
-  color: rgb(248, 113, 113);
+  color: #fb7185;
+  background: rgba(225, 29, 72, 0.08);
+  border-color: rgba(251, 113, 133, 0.18);
 }
 
 .removed .amount {
-  color: rgb(74, 222, 128);
-}
-
-.vertical-line {
-  width: 1px;
-  background: var(--color-border);
+  color: #4ade80;
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(74, 222, 128, 0.18);
 }
 
 .strike-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   min-width: 0;
 }
 
 .reason {
   margin: 0;
-
-  text-align: right;
-  align-self: flex-end;
-
-  max-width: 80%;
-
-  font-size: 1rem;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 600;
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
@@ -148,52 +207,64 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: var(--spacing-4);
-
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .update-btns {
   display: flex;
-  gap: var(--spacing-2);
-
+  gap: 6px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 150ms ease;
+  transform: translateY(3px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
 .strike-card:hover .update-btns,
 .strike-card:focus-within .update-btns {
   opacity: 1;
   pointer-events: auto;
+  transform: translateY(0);
 }
 
 .update-btns button {
-  padding: 0;
-  border: 0;
-  background: transparent;
-
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 0 8px;
   color: var(--color-text-muted);
-  font: inherit;
-  font-size: 0.75rem;
-  text-decoration: underline;
+  font-size: 0.64rem;
+  font-weight: 700;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
   cursor: pointer;
+  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
 }
 
-.update-btns button:hover {
-  color: var(--color-text);
+.delete-btn:hover {
+  color: #fb7185;
+  background: rgba(225, 29, 72, 0.08);
+  border-color: rgba(251, 113, 133, 0.2);
+}
+
+.edit-btn:hover {
+  color: var(--color-secondary-light);
+  background: rgba(9, 132, 227, 0.08);
+  border-color: rgba(116, 185, 255, 0.2);
 }
 
 .meta {
   display: grid;
   justify-items: end;
-  gap: 0.15rem;
-
-  font-size: 0.75rem;
+  gap: 2px;
+  font-size: 0.65rem;
   line-height: 1.1;
 }
 
 .name {
-  font-weight: 700;
+  color: var(--color-text);
+  font-weight: 750;
 }
 
 .date {
@@ -201,15 +272,60 @@
 }
 
 @media (max-width: 520px) {
-  .reason {
-    max-width: 100%;
-  }
-
   .strike-history-container {
-    margin-right: 0px
+    padding: 13px 12px 11px;
+    border-radius: 18px;
   }
 
-  .info-message {
-    margin-top: 25vh;
+  .strike-event {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 11px;
+    padding: 11px 12px;
+  }
+
+  .amount {
+    width: 44px;
+    min-height: 44px;
+    border-radius: 12px;
+  }
+
+  .update-btns {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .update-btns button span {
+    display: none;
+  }
+
+  .meta {
+    max-width: 45%;
+  }
+}
+
+@media (max-height: 720px) {
+  .strike-history-container {
+    padding-top: 12px;
+  }
+
+  .history-heading {
+    padding-bottom: 8px;
+  }
+}
+
+@media (hover: none) {
+  .update-btns {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strike-card,
+  .update-btns,
+  .update-btns button {
+    transition: none;
   }
 }

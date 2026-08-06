@@ -1,80 +1,170 @@
 .strike-input-container {
   display: grid;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
   width: 100%;
+  height: 100%;
+  padding: 15px 16px;
+  background: color-mix(in srgb, var(--color-bg-card) 82%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: 19px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(18px);
+}
 
-  padding: 5px;
+.input-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.input-heading > span {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  background: color-mix(in srgb, var(--color-primary) 11%, transparent);
+  border-radius: 10px;
+}
+
+.input-heading div {
+  display: grid;
+  gap: 3px;
+  line-height: 1.2;
+}
+
+.input-heading strong {
+  color: var(--color-text-heading);
+  font-size: 0.82rem;
+}
+
+.input-heading small {
+  color: var(--color-text-muted);
+  font-size: 0.61rem;
 }
 
 .strike-content {
   display: grid;
-  grid-template-columns: 1fr 72px;
+  grid-template-columns: minmax(0, 1fr) 72px auto;
+  align-items: end;
   gap: var(--spacing-2);
 }
 
-.reason-input,
-.amount-input,
-.add-btn {
-  border: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--color-text);
-  font: inherit;
+.strike-content label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.strike-content label > span {
+  color: var(--color-text-muted);
+  font-size: 0.61rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .reason-input,
 .amount-input {
-  min-height: 64px;
-  padding: var(--spacing-3);
+  width: 100%;
+  height: 44px;
+  padding: 10px 12px;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.84rem;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 11px;
   outline: none;
-
-  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 }
 
 .reason-input {
   resize: none;
-  text-align: left;
-  line-height: 1.4;
-
+  line-height: 1.35;
   scrollbar-width: none;
 }
 
 .amount-input {
-  text-align: right;
+  text-align: center;
 }
 
 .reason-input::placeholder,
 .amount-input::placeholder {
   color: var(--color-text-muted);
+  opacity: 0.72;
 }
 
 .reason-input:focus,
 .amount-input:focus {
-  border-color: var(--color-primary-light);
+  background: color-mix(in srgb, var(--color-bg-elevated) 94%, var(--color-primary));
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 9%, transparent);
 }
 
 .add-btn {
-  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 44px;
+  padding: 0 14px;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 750;
+  white-space: nowrap;
+  background: var(--gradient-primary);
+  border: 0;
+  border-radius: 11px;
+  box-shadow: 0 7px 18px rgba(0, 184, 148, 0.15);
   cursor: pointer;
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.1s ease,
-    opacity 0.2s ease;
-
-  border-radius: var(--radius-lg);
+  transition: transform var(--transition-fast), filter var(--transition-fast), opacity var(--transition-fast);
 }
 
 .add-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.add-btn:active:not(:disabled) {
-  transform: translateY(1px);
+  filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 
 .add-btn:disabled {
-  opacity: 0.5;
+  color: var(--color-text-muted);
+  background: var(--color-bg-elevated);
   cursor: not-allowed;
-  background: rgba(255, 255, 255, 0.03);
-  border-color: var(--color-border);
+  opacity: 0.46;
+  box-shadow: none;
+}
+
+.reason-input:focus-visible,
+.amount-input:focus-visible,
+.add-btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 45%, transparent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 620px) {
+  .strike-content {
+    grid-template-columns: minmax(0, 1fr) 68px;
+  }
+
+  .add-btn {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .strike-input-container {
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .input-heading small {
+    display: none;
+  }
+}
+
+@media (max-height: 720px) {
+  .input-heading {
+    display: none;
+  }
 }

@@ -1,20 +1,59 @@
 .weeks-frame {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--spacing-3);
   width: 100%;
-  padding: 5px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
+  height: 100%;
+  padding: 15px 16px;
   overflow: hidden;
+  background: color-mix(in srgb, var(--color-bg-card) 82%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: 19px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(18px);
+}
+
+.weeks-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.weeks-heading > span {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-secondary-light);
+  font-size: 0.78rem;
+  background: color-mix(in srgb, var(--color-secondary) 12%, transparent);
+  border-radius: 10px;
+}
+
+.weeks-heading div {
+  display: grid;
+  gap: 3px;
+  line-height: 1.2;
+}
+
+.weeks-heading strong {
+  color: var(--color-text-heading);
+  font-size: 0.82rem;
+}
+
+.weeks-heading small {
+  color: var(--color-text-muted);
+  font-size: 0.61rem;
 }
 
 .weeks-scroll {
+  width: 100%;
+  min-width: 0;
+  padding: 1px;
   overflow-x: auto;
-  scrollbar-width: none;
   cursor: grab;
   user-select: none;
-
-  width: 100%;
-
-  padding: 5px;
+  scrollbar-width: none;
 }
 
 .weeks-scroll::-webkit-scrollbar {
@@ -31,62 +70,66 @@
 
 .weeks-container {
   display: flex;
-  justify-content: flex-start;
-
+  gap: 5px;
   width: max-content;
   min-width: 100%;
-
-  gap: 0;
-  /* padding: 0.5rem;
-  border-radius: 20px;
-
-  background: rgba(255, 255, 255, 0.04); */
 }
 
 .week-btn {
+  position: relative;
   flex: 1 0 auto;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0px;
-
-  border: none;
-  background: transparent;
-  color: var(--color-text-secondary);
-
-  padding: 5px 20px;
-  border-radius: 14px;
-
+  min-width: 90px;
+  padding: 7px 13px;
+  color: var(--color-text-muted);
   font: inherit;
-  font-weight: 600;
   white-space: nowrap;
+  background: var(--color-bg-elevated);
+  border: 1px solid transparent;
+  border-radius: 11px;
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .week-label {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 800;
 }
 
 .week-dates {
-  font-size: 10px;
-  font-weight: 700;
-  transform: translateY(-1px);
-  opacity: 0.8;
+  font-size: 0.57rem;
+  font-weight: 650;
+  opacity: 0.76;
 }
 
 .week-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
   color: var(--color-text);
+  border-color: var(--color-border);
+  transform: translateY(-1px);
 }
 
 .week-btn.active {
+  color: #fff;
   background: var(--gradient-primary);
-  /* color: #fff; */
-  color: var(--color-text);
+  border-color: transparent;
+  box-shadow: 0 6px 16px rgba(0, 184, 148, 0.16);
+}
+
+@media (max-width: 520px) {
+  .weeks-frame {
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .weeks-heading small {
+    display: none;
+  }
+}
+
+@media (max-height: 720px) {
+  .weeks-heading {
+    display: none;
+  }
 }

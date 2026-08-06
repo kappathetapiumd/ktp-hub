@@ -11,6 +11,8 @@ export default function WeekModal({ showModal }: Props) {
   const [endDate, setEndDate] = useState('');
 
   async function generateWeeks() {
+    showModal(false);
+    
     const response = await fetch('/api/weeks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -21,18 +23,21 @@ export default function WeekModal({ showModal }: Props) {
     });
 
     if (!response.ok) return;
-
-    showModal(false);
   }
 
   return (
     <div className={styles['modal-overlay']}>
       <div className={styles['modal-container']}>
-        <div className={styles['date-selector']}>
-          <p className={styles['date-label']}>
-            Select the start and end date of pledging.
+        <div className={styles['modal-heading']}>
+          <span className={styles['modal-icon']}><i className="fa-regular fa-calendar"></i></span>
+          <p className={styles['eyebrow']}>Term setup</p>
+          <h2>Generate chapter weeks</h2>
+          <p className={styles['message']}>
+            Choose the first and last day of the pledging term.
           </p>
+        </div>
 
+        <div className={styles['date-selector']}>
           <label>Start Date</label>
           <input
             value={startDate}
@@ -56,6 +61,7 @@ export default function WeekModal({ showModal }: Props) {
             disabled={invalidDates(startDate, endDate)}
             className={styles['yes-btn']}
           >
+            <i className="fa-solid fa-calendar-plus"></i>
             Create Term
           </button>
           <button

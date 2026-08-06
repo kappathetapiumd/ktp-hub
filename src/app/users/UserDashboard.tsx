@@ -47,7 +47,9 @@ export default function UserDashboard({ user }: Props) {
   }, []);
 
   return (
-    <>
+    <main className={styles['dashboard']}>
+      <div className={styles['background-glow']}></div>
+
       {showDeleteModal &&
         <DeleteModal
           userId={userId}
@@ -81,31 +83,50 @@ export default function UserDashboard({ user }: Props) {
         />
       }
 
-      {user.role === 'OWNER' &&
-        <button
-          onClick={() => setShowOwnerModal(true)}
-          className={styles['ownership-btn']}
-        >
-          Transfer Ownership
-        </button>
-      }
+      <div className={styles['panel']}>
+        <header className={styles['header']}>
+          <div className={styles['title-icon']}>
+            <i className="fa-solid fa-users"></i>
+          </div>
+          <div className={styles['title-copy']}>
+            <p className={styles['eyebrow']}>Chapter directory</p>
+            <h1>Members</h1>
+            <p className={styles['subtitle']}>
+              Manage roles, access, and committee membership.
+            </p>
+          </div>
+          <div className={styles['header-actions']}>
+            <span className={styles['count']}>
+              {users.length} {users.length === 1 ? 'member' : 'members'}
+            </span>
+            {user.role === 'OWNER' &&
+              <button
+                onClick={() => setShowOwnerModal(true)}
+                className={styles['ownership-btn']}
+              >
+                <i className="fa-solid fa-crown"></i>
+                <span>Transfer ownership</span>
+              </button>
+            }
+          </div>
+        </header>
 
-      <div className={styles['users-container']}>
         <div className={styles['search-bar-container']}>
-          <SearchBar
-            isActive={isActive}
-            setUsers={setUsers}
-          />
-
-          <button
-            onClick={() => router.push('/strikes')}
-            className={styles['dashboard-btn']}
-          >
-            <i className="fa-solid fa-user-xmark"></i>
-          </button>
+          <div className={styles['search-shell']}>
+            <i className="fa-solid fa-magnifying-glass"></i>
+            <SearchBar
+              isActive={isActive}
+              setUsers={setUsers}
+            />
+          </div>
         </div>
 
         <div className={styles['user-list-container']}>
+          <div className={styles['list-headers']}>
+            <span>Member</span>
+            <span>Role</span>
+            <span>Membership committee</span>
+          </div>
           <UserList
             user={user}
             users={users}
@@ -130,6 +151,14 @@ export default function UserDashboard({ user }: Props) {
           />
         </div>
       </div>
-    </>
+
+      <button
+        onClick={() => router.push('/strikes')}
+        className={styles['dashboard-btn']}
+      >
+        <i className="fa-solid fa-user-xmark"></i>
+        <span>Strike Dashboard</span>
+      </button>
+    </main>
   );
 }

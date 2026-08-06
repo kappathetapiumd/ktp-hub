@@ -37,21 +37,37 @@ export default function PledgeSideBar(
         `}
       >
         <div className={styles['header']}>
-          <h1 className={styles['total-strikes']}>
-            <span>Total Strikes:</span>
-            <span className={`${styles['total-count']} 
-              ${totalStrikes < 10 ? styles['single-digit'] : ''}`}
-            >{totalStrikes}</span>
-          </h1>
+          <div className={styles['brand']}>
+            <span className={styles['brand-icon']}>
+              <i className="fa-solid fa-bolt"></i>
+            </span>
+            <div>
+              <small>Strike Sheet</small>
+              <strong>Pledge Roster</strong>
+            </div>
+          </div>
           <button
             onClick={() => setShowSideBar(false)}
-            className={styles["close-sidebar"]}
+            className={styles['close-sidebar']}
           >
             <i className="fa-solid fa-xmark"></i>
           </button>
         </div>
 
-        <div className={styles["pledge-list"]}>
+        <div className={styles['total-strikes']}>
+          <div>
+            <span>Total</span>
+            <small>Across all pledges</small>
+          </div>
+          <strong>{totalStrikes}</strong>
+        </div>
+
+        <div className={styles['list-label']}>
+          <span>Pledges</span>
+          <small>{pledges.length}</small>
+        </div>
+
+        <div className={styles['pledge-list']}>
           {pledges.map(({ id, name, strikes }) => (
             <div
               onClick={() => setSelectedPledge(id)}
@@ -64,10 +80,18 @@ export default function PledgeSideBar(
                 ${styles[`${selectedPledge === id ? 'active' : ''}`]}
               `}
             >
-              <span className={styles["name"]}>{name}</span>
-              <span className={styles["strike-count"]}>{strikes}</span>
+              <span className={styles['status-dot']}></span>
+              <span className={styles['name']}>{name}</span>
+              <span className={styles['strike-count']}>{strikes}</span>
             </div>
           ))}
+
+          {pledges.length === 0 &&
+            <div className={styles['empty-roster']}>
+              <i className="fa-solid fa-user-group"></i>
+              <span>No pledges yet</span>
+            </div>
+          }
         </div>
 
         <div className={styles['sidebar-actions']}>
@@ -76,6 +100,7 @@ export default function PledgeSideBar(
             className={styles['links-btn']}
           >
             <i className="fa-solid fa-link"></i>
+            <span>Links</span>
           </button>
 
           {(user.role === 'ADMIN' || user.role === 'OWNER') &&
@@ -84,6 +109,7 @@ export default function PledgeSideBar(
               className={styles['users-btn']}
             >
               <i className="fa-solid fa-tachograph-digital"></i>
+              <span>Members</span>
             </button>
           }
 
@@ -92,6 +118,7 @@ export default function PledgeSideBar(
             className={styles['reqs-btn']}
           >
             <i className="fa-solid fa-list-check"></i>
+            <span>Requirements</span>
           </button>
         </div>
       </div>

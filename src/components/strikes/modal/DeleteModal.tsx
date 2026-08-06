@@ -21,6 +21,8 @@ export default function DeleteModal({
   showModal
 }: Props) {
   async function deleteStrike() {
+    showModal(false);
+    
     const params = new URLSearchParams({
       strikeId
     });
@@ -44,25 +46,27 @@ export default function DeleteModal({
           ? { ...pledge, strikes: pledge.strikes - deletedAmount }
           : pledge
       ));
-
-    showModal(false);
   }
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={styles['modal-container']}>
-        <p className={styles['message']}>
-          Are you sure you want to delete this strike?
-          <br />
-          {`This action can't be undone.`}
-        </p>
+      <div className={`${styles['modal-container']} ${styles['danger-modal']}`}>
+        <div className={styles['modal-heading']}>
+          <span className={styles['modal-icon']}><i className="fa-solid fa-trash-can"></i></span>
+          <p className={styles['eyebrow']}>Delete strike</p>
+          <h2>Remove this strike?</h2>
+          <p className={styles['message']}>
+            This strike will be removed from the pledge’s history. This action cannot be undone.
+          </p>
+        </div>
 
         <div className={styles['confirmation-btns']}>
           <button
             onClick={deleteStrike}
             className={styles['yes-btn']}
           >
-            Yes
+            <i className="fa-solid fa-trash-can"></i>
+            Delete strike
           </button>
           <button
             onClick={() => showModal(false)}

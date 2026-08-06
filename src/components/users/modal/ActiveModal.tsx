@@ -30,16 +30,22 @@ export default function ActiveModal({ userId, setUsers, showModal }: Props) {
   return (
     <div className={styles['modal-overlay']}>
       <div className={styles['modal-container']}>
-        <p className={styles['message']}>
-          Do you want to reinstate this user?
-        </p>
+        <div className={styles['modal-heading']}>
+          <span className={styles['modal-icon']}><i className="fa-solid fa-user-check"></i></span>
+          <p className={styles['eyebrow']}>Restore access</p>
+          <h2>Reinstate this user?</h2>
+          <p className={styles['message']}>
+            This user will return to the active member directory.
+          </p>
+        </div>
 
         <div className={styles['confirmation-btns']}>
           <button
             onClick={setUserActive}
             className={styles['yes-btn']}
           >
-            Yes
+            <i className="fa-solid fa-rotate-left"></i>
+            Restore user
           </button>
           <button
             onClick={() => showModal(false)}

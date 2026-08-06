@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { sortUsers } from '@/lib/utils';
-
 import type { User } from '@/lib/users';
 import type { CurrentUser } from '@/lib/auth/currentUser';
 
@@ -60,10 +58,6 @@ export default function UpdateModal(
           : user
       )
     );
-
-    setUsers(prev =>
-      sortUsers(prev)
-    );
   }
 
   return (
@@ -73,71 +67,89 @@ export default function UpdateModal(
       className={styles['modal-overlay']}
     >
       <div className={styles['modal-container']}>
-        <div className={styles['user-content']}>
-          <input
-            onChange={e => setName(e.target.value)}
-            value={name}
-            placeholder='Full Name'
-            className={styles['name']}
-          />
-          <input
-            onChange={e => setEmail(e.target.value)}
-            value={email}
-            placeholder='Email'
-            className={styles['email']}
-          />
+        <div className={styles['modal-heading']}>
+          <span className={styles['modal-icon']}><i className="fa-solid fa-user-pen"></i></span>
+          <p className={styles['eyebrow']}>Member details</p>
+          <h2>Edit user</h2>
+          <p className={styles['message']}>Update this member’s contact information and role.</p>
+        </div>
 
-          <div className={styles['role-dropdown']}>
-            <button
-              onClick={() => setShowRowSelect(!showRoleSelect)}
-              className={`
-                ${styles['role-trigger']}
-                ${styles[`${role.toLowerCase()}`]}
-              `}
-            >
-              {role === 'PCP_PCVP' ? 'PCP/PCVP' : role}
-              <i className="fa-solid fa-chevron-down"></i>
-            </button>
-            <div
-              className={`
-                ${styles['role-select']}
-                ${!showRoleSelect ? styles['hide-role-select'] : ''}
-              `}
-            >
-              {user.role === 'OWNER' &&
+        <div className={styles['user-content']}>
+          <label>
+            <span>Full name</span>
+            <input
+              onChange={e => setName(e.target.value)}
+              value={name}
+              type="text"
+              placeholder="Full name"
+              className={styles['name']}
+            />
+          </label>
+          <label>
+            <span>Email</span>
+            <input
+              onChange={e => setEmail(e.target.value)}
+              value={email}
+              type="email"
+              placeholder="Email"
+              className={styles['email']}
+            />
+          </label>
+
+          <label>
+            <span>Role</span>
+            <div className={styles['role-dropdown']}>
+              <button
+                onClick={() => setShowRowSelect(!showRoleSelect)}
+                className={`
+                  ${styles['role-trigger']}
+                  ${styles[`${role.toLowerCase()}`]}
+                `}
+              >
+                {role === 'PCP_PCVP' ? 'PCP/PCVP' : role}
+                <i className="fa-solid fa-chevron-down"></i>
+              </button>
+              <div
+                className={`
+                  ${styles['role-select']}
+                  ${!showRoleSelect ? styles['hide-role-select'] : ''}
+                `}
+              >
+                {user.role === 'OWNER' &&
+                  <button
+                    onClick={() => changeRole('ADMIN')}
+                    className={`${styles['role-btn']} ${styles['admin']}`}
+                  >
+                    ADMIN
+                  </button>
+                }
                 <button
-                  onClick={() => changeRole('ADMIN')}
-                  className={`${styles['role-btn']} ${styles['admin']}`}
+                  onClick={() => changeRole('BROTHER')}
+                  className={`${styles['role-btn']} ${styles['brother']}`}
                 >
-                  ADMIN
+                  BROTHER
                 </button>
-              }
-              <button
-                onClick={() => changeRole('BROTHER')}
-                className={`${styles['role-btn']} ${styles['brother']}`}
-              >
-                BROTHER
-              </button>
-              <button
-                onClick={() => changeRole('PCP_PCVP')}
-                className={`${styles['role-btn']} ${styles['pcp_pcvp']}`}
-              >
-                PCP/PCVP
-              </button>
-              <button
-                onClick={() => changeRole('PLEDGE')}
-                className={`${styles['role-btn']} ${styles['pledge']}`}
-              >
-                PLEDGE
-              </button>
-              <button
-                onClick={() => changeRole('NONE')}
-                className={`${styles['role-btn']}`}
-              >
-                NONE
-              </button>
+                <button
+                  onClick={() => changeRole('PCP_PCVP')}
+                  className={`${styles['role-btn']} ${styles['pcp_pcvp']}`}
+                >
+                  PCP/PCVP
+                </button>
+                <button
+                  onClick={() => changeRole('PLEDGE')}
+                  className={`${styles['role-btn']} ${styles['pledge']}`}
+                >
+                  PLEDGE
+                </button>
+                <button
+                  onClick={() => changeRole('NONE')}
+                  className={`${styles['role-btn']}`}
+                >
+                  NONE
+                </button>
+              </div>
             </div>
-          </div>
+          </label>
         </div>
 
         <div className={styles['confirmation-btns']}>
@@ -145,6 +157,7 @@ export default function UpdateModal(
             onClick={updateUser}
             className={styles['yes-btn']}
           >
+            <i className="fa-solid fa-check"></i>
             Update
           </button>
           <button

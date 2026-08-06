@@ -38,17 +38,23 @@ export default function ClearModal({ setUsers, showModal }: Props) {
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={styles['modal-container']}>
-        <p className={styles['message']}>
-          Are you sure you want to clear ALL requirements?
-        </p>
+      <div className={`${styles['modal-container']} ${styles['danger-modal']}`}>
+        <div className={styles['modal-heading']}>
+          <span className={styles['modal-icon']}><i className="fa-solid fa-rotate-left"></i></span>
+          <p className={styles['eyebrow']}>Reset progress</p>
+          <h2>Clear all requirements?</h2>
+          <p className={styles['message']}>
+            Every member’s requirement progress will be reset. This cannot be undone.
+          </p>
+        </div>
 
         <div className={styles['confirmation-btns']}>
           <button
             onClick={clearRequirements}
             className={styles['yes-btn']}
           >
-            Yes
+            <i className="fa-solid fa-trash-can"></i>
+            Clear progress
           </button>
           <button
             onClick={() => showModal(false)}

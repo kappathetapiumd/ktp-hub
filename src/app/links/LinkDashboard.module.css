@@ -97,7 +97,7 @@
   min-height: 0;
   padding: clamp(18px, 3vw, 32px);
   overflow-y: auto;
-  scrollbar-width: thin;
+  scrollbar-width: none;
   scrollbar-color: var(--color-border) transparent;
 }
 

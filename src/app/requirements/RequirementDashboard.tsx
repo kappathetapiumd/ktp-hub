@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 
 import UserList from '@/components/requirements/UserList';
 import ClearModal from '@/components/requirements/modal/ClearModal';
-import NetworkBackground from '@/components/background/NetworkBackground';
 
 import type { CurrentUser } from '@/lib/auth/currentUser';
 
@@ -132,10 +131,20 @@ export default function RequirementDashboard({ user }: Props) {
     setGroupReqs(prev => prev.filter(groupReq => groupReq.id !== id));
   }
 
-  return (
-    <>
-      <NetworkBackground />
+  const completedRequirements = users.reduce((total, currentUser) =>
+    total
+    + Number(currentUser.philSmallEvent)
+    + Number(currentUser.philBigEvent)
+    + Number(currentUser.profDevEventA)
+    + Number(currentUser.profDevEventB), 0
+  );
 
+  const totalRequirements = users.length * 4;
+
+  return (
+    <main className={styles['dashboard']}>
+      <div className={styles['background-glow']}></div>
+      
       {showClearModal &&
         <ClearModal
           setUsers={setUsers}
@@ -143,91 +152,117 @@ export default function RequirementDashboard({ user }: Props) {
         />
       }
 
-      {(user.role === 'ADMIN' || user.role === 'OWNER') &&
-        <button
-          onClick={() => setShowClearModal(true)}
-          className={styles['clear-btn']}
-        >
-          Clear
-        </button>
-      }
+      <div className={styles['panel']}>
+        <header className={styles['dashboard-header']}>
+          <div className={styles['title-icon']}>
+            <i className="fa-solid fa-list-check"></i>
+          </div>
+          <div className={styles['title-copy']}>
+            <p className={styles['eyebrow']}>Chapter progress</p>
+            <h1>Requirements</h1>
+            <p className={styles['subtitle']}>
+              All requirements must be met before the end of the semester.
+            </p>
+          </div>
 
-      <button
-        onClick={() => router.push('/strikes')}
-        className={styles['strikes-btn']}
-      >
-        <i className="fa-solid fa-user-xmark"></i>
-      </button>
+          <div className={styles['header-actions']}>
+            <div className={styles['progress-pill']}>
+              <span>{completedRequirements}</span>
+              <small>of {totalRequirements || 0} complete</small>
+            </div>
+            {(user.role === 'ADMIN' || user.role === 'OWNER') &&
+              <button
+                onClick={() => setShowClearModal(true)}
+                className={styles['clear-btn']}
+              >
+                <i className="fa-solid fa-rotate-left"></i>
+                <span>Clear progress</span>
+              </button>
+            }
+          </div>
+        </header>
 
-      <div className={styles['user-list']}>
         <div className={styles['group-task-slot']}>
           {user.role !== 'BROTHER' && (
             <div className={styles['group-task-section']}>
-              <span className={styles['group-task-title']}>
-                Group Pledge Tasks
-              </span>
-
-              {/* {groupReqs.length > 0 && ( */}
-                <div className={styles['group-tasks']}>
-                  {groupReqs.map(({ id, completed, name }) => (
-                    <div key={id} className={styles['group-task']}>
-                      <button
-                        onClick={() => toggleGroupTask(id, completed)}
-                        disabled={user.role !== 'OWNER'}
-                        className={`${styles['task-name']} ${
-                          completed
-                            ? styles['task-completed']
-                            : styles['task-incomplete']
-                        }`}
-                      >
-                        {name}
-                      </button>
-
-                      {user.role === 'OWNER' && (
-                        <button
-                          onClick={() => deleteGroupTask(id)}
-                          className={styles['delete-task']}
-                        >
-                          <i className="fa-solid fa-xmark"></i>
-                        </button>
-                      )}
-                    </div>
-                  ))}
+              <div className={styles['group-task-heading']}>
+                <span className={styles['group-task-icon']}>
+                  <i className="fa-solid fa-people-group"></i>
+                </span>
+                <div>
+                  <strong>Group Pledge Tasks</strong>
+                  <small>{groupReqs.filter(task => task.completed).length} of {groupReqs.length} complete</small>
                 </div>
-              {/* )} */}
+              </div>
+
+              <div className={styles['group-tasks']}>
+                {groupReqs.map(({ id, completed, name }) => (
+                  <div key={id} className={styles['group-task']}>
+                    <button
+                      onClick={() => toggleGroupTask(id, completed)}
+                      disabled={user.role !== 'OWNER'}
+                      className={`${styles['task-name']} ${
+                        completed
+                          ? styles['task-completed']
+                          : styles['task-incomplete']
+                      }`}
+                    >
+                      <i className={`fa-solid ${completed ? 'fa-check' : 'fa-hourglass-half'}`}></i>
+                      <span>{name}</span>
+                    </button>
+
+                    {user.role === 'OWNER' && (
+                      <button
+                        onClick={() => deleteGroupTask(id)}
+                        className={styles['delete-task']}
+                      >
+                        <i className="fa-solid fa-xmark"></i>
+                      </button>
+                    )}
+                  </div>
+                ))}
+
+                {groupReqs.length === 0 &&
+                  <span className={styles['no-tasks']}>No group tasks yet</span>
+                }
+              </div>
             </div>
           )}
         </div>
 
-        <div className={styles['headers']}>
-          <span className={styles['header']}>Name</span>
-          <span className={styles['header']}>
-            <span>Small Event</span>
-            <span className={styles['header-detail']}>(Philanthropy)</span>
-          </span>
-          <span className={styles['header']}>
-            <span>Big Event</span>
-            <span className={styles['header-detail']}>(Philanthropy)</span>
-          </span>
-          <span className={styles['header']}>
-            <span>Event #1</span>
-            <span className={styles['header-detail']}>
-              (Professional Development)
+        <div className={styles['tracker']}>
+          <div className={styles['headers']}>
+            <span className={styles['header']}>Member</span>
+            <span className={styles['header']}>
+              <span>Small Event</span>
+              <span className={styles['header-detail']}>(Philanthropy)</span>
             </span>
-          </span>
-          <span className={styles['header']}>
-            <span>Event #2</span>
-            <span className={styles['header-detail']}>
-              (Professional Development)
+            <span className={styles['header']}>
+              <span>Big Event</span>
+              <span className={styles['header-detail']}>(Philanthropy)</span>
             </span>
-          </span>
-        </div>
+            <span className={styles['header']}>
+              <span>Event #1</span>
+              <span className={styles['header-detail']}>
+                (Professional Development)
+              </span>
+            </span>
+            <span className={styles['header']}>
+              <span>Event #2</span>
+              <span className={styles['header-detail']}>
+                (Professional Development)
+              </span>
+            </span>
+          </div>
 
-        <UserList
-          user={user}
-          users={users}
-          setUsers={setUsers}
-        />
+          <div className={styles['user-list']}>
+            <UserList
+              user={user}
+              users={users}
+              setUsers={setUsers}
+            />
+          </div>
+        </div>
 
         <div className={styles['task-control-slot']}>
           {user.role === 'OWNER' && (
@@ -237,21 +272,19 @@ export default function RequirementDashboard({ user }: Props) {
                 className={styles['toggle-task-input']}
               >
                 <i
-                  className={`
-                    fa-solid ${showGroupReqInput ? 'fa-minus' : 'fa-plus'}
-                  `}
+                  className={`fa-solid ${showGroupReqInput ? 'fa-minus' : 'fa-plus'}`}
                 ></i>
-                {showGroupReqInput ? 'Hide' : 'Add Group Pledge Task'}
+                <span>{showGroupReqInput ? 'Hide' : 'Add a group task'}</span>
               </button>
 
               {showGroupReqInput &&
-                <>
+                <div className={styles['task-form']}>
                   <input
                     value={newGroupReq}
                     onChange={e => setNewGroupReq(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && addGroupReq()}
                     className={styles['task-input']}
-                    placeholder="Enter a group pledge task"
+                    placeholder="e.g. Music Video"
                     maxLength={60}
                   />
                   <button
@@ -259,15 +292,23 @@ export default function RequirementDashboard({ user }: Props) {
                     disabled={!newGroupReq.trim()}
                     className={styles['add-task']}
                   >
-                    Add
+                    <i className="fa-solid fa-plus"></i>
+                    <span>Add task</span>
                   </button>
-                </>
+                </div>
               }
             </div>
           )}
         </div>
       </div>
 
-    </>
+      <button
+        onClick={() => router.push('/strikes')}
+        className={styles['strikes-btn']}
+      >
+        <i className="fa-solid fa-user-xmark"></i>
+        <span>Strike Dashboard</span>
+      </button>
+    </main>
   );
 }

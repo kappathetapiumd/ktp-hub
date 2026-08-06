@@ -61,6 +61,13 @@ export default function WeeksSelect(
 
   return (
     <div className={styles['weeks-frame']}>
+      <div className={styles['weeks-heading']}>
+        <span><i className="fa-regular fa-calendar"></i></span>
+        <div>
+          <strong>Timeline</strong>
+          <small>Select a week to review</small>
+        </div>
+      </div>
       <div
         ref={scrollRef}
         className={styles['weeks-scroll']}
@@ -69,7 +76,7 @@ export default function WeeksSelect(
         onMouseUp={stopDragging}
         onMouseLeave={stopDragging}
       >
-        <div className={styles["weeks-container"]}>
+        <div className={styles['weeks-container']}>
           {weeks.map((week, index) => (
             <button
               key={week}
@@ -82,8 +89,8 @@ export default function WeeksSelect(
                 ${selectedWeek === week ? styles['active'] : ''}
               `}
             >
-              <span className={styles["week-label"]}>Week {index + 1}</span>
-              <span className={styles["week-dates"]}>{formatWeek(week)}</span>
+              <span className={styles['week-label']}>Week {index + 1}</span>
+              <span className={styles['week-dates']}>{formatWeek(week)}</span>
             </button>
           ))}
         </div>

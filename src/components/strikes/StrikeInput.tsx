@@ -21,6 +21,12 @@ type Props = {
   weeks: string[];
 }
 
+const reasonPlaceholders = [
+  `Pratham won't shut up, he's just background noise`,
+  `Ajay can't point out America on a map`,
+  `Kanhav doesn't know how an ETA works`
+];
+
 export default function StrikeInput(
   {
     user,
@@ -36,8 +42,16 @@ export default function StrikeInput(
 ) {
   const [reason, setReason] = useState('');
   const [amount, setAmount] = useState('');
+  const [processingStrike, setProcessingStrike] = useState(false);
+
+  const [randomPlaceholder, setRandomPlaceHolder] = useState(() => {
+    const randomIndex = Math.floor(Math.random() * reasonPlaceholders.length);
+    return reasonPlaceholders[randomIndex];
+  });
 
   async function addStrike() {
+    setProcessingStrike(true);
+
     const currentPledge = pledges.find(pledge => pledge.id === selectedPledge)!;
     
     // if total strikes for a pledge will be negative, don't add the strike
@@ -64,6 +78,9 @@ export default function StrikeInput(
     setReason('');
     setAmount('');
 
+    const randomIndex = Math.floor(Math.random() * reasonPlaceholders.length);
+    setRandomPlaceHolder(reasonPlaceholders[randomIndex]);
+
     // update pledges array to rerender pledge list with correct strike counts
     setPledges(prev => 
       prev.map((pledge) =>
@@ -85,6 +102,8 @@ export default function StrikeInput(
         createdById: strikeEvent.createdById
       }, ...prev]);
     }
+
+    setProcessingStrike(false);
   }
 
   // if not on membership committee, can't add strike
@@ -92,34 +111,52 @@ export default function StrikeInput(
 
   return (
     <div className={styles['strike-input-container']}>
-      <div className={styles['strike-content']}>
-        <textarea
-          onChange={e => setReason(e.target.value)}
-          value={reason}
-          className={styles['reason-input']}
-          placeholder="Reason"
-          rows={1}
-          suppressHydrationWarning
-        />
-
-        <input
-          onChange={e => setAmount(e.target.value)}
-          value={amount}
-          type="text"
-          className={styles['amount-input']}
-          inputMode="numeric"
-          placeholder="#"
-          suppressHydrationWarning
-        />
+      <div className={styles['input-heading']}>
+        <span><i className="fa-solid fa-plus"></i></span>
+        <div>
+          <strong>Add a Strike</strong>
+          <small>Positive numbers add strikes; negative numbers remove them</small>
+        </div>
       </div>
 
-      <button
-        onClick={addStrike}
-        disabled={invalidStrike(reason, amount, selectedPledge, weeks)}
-        className={styles['add-btn']}
-      >
-        <i className="fa-solid fa-plus"></i>
-      </button>
+      <div className={styles['strike-content']}>
+        <label>
+          <span>Reason</span>
+          <textarea
+            onChange={e => setReason(e.target.value)}
+            value={reason}
+            className={styles['reason-input']}
+            placeholder={`e.g. ${randomPlaceholder}`}
+            rows={1}
+            suppressHydrationWarning
+          />
+        </label>
+
+        <label>
+          <span>Amount</span>
+          <input
+            onChange={e => setAmount(e.target.value)}
+            value={amount}
+            type="text"
+            className={styles['amount-input']}
+            inputMode="numeric"
+            placeholder="#"
+            suppressHydrationWarning
+          />
+        </label>
+
+        <button
+          onClick={addStrike}
+          disabled={
+            invalidStrike(reason, amount, selectedPledge, weeks)
+              || processingStrike
+          }
+          className={styles['add-btn']}
+        >
+          <i className="fa-solid fa-plus"></i>
+          <span>Add strike</span>
+        </button>
+      </div>
     </div>
   );
 }

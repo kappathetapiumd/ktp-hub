@@ -44,7 +44,9 @@ export default function InactiveUserDashboard({ user }: Props) {
   }, []);
 
   return (
-    <>
+    <main className={`${styles['dashboard']} ${styles['deleted-dashboard']}`}>
+      <div className={styles['background-glow']}></div>
+
       {showActiveModal &&
         <ActiveModal
           userId={userId}
@@ -73,40 +75,65 @@ export default function InactiveUserDashboard({ user }: Props) {
         />
       }
 
-      <div className={styles['users-container']}>
+      <div className={styles['panel']}>
+        <header className={styles['header']}>
+          <div className={`${styles['title-icon']} ${styles['archive-icon']}`}>
+            <i className="fa-solid fa-box-archive"></i>
+          </div>
+          <div className={styles['title-copy']}>
+            <p className={styles['eyebrow']}>Member archive</p>
+            <h1>Deleted Users</h1>
+            <p className={styles['subtitle']}>
+              Restore former users or permanently clear archived records.
+            </p>
+          </div>
+          <span className={styles['count']}>
+            {users.length} archived
+          </span>
+        </header>
+
         <div className={styles['search-bar-container']}>
           {users.length > 0 &&
-            <SearchBar
-              isActive={isActive}
-              setUsers={setUsers}
-            />
+            <div className={styles['search-shell']}>
+              <i className="fa-solid fa-magnifying-glass"></i>
+              <SearchBar
+                isActive={isActive}
+                setUsers={setUsers}
+              />
+            </div>
           }
-
-          <button
-            onClick={() => router.push('/strikes')}
-            className={styles['dashboard-btn']}
-          >
-            <i className="fa-solid fa-user-xmark"></i>
-          </button>
         </div>
 
         <div className={styles['user-list-container']}>
           {users.length > 0 &&
-            <UserList
-              user={user}
-              users={users}
-              setUserId={setUserId}
-              isUpdating={isUpdating}
-              isDeleting={isDeleting}
-              setShowDeleteModal={setShowDeleteModal}
-              setShowUpdateModal={setShowActiveModal}
-              setUsers={setUsers}
-            />
+            <>
+              <div className={styles['list-headers']}>
+                <span>Archived member</span>
+                <span>Former role</span>
+                <span>Membership committee</span>
+              </div>
+              <UserList
+                user={user}
+                users={users}
+                setUserId={setUserId}
+                isUpdating={isUpdating}
+                isDeleting={isDeleting}
+                setShowDeleteModal={setShowDeleteModal}
+                setShowUpdateModal={setShowActiveModal}
+                setUsers={setUsers}
+              />
+            </>
           }
         </div>
         
         {users.length === 0 && 
-          <p className={styles['info-message']}>No deleted users.</p>
+          <div className={styles['info-message']}>
+            <span className={styles['empty-icon']}>
+              <i className="fa-solid fa-box-open"></i>
+            </span>
+            <h2>The archive is empty</h2>
+            <p>Deleted users will appear here if you need to restore them.</p>
+          </div>
         }
 
         <div className={styles['button-list-container']}>
@@ -121,6 +148,14 @@ export default function InactiveUserDashboard({ user }: Props) {
           />
         </div>
       </div>
-    </>
+
+      <button
+        onClick={() => router.push('/strikes')}
+        className={styles['dashboard-btn']}
+      >
+        <i className="fa-solid fa-user-xmark"></i>
+        <span>Strike Dashboard</span>
+      </button>
+    </main>
   );
 }

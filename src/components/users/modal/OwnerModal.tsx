@@ -22,6 +22,8 @@ export default function OwnerModal({ users, showModal }: Props) {
       return;
     }
 
+    showModal(false);
+
     const response = await fetch('/api/users', {
       method: 'PUT',
       headers: { 'Content-Type': '/application/json' },
@@ -33,20 +35,32 @@ export default function OwnerModal({ users, showModal }: Props) {
 
     if (!response.ok) return;
 
-    showModal(false);
     window.location.reload();
   }
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={styles['modal-container']}>
+      <div className={`${styles['modal-container']} ${styles['owner-modal']}`}>
+        <div className={styles['modal-heading']}>
+          <span className={styles['modal-icon']}><i className="fa-solid fa-crown"></i></span>
+          <p className={styles['eyebrow']}>Chapter ownership</p>
+          <h2>Transfer ownership</h2>
+          <p className={styles['message']}>
+            Enter the new owner’s university email. You’ll confirm once more before transferring.
+          </p>
+        </div>
+
         <div className={styles['user-content']}>
-          <input
-            onChange={e => setEmail(e.target.value)}
-            value={email}
-            placeholder='Enter the email of the new owner.'
-            className={styles['email']}
-          />
+          <label>
+            <span>New owner email</span>
+            <input
+              onChange={e => setEmail(e.target.value)}
+              value={email}
+              type="email"
+              placeholder="name@umd.edu"
+              className={styles['email']}
+            />
+          </label>
         </div>
 
         <div className={styles['confirmation-btns']}>
@@ -60,6 +74,7 @@ export default function OwnerModal({ users, showModal }: Props) {
             }
             className={styles['yes-btn']}
           >
+            <i className="fa-solid fa-crown"></i>
             {!clickedTwice ? 'Click to transfer' : 'Click again to confirm'}
           </button>
           <button

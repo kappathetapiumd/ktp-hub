@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-import NetworkBackground from '@/components/background/NetworkBackground';
 import ZeroStrikesModal from '@/components/strikes/modal/ZeroStrikesModal';
 import DeleteModal from '@/components/strikes/modal/DeleteModal';
 import EditModal from '@/components/strikes/modal/EditModal';
@@ -98,9 +97,8 @@ export default function StrikeDashboard({ user }: Props) {
   const currentPledge = pledges.find(pledge => pledge.id === selectedPledge);
 
   return (
-    <>
-      {/* might dtm - possibly get rid of this, also kinda buggy on ipad, make sure to uninstall react-responsive package too */}
-      {!isMobile && <NetworkBackground />}
+    <main className={styles['dashboard']}>
+      <div className={styles['background-glow']}></div>
 
       {showStrikesModal &&
         <ZeroStrikesModal
@@ -135,24 +133,49 @@ export default function StrikeDashboard({ user }: Props) {
         />
       }
 
-      <main className={styles['dashboard']}>
-        <aside className={styles['sidebar']}>
-          <PledgeSideBar
-            user={user}
-            pledges={pledges}
-            totalStrikes={totalStrikes}
-            selectedPledge={selectedPledge}
-            setSelectedPledge={setSelectedPledge}
-            showSideBar={showSideBar}
-            setShowSideBar={setShowSideBar}
-          />
-        </aside>
+      <aside className={styles['sidebar']}>
+        <PledgeSideBar
+          user={user}
+          pledges={pledges}
+          totalStrikes={totalStrikes}
+          selectedPledge={selectedPledge}
+          setSelectedPledge={setSelectedPledge}
+          showSideBar={showSideBar}
+          setShowSideBar={setShowSideBar}
+        />
+      </aside>
 
-        <section
-          onClick={() => isMobile && setShowSideBar(false)}
-          className={styles['dashboard-main']}
-        >
-          <div className={styles['dashboard-controls']}>
+      <section
+        onClick={() => isMobile && setShowSideBar(false)}
+        className={styles['dashboard-main']}
+      >
+        <header className={styles['dashboard-header']}>
+          <div className={styles['title-icon']}>
+            <i className="fa-solid fa-bolt"></i>
+          </div>
+          <div className={styles['title-copy']}>
+            <p className={styles['eyebrow']}>Accountability center</p>
+            <h1>{currentPledge ? currentPledge.name : 'Strike Dashboard'}</h1>
+            <p className={styles['subtitle']}>
+              {currentPledge
+                ? 'Review activity and manage strike history.'
+                : 'Select a pledge from the roster to get started.'}
+            </p>
+          </div>
+          <div className={styles['header-stats']}>
+            <div className={styles['stat']}>
+              <span>{currentPledge?.strikes ?? '—'}</span>
+              <small>Total strikes</small>
+            </div>
+            <div className={styles['stat']}>
+              <span>{totalStrikesPerWeek > 0 ? `+${totalStrikesPerWeek}` : totalStrikesPerWeek}</span>
+              <small>Selected week</small>
+            </div>
+          </div>
+        </header>
+
+        <div className={styles['dashboard-controls']}>
+          <div className={styles['composer-slot']}>
             <StrikeInput
               user={user}
               pledges={pledges}
@@ -164,26 +187,28 @@ export default function StrikeDashboard({ user }: Props) {
               selectedWeek={selectedWeek}
               weeks={weeks}
             />
+          </div>
+          <div className={styles['weeks-slot']}>
             <WeeksSelect
               weeks={weeks}
               selectedWeek={selectedWeek}
               setSelectedWeek={setSelectedWeek}
             />
           </div>
+        </div>
 
-          <div className={styles['history-wrapper']}>
-            <StrikeHistory
-              user={user}
-              strikeHistory={strikeHistory}
-              totalStrikesPerWeek={totalStrikesPerWeek}
-              setShowDeleteModal={setShowDeleteModal}
-              setShowEditModal={setShowEditModal}
-              setStrikeId={setStrikeId}
-              selectedPledge={selectedPledge}
-            />
-          </div>
-        </section>
-      </main>
-    </>
+        <div className={styles['history-wrapper']}>
+          <StrikeHistory
+            user={user}
+            strikeHistory={strikeHistory}
+            totalStrikesPerWeek={totalStrikesPerWeek}
+            setShowDeleteModal={setShowDeleteModal}
+            setShowEditModal={setShowEditModal}
+            setStrikeId={setStrikeId}
+            selectedPledge={selectedPledge}
+          />
+        </div>
+      </section>
+    </main>
   );
 }
