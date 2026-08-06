@@ -102,3 +102,14 @@ export async function updateRequirement(
     });
   }
 }
+
+export async function clearRequirements() {
+  await prisma.user.updateMany({
+    data: {
+      philSmallEvent: false,
+      philBigEvent: false,
+      profDevEventA: false,
+      profDevEventB: false
+    }
+  });
+}

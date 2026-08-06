@@ -1,49 +1,24 @@
-import { useEffect, useState } from 'react';
-
 import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './UserList.module.css';
 
 type Props = {
   user: CurrentUser
+  users: User[]
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
 type User = {
   id: string;
   name: string;
+  role: string;
   philSmallEvent: boolean;
   philBigEvent: boolean;
   profDevEventA: boolean;
   profDevEventB: boolean
 }
 
-export default function UserList({ user }: Props) {
-  const [users, setUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    loadUsers();
-
-    async function loadUsers() {
-      const type =
-        (user.role === 'OWNER' || user.role === 'ADMIN')
-        ? 'all'
-        : user.role === 'BROTHER'
-        ? 'brothers'
-        : 'pledges';
-
-      const params = new URLSearchParams({
-        type
-      });
-
-      const response = await fetch(`/api/requirements?${params.toString()}`);
-
-      if (!response.ok) return;
-
-      const users = await response.json();
-      setUsers(users);
-    }
-  }, [user.role]);
-
+export default function UserList({ user, users, setUsers }: Props) {
   async function updateEvent(id: string, completed: boolean, event: string) {
     const response = await fetch('/api/requirements', {
       method: 'PUT',
@@ -74,14 +49,24 @@ export default function UserList({ user }: Props) {
 
   return (
     <div className={styles['user-list']}>
-      {users.map((
-        { id, name, philSmallEvent, philBigEvent, profDevEventA, profDevEventB }
-      ) => (
+      {users.map(({
+        id, role, name, philSmallEvent,
+        philBigEvent, profDevEventA, profDevEventB
+      }) => (
         <div
           key={id}
           className={styles['user-card']}
         >
-          <span className={styles['name']}>{name}</span>
+          <span
+            className={`
+              ${styles['name']}
+              ${styles[`${(user.role === 'ADMIN' || user.role === 'OWNER')
+                && (role === 'BROTHER' ? 'brother': 'pledge')}`
+              ]}
+            `}
+          >
+            {name}
+          </span>
           <div className={styles['checkboxes']}>
             <button
               onClick={() => updateEvent(id, philSmallEvent, 'SMALL')}

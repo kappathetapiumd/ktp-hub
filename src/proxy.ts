@@ -15,7 +15,7 @@ const pledgePcpBrotherRoutes = [
 const membershipRoutes = [...pledgePcpBrotherRoutes];
 
 // users - GET, PUT, DELETE
-// requirements - PUT
+// requirements - PUT, DELETE
 const adminRoutes = [...membershipRoutes, '/users', '/api/users'];
 
 // weeks - POST
