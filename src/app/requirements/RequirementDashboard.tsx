@@ -122,9 +122,10 @@ export default function RequirementDashboard({ user }: Props) {
     });
 
     const response =
-    await fetch(`/api/requirements/pledge?${params.toString()}`, {
-      method: 'DELETE'
-    });
+      await fetch(`/api/requirements/pledge?${params.toString()}`, {
+        method: 'DELETE'
+      }
+    );
 
     if (!response.ok) return;
 

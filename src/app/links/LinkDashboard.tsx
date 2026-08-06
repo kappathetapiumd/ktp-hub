@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { CurrentUser } from '@/lib/auth/currentUser';
@@ -22,25 +22,59 @@ export default function LinkDashboard({ user }: Props) {
   const [links, setLinks] = useState<Link[]>([]);
   const [label, setLabel] = useState('');
   const [url, setUrl] = useState('');
+
   const canManageLinks = user.role === 'ADMIN' || user.role === 'OWNER';
+  const canAddLink = label.trim() && url.trim();
 
-  function addLink(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  useEffect(() => {
+    loadLinks();
 
+    async function loadLinks() {
+      const response = await fetch('/api/links');
+
+      if (!response.ok) return;
+
+      const links = await response.json();
+      setLinks(links);
+    }
+  }, []);
+
+  async function addLink() {
     const cleanLabel = label.trim();
     const cleanUrl = url.trim();
     if (!cleanLabel || !cleanUrl) return;
 
-    setLinks(currentLinks => [
-      ...currentLinks,
-      { id: crypto.randomUUID(), label: cleanLabel, url: cleanUrl },
-    ]);
+    const response = await fetch('/api/links', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        label,
+        url
+      })
+    });
+
+    if (!response.ok) return;
+
+    const newLink = await response.json();
+
+    setLinks(prev => [...prev, newLink]);
+
     setLabel('');
     setUrl('');
   }
 
-  function deleteLink(id: string) {
-    setLinks(currentLinks => currentLinks.filter(link => link.id !== id));
+  async function deleteLink(id: string) {
+    const params = new URLSearchParams({
+      id
+    });
+
+    const response = await fetch(`/api/links?${params.toString()}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) return;
+
+    setLinks(prev => prev.filter(link => link.id !== id));
   }
 
   return (
@@ -94,7 +128,11 @@ export default function LinkDashboard({ user }: Props) {
                       <strong>{linkLabel}</strong>
                       <small>{linkUrl}</small>
                     </span>
-                    <i className={`fa-solid fa-chevron-right ${styles['chevron']}`} />
+                    <i
+                      className={`
+                        fa-solid fa-chevron-right ${styles['chevron']}
+                      `}
+                    ></i>
                   </a>
 
                   {canManageLinks && (
@@ -112,7 +150,7 @@ export default function LinkDashboard({ user }: Props) {
         </div>
 
         {canManageLinks && (
-          <form className={styles['link-input']} onSubmit={addLink}>
+          <div className={styles['link-input']}>
             <div className={styles['composer-heading']}>
               <span><i className="fa-solid fa-plus" /></span>
               <div>
@@ -128,6 +166,9 @@ export default function LinkDashboard({ user }: Props) {
                   type="text"
                   value={label}
                   onChange={e => setLabel(e.target.value)}
+                  onKeyDown={
+                    e => (canAddLink && e.key === 'Enter') && addLink()
+                  }
                   placeholder="e.g. Chapter Calendar"
                 />
               </label>
@@ -137,15 +178,21 @@ export default function LinkDashboard({ user }: Props) {
                   type="url"
                   value={url}
                   onChange={e => setUrl(e.target.value)}
+                  onKeyDown={
+                    e => (canAddLink && e.key === 'Enter') && addLink()
+                  }
                   placeholder="https://example.com"
                 />
               </label>
-              <button disabled={!label.trim() || !url.trim()}>
+              <button
+                onClick={addLink}
+                disabled={!canAddLink}
+              >
                 <i className="fa-solid fa-plus" />
                 <span>Add link</span>
               </button>
             </div>
-          </form>
+          </div>
         )}
       </div>
 

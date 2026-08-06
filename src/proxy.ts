@@ -7,9 +7,10 @@ import { getUserFromSession, updateUserSessionExpiration } from '@/lib/auth/sess
 // strikes - GET (pledges - only total and total per week)
 // requirements - GET
 // requirements/pledge - GET
+// links - GET
 const pledgePcpBrotherRoutes = [
   '/strikes', '/requirements', '/links', '/api/strikes', '/api/pledges',
-  '/api/weeks', '/api/requirements', '/api/requirements/pledge'
+  '/api/weeks', '/api/requirements', '/api/requirements/pledge', '/api/links'
 ];
 
 // strikes - POST, PUT, DELETE
@@ -17,6 +18,7 @@ const membershipRoutes = [...pledgePcpBrotherRoutes];
 
 // users - GET, PUT, DELETE
 // requirements - PUT, DELETE
+// links - POST, DELETE
 const adminRoutes = [...membershipRoutes, '/users', '/api/users'];
 
 // weeks - POST
@@ -121,8 +123,8 @@ function membershipAuth(
   if (!membershipRoutes.includes(path))
     return deny('/strikes', apiCall, request);
 
-  if ((path === '/api/weeks' || path.startsWith('/api/requirements'))
-    && request.method !== 'GET'
+  if ((path === '/api/weeks' || path.startsWith('/api/requirements')
+    || path === '/api/links') && request.method !== 'GET'
   )
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 

@@ -23,7 +23,7 @@ type Props = {
 
 const reasonPlaceholders = [
   `Pratham won't shut up, he's just background noise`,
-  `Ajay can't point out America on a map`,
+  `Ajay deadass can't point out America on a map`,
   `Kanhav doesn't know how an ETA works`
 ];
 
