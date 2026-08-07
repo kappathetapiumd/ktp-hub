@@ -8,9 +8,11 @@ import { getUserFromSession, updateUserSessionExpiration } from '@/lib/auth/sess
 // requirements - GET
 // requirements/pledge - GET
 // links - GET
+// pusher/auth - POST
 const pledgePcpBrotherRoutes = [
   '/strikes', '/requirements', '/links', '/api/strikes', '/api/pledges',
-  '/api/weeks', '/api/requirements', '/api/requirements/pledge', '/api/links'
+  '/api/weeks', '/api/requirements', '/api/requirements/pledge', '/api/links',
+  '/api/pusher/auth'
 ];
 
 // strikes - POST, PUT, DELETE
@@ -111,7 +113,7 @@ function brotherPcpAuth(
   if (!pledgePcpBrotherRoutes.includes(path))
     return deny('/strikes', apiCall, request);
 
-  if (apiCall && request.method !== 'GET')
+  if (apiCall && path !== '/api/pusher/auth' && request.method !== 'GET')
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   return NextResponse.next();

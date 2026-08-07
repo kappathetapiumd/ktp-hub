@@ -4,10 +4,12 @@ import { invalidStrike } from '@/lib/utils';
 
 import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
+import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './Modal.module.css';
 
 type Props = {
+  user: CurrentUser;
   strikeId: string;
   strikeHistory: Strike[];
   setStrikeHistory: React.Dispatch<React.SetStateAction<Strike[]>>;
@@ -22,6 +24,7 @@ type Props = {
 
 export default function EditModal(
   {
+    user,
     strikeId,
     strikeHistory,
     setStrikeHistory,
@@ -57,7 +60,9 @@ export default function EditModal(
       body: JSON.stringify({
         id: strikeId,
         amount: Number(amount),
-        reason
+        reason,
+        pledgeId: selectedPledge,
+        createdById: user.id
       })
     });
 

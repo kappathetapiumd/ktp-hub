@@ -41,3 +41,14 @@ export function invalidStrike(
 
   return today.isBefore(startDate) || today.isAfter(endDate);
 }
+
+export function addedToThisWeek(selectedWeek: string) {
+  const [start, end] = selectedWeek.split(' - ');
+
+  const today = dayjs();
+  const startDate = dayjs(start);
+  const endDate = dayjs(end);
+
+  return (today.isAfter(startDate, 'day') && today.isBefore(endDate, 'day'))
+    || today.isSame(startDate, 'day') || today.isSame(endDate, 'day');
+}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { pusherClient } from '@/lib/pusher/client';
 
 import ZeroStrikesModal from '@/components/strikes/modal/ZeroStrikesModal';
 import DeleteModal from '@/components/strikes/modal/DeleteModal';
@@ -16,6 +17,7 @@ import type { Strike } from '@/lib/strikes';
 import type { CurrentUser } from '@/lib/auth/currentUser'; 
 
 import styles from './StrikeDashboard.module.css';
+import { addedToThisWeek } from '@/lib/utils';
 
 type Props = {
   user: CurrentUser;
@@ -34,6 +36,60 @@ export default function StrikeDashboard({ user }: Props) {
   const [strikeId, setStrikeId] = useState('');
   const [showSideBar, setShowSideBar] = useState(true);
 
+  useEffect(() => {
+    const channel = pusherClient.subscribe('private-strikes');
+
+    function handleStrikeEvent(
+      { pledgeId, userId }: { pledgeId: string; userId: string }
+    ) {
+      if (user.id !== userId) {
+        if (selectedPledge === pledgeId && addedToThisWeek(selectedWeek)) {
+          loadStrikeHistory();
+        }
+
+        loadPledges();
+      }
+    }
+
+    channel.bind('strike-created', handleStrikeEvent);
+    channel.bind('strike-updated', handleStrikeEvent);
+    channel.bind('strike-deleted', handleStrikeEvent);
+
+    return () => {
+      channel.unbind('strike-created', handleStrikeEvent);
+      channel.unbind('strike-updated', handleStrikeEvent);
+      channel.unbind('strike-deleted', handleStrikeEvent);
+      pusherClient.unsubscribe('private-strikes');
+    }
+
+    async function loadPledges() {
+      const response = await fetch('/api/pledges');
+
+      if (!response.ok) return;
+
+      const pledges = await response.json();
+      setPledges(pledges);
+    }
+
+    async function loadStrikeHistory() {
+      const params = new URLSearchParams({
+        pledgeId: selectedPledge,
+        week: selectedWeek
+      });
+
+      const response = await fetch(`/api/strikes?${params.toString()}`);
+
+      if (!response.ok) return;
+
+      const { strikeHistory, totalStrikesPerWeek } = await response.json();
+
+      setTotalStrikesPerWeek(totalStrikesPerWeek);
+
+      if (strikeHistory)
+        setStrikeHistory(strikeHistory);
+    }
+  }, [selectedPledge, selectedWeek, user.id]);
+
   // load the list of pledges
   useEffect(() => {
     loadPledges();
@@ -48,7 +104,7 @@ export default function StrikeDashboard({ user }: Props) {
     }
   }, []);
 
-  // load the weeksD
+  // load the weeks
   useEffect(() => {
     loadWeeks();
 
@@ -109,6 +165,7 @@ export default function StrikeDashboard({ user }: Props) {
 
       {showDeleteModal &&
         <DeleteModal
+          user={user}
           strikeId={strikeId}
           setStrikeHistory={setStrikeHistory}
           setTotalStrikesPerWeek={setTotalStrikesPerWeek}
@@ -120,6 +177,7 @@ export default function StrikeDashboard({ user }: Props) {
 
       {showEditModal &&
         <EditModal
+          user={user}
           strikeId={strikeId}
           strikeHistory={strikeHistory}
           setStrikeHistory={setStrikeHistory}

@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import dayjs from 'dayjs';
 
-import { invalidStrike } from '@/lib/utils';
+import { addedToThisWeek, invalidStrike } from '@/lib/utils';
 
 import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
@@ -22,9 +21,9 @@ type Props = {
 }
 
 const reasonPlaceholders = [
-  `Pratham won't shut up, literally just background noise`,
-  `Ajay deadass can't point out America on a map`,
-  `Kanhav doesn't know how an ETA works`
+  `Pratham won't shut up`,
+  `Ajay sucks at Geoguesser`,
+  `Kanhav can't score a penalty`
 ];
 
 export default function StrikeInput(
@@ -154,20 +153,8 @@ export default function StrikeInput(
           className={styles['add-btn']}
         >
           <i className="fa-solid fa-plus"></i>
-          <span>Add strike</span>
         </button>
       </div>
     </div>
   );
-}
-
-function addedToThisWeek(selectedWeek: string) {
-  const [start, end] = selectedWeek.split(' - ');
-
-  const today = dayjs();
-  const startDate = dayjs(start);
-  const endDate = dayjs(end);
-
-  return (today.isAfter(startDate, 'day') && today.isBefore(endDate, 'day'))
-    || today.isSame(startDate, 'day') || today.isSame(endDate, 'day');
 }

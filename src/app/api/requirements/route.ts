@@ -5,7 +5,9 @@ export async function GET(request: Request) {
 
   const type = searchParams.get('type');
 
-  const users = await getRequirementUsers(type!);
+  if (!type) return Response.json({ error: 'No type specified.' })
+
+  const users = await getRequirementUsers(type);
   return Response.json(users);
 }
 

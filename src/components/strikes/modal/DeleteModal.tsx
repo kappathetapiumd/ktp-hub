@@ -1,9 +1,11 @@
 import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
+import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './Modal.module.css';
 
 type Props = {
+  user: CurrentUser
   strikeId: string;
   setStrikeHistory: React.Dispatch<React.SetStateAction<Strike[]>>;
   setTotalStrikesPerWeek: React.Dispatch<React.SetStateAction<number>>;
@@ -13,6 +15,7 @@ type Props = {
 }
 
 export default function DeleteModal({
+  user,
   strikeId,
   setStrikeHistory,
   setTotalStrikesPerWeek,
@@ -24,7 +27,9 @@ export default function DeleteModal({
     showModal(false);
     
     const params = new URLSearchParams({
-      strikeId
+      strikeId,
+      pledgeId: selectedPledge,
+      deletedById: user.id
     });
 
     const response = await fetch(`/api/strikes?${params.toString()}`, {
