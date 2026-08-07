@@ -1,7 +1,5 @@
 import dayjs from 'dayjs';
 
-import type { User } from './users';
-
 export function sortUsers(users: {role: string; name: string}[]) {
   const roleOrder: Record<string, number> = {
     'OWNER': 1,

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import dayjs from 'dayjs';
 
 import styles from './WeeksSelect.module.css';
@@ -13,6 +13,8 @@ export default function WeeksSelect(
   { weeks, selectedWeek, setSelectedWeek }: Props
 ) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const selectedWeekRef = useRef<HTMLButtonElement>(null);
+  const hasCenteredInitialWeek = useRef(false);
   const isMouseDown = useRef(false);
   const hasDragged = useRef(false);
   const startX = useRef(0);
@@ -22,7 +24,23 @@ export default function WeeksSelect(
   useEffect(() => {
     const currentWeek = getCurrentWeek(weeks, dayjs());
     setSelectedWeek(currentWeek);
-  }, [weeks]);
+  }, [weeks, setSelectedWeek]);
+
+  // Center the initially selected week, clamping naturally at either end.
+  useLayoutEffect(() => {
+    const scrollElement = scrollRef.current;
+    const selectedElement = selectedWeekRef.current;
+
+    if (!scrollElement || !selectedElement || hasCenteredInitialWeek.current) return;
+
+    const scrollRect = scrollElement.getBoundingClientRect();
+    const selectedRect = selectedElement.getBoundingClientRect();
+    const selectedCenter = scrollElement.scrollLeft
+      + selectedRect.left - scrollRect.left
+      + selectedRect.width / 2;
+    scrollElement.scrollLeft = selectedCenter - scrollElement.clientWidth / 2;
+    hasCenteredInitialWeek.current = true;
+  }, [selectedWeek]);
 
   // start horizontal scroll functionality
   function handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
@@ -80,6 +98,7 @@ export default function WeeksSelect(
           {weeks.map((week, index) => (
             <button
               key={week}
+              ref={selectedWeek === week ? selectedWeekRef : null}
               onClick={() => {
                 if (hasDragged.current) return;
                 setSelectedWeek(week);

@@ -22,7 +22,7 @@ type Props = {
 
 const reasonPlaceholders = [
   `Pratham won't shut up`,
-  `Ajay sucks at Geoguesser`,
+  `Ajay sucks at GeoGuessr`,
   `Kanhav can't score a penalty`
 ];
 

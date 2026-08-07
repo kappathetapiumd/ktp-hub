@@ -200,7 +200,7 @@ export default function RequirementDashboard({ user }: Props) {
         </header>
 
         <div className={styles['group-task-slot']}>
-          {user.role !== 'BROTHER' && (
+          {user.role !== 'BROTHER' && user.role !== 'ADMIN' && (
             <div className={styles['group-task-section']}>
               <div className={styles['group-task-heading']}>
                 <span className={styles['group-task-icon']}>
