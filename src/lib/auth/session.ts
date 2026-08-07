@@ -62,6 +62,12 @@ async function getUserSessionById(sessionId: string) {
     }
   });
 
+  await prisma.passwordResetToken.deleteMany({
+    where: {
+      expiresAt: { lt: new Date() }
+    }
+  });
+
   const user = await prisma.session.findFirst({
     where: { sessionId },
     select: {

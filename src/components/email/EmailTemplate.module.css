@@ -1,0 +1,112 @@
+.page {
+  background-color: #f4f4f5;
+  color: #27272a;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.preview {
+  display: none;
+  font-size: 1px;
+  line-height: 1px;
+  max-height: 0;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.outer-cell {
+  padding: 40px 16px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e4e4e7;
+  border-collapse: separate;
+  border-radius: 12px;
+  max-width: 600px;
+  overflow: hidden;
+}
+
+.header {
+  background-color: #18181b;
+  padding: 24px 40px;
+}
+
+.brand {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.content {
+  padding: 40px;
+}
+
+.heading {
+  color: #18181b;
+  font-size: 28px;
+  line-height: 36px;
+  margin: 0 0 20px;
+}
+
+.paragraph {
+  color: #52525b;
+  font-size: 16px;
+  line-height: 26px;
+  margin: 0 0 24px;
+}
+
+.button-table {
+  margin: 8px 0 32px;
+}
+
+.button-cell {
+  background-color: #18181b;
+  border-radius: 6px;
+}
+
+.button {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 14px 24px;
+  text-decoration: none;
+}
+
+.fallback-text {
+  color: #71717a;
+  font-size: 14px;
+  line-height: 22px;
+  margin: 0 0 8px;
+}
+
+.link-container {
+  margin: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.link {
+  color: #2563eb;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.footer {
+  background-color: #fafafa;
+  border-top: 1px solid #e4e4e7;
+  padding: 20px 40px;
+}
+
+.footer-text {
+  color: #71717a;
+  font-size: 12px;
+  line-height: 18px;
+  margin: 0;
+}

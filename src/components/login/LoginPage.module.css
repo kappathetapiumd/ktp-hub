@@ -15,7 +15,7 @@
   position: relative;
   z-index: 1;
   width: min(100%, 440px);
-  padding: var(--spacing-10);
+  padding: var(--spacing-10) var(--spacing-10) var(--spacing-6);
 
   background: transparent;
   border-radius: var(--radius-2xl);
@@ -144,7 +144,8 @@
   line-height: 1.5;
 }
 
-.switch-link {
+.switch-link,
+.forgot-password-link {
   margin-left: 0.25rem;
   padding: 0;
   border: none;
@@ -160,15 +161,29 @@
     text-shadow var(--transition-fast);
 }
 
-.switch-link:hover {
+.switch-link:hover,
+.forgot-password-link:hover {
   transform: none;
   color: var(--color-primary);
   text-shadow: 0 0 12px rgba(0, 212, 170, 0.35);
 }
 
-.switch-link:focus-visible {
+.switch-link:focus-visible,
+.forgot-password-link:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.2);
+}
+
+.forgot-password-link {
+  display: inline-block;
+  margin-top: var(--spacing-2);
+  margin-left: 0;
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.forgot-password-link:hover {
+  color: var(--color-primary-light);
 }
 
 .info-message {
@@ -184,7 +199,7 @@
   }
 
   .login-content {
-    padding: var(--spacing-8) var(--spacing-6);
+    padding: var(--spacing-8) var(--spacing-6) var(--spacing-5);
   }
 
   .login-content h1 {

@@ -65,7 +65,7 @@ export default function LoginPage() {
 
         <div className={styles['login-input']}>
           {!isLogin && (
-            <div className={styles["input-group"]}>
+            <div className={styles['input-group']}>
               <p>Name</p>
               <input
                 value={name}
@@ -76,7 +76,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className={styles["input-group"]}>
+          <div className={styles['input-group']}>
             <p>Email</p>
             <input
               value={email}
@@ -87,7 +87,7 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className={styles["input-group"]}>
+          <div className={styles['input-group']}>
             <p>Password</p>
             <input
               value={password}
@@ -99,27 +99,38 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className={styles["login-btns-container"]}>
+          <div className={styles['login-btns-container']}>
             <button
               onClick={handleAuth}
-              className={styles["submit-btn"]}
+              className={styles['submit-btn']}
               disabled={
                 isLogin ? (invalidLogin) : (invalidLogin || !validSignup)
               }
             >
               {isLogin ? 'Sign in' : 'Register'}
             </button>
-            <p className={styles["account-container"]}>
+            <p className={styles['account-container']}>
               {isLogin
                 ? "Don't have an account? "
                 : 'Already have an account? '
               }
               <a
                 onClick={() => setIsLogin(!isLogin)}
-                className={styles["switch-link"]}
+                className={styles['switch-link']}
               >
                 {isLogin ? 'Register' : 'Sign in'}
               </a>
+              
+              <br />
+
+              {isLogin &&
+                <a
+                  onClick={() => {router.push('/forgot-password')}}
+                  className={styles['forgot-password-link']}
+                >
+                  Forgot your password?
+                </a>
+              }
             </p>
           </div>
         </div>

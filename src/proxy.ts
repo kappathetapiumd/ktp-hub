@@ -43,11 +43,12 @@ async function proxyAuth(request: NextRequest) {
   const user = await getUserFromSession(request.cookies);
   const path = request.nextUrl.pathname;
   const apiCall = path.startsWith('/api');
-  const loginPage = path === '/';
+  const loginPage = path === '/'
+    || path === '/forgot-password' || path === '/reset-password';
   const limboPage = path === '/limbo';
   const authErrorPage = limboPage && request.nextUrl.searchParams.has('message');
 
-  if (path === '/api/auth/signin' || path === '/api/auth/signup')
+  if (path.startsWith('/api/auth'))
     return NextResponse.next();
 
   if (!user) {
