@@ -3,8 +3,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import NetworkBackground from '@/components/background/NetworkBackground';
-
 import styles from './Limbo.module.css';
 
 export default function Limbo({ message }: { message: string | undefined }) {
@@ -20,8 +18,6 @@ export default function Limbo({ message }: { message: string | undefined }) {
 
   return (
     <div className={styles['limbo-container']}>
-      <NetworkBackground />
-
       <section className={styles['limbo-content']}>
         <h1>Κ Θ Π</h1>
 

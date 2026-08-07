@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import NetworkBackground from '../background/NetworkBackground';
-
 import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
@@ -62,8 +60,6 @@ export default function LoginPage() {
 
   return (
     <div className={styles['login-container']}>
-      <NetworkBackground />
-
       <section className={styles['login-content']}>
         <h1>Κ Θ Π</h1>
 
