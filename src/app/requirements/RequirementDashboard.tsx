@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import UserList from '@/components/requirements/UserList';
@@ -33,6 +33,7 @@ type GroupTask = {
 export default function RequirementDashboard({ user }: Props) {
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
+  const [search, setSearch] = useState('');
   const [groupReqs, setGroupReqs] = useState<GroupTask[]>([]);
   const [newGroupReq, setNewGroupReq] = useState('');
   const [showGroupReqInput, setShowGroupReqInput] = useState(false);
@@ -142,6 +143,21 @@ export default function RequirementDashboard({ user }: Props) {
 
   const totalRequirements = users.length * 4;
 
+  const filteredUsers = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase();
+
+    if (!query) return users;
+
+    return users.filter(currentUser => {
+      const role = currentUser.role === 'PCP_PCVP'
+        ? 'pcp/pcvp'
+        : currentUser.role.toLocaleLowerCase();
+
+      return currentUser.name.toLocaleLowerCase().includes(query)
+        || role.includes(query);
+    });
+  }, [search, users]);
+
   return (
     <main className={styles['dashboard']}>
       <div className={styles['background-glow']}></div>
@@ -177,7 +193,7 @@ export default function RequirementDashboard({ user }: Props) {
                 className={styles['clear-btn']}
               >
                 <i className="fa-solid fa-rotate-left"></i>
-                <span>Clear progress</span>
+                <span>Clear Progress</span>
               </button>
             }
           </div>
@@ -192,7 +208,10 @@ export default function RequirementDashboard({ user }: Props) {
                 </span>
                 <div>
                   <strong>Group Pledge Tasks</strong>
-                  <small>{groupReqs.filter(task => task.completed).length} of {groupReqs.length} complete</small>
+                  <small>
+                    {groupReqs.filter(task => task.completed).length} of {' '}
+                    {groupReqs.length} complete
+                  </small>
                 </div>
               </div>
 
@@ -208,7 +227,11 @@ export default function RequirementDashboard({ user }: Props) {
                           : styles['task-incomplete']
                       }`}
                     >
-                      <i className={`fa-solid ${completed ? 'fa-check' : 'fa-hourglass-half'}`}></i>
+                      <i
+                        className={`fa-solid
+                          ${completed ? 'fa-check' : 'fa-hourglass-half'}
+                        `}
+                      ></i>
                       <span>{name}</span>
                     </button>
 
@@ -229,6 +252,20 @@ export default function RequirementDashboard({ user }: Props) {
               </div>
             </div>
           )}
+        </div>
+
+        <div className={styles['search-bar-container']}>
+          <div className={styles['search-shell']}>
+            <i className="fa-solid fa-magnifying-glass" />
+            <input
+              type="search"
+              value={search}
+              onChange={event => setSearch(event.target.value)}
+              placeholder="Search members..."
+              aria-label="Search members"
+              className={styles['search-bar']}
+            />
+          </div>
         </div>
 
         <div className={styles['tracker']}>
@@ -257,11 +294,19 @@ export default function RequirementDashboard({ user }: Props) {
           </div>
 
           <div className={styles['user-list']}>
-            <UserList
-              user={user}
-              users={users}
-              setUsers={setUsers}
-            />
+            {filteredUsers.length === 0 && search.trim() ? (
+              <div className={styles['no-results']}>
+                <i className="fa-solid fa-magnifying-glass" />
+                <strong>No matching members</strong>
+                <span>Try searching for a different name or role.</span>
+              </div>
+            ) : (
+              <UserList
+                user={user}
+                users={filteredUsers}
+                setUsers={setUsers}
+              />
+            )}
           </div>
         </div>
 
@@ -273,7 +318,9 @@ export default function RequirementDashboard({ user }: Props) {
                 className={styles['toggle-task-input']}
               >
                 <i
-                  className={`fa-solid ${showGroupReqInput ? 'fa-minus' : 'fa-plus'}`}
+                  className={`fa-solid
+                    ${showGroupReqInput ? 'fa-minus' : 'fa-plus'}
+                  `}
                 ></i>
                 <span>{showGroupReqInput ? 'Hide' : 'Add a group task'}</span>
               </button>

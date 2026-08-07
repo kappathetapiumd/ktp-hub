@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import DeleteModal from '@/components/users/modal/DeleteModal';
@@ -21,6 +21,7 @@ type Props = {
 export default function InactiveUserDashboard({ user }: Props) {
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
+  const [search, setSearch] = useState('');
   const [userId, setUserId] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -28,6 +29,26 @@ export default function InactiveUserDashboard({ user }: Props) {
   const [showActiveModal, setShowActiveModal] = useState(false);
   const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
   const isActive = false;
+
+  const filteredUsers = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase();
+
+    if (!query) return users;
+
+    return users.filter(currentUser => {
+      const role = currentUser.role === 'PCP_PCVP'
+        ? 'pcp/pcvp pledge'
+        : currentUser.role.toLocaleLowerCase();
+      const matchesMembership = currentUser.membershipCommittee
+        && ['membership', 'committee', 'mc']
+          .some(term => term.includes(query));
+
+      return currentUser.name.toLocaleLowerCase().includes(query)
+        || currentUser.email.toLocaleLowerCase().includes(query)
+        || role.includes(query)
+        || matchesMembership;
+    });
+  }, [search, users]);
 
   useEffect(() => {
     loadUsers();
@@ -97,8 +118,8 @@ export default function InactiveUserDashboard({ user }: Props) {
             <div className={styles['search-shell']}>
               <i className="fa-solid fa-magnifying-glass"></i>
               <SearchBar
-                isActive={isActive}
-                setUsers={setUsers}
+                search={search}
+                setSearch={setSearch}
               />
             </div>
           }
@@ -114,7 +135,7 @@ export default function InactiveUserDashboard({ user }: Props) {
               </div>
               <UserList
                 user={user}
-                users={users}
+                users={filteredUsers}
                 setUserId={setUserId}
                 isUpdating={isUpdating}
                 isDeleting={isDeleting}

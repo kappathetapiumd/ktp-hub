@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { CurrentUser } from '@/lib/auth/currentUser';
@@ -20,11 +20,23 @@ type Link = {
 export default function LinkDashboard({ user }: Props) {
   const router = useRouter();
   const [links, setLinks] = useState<Link[]>([]);
+  const [search, setSearch] = useState('');
   const [label, setLabel] = useState('');
   const [url, setUrl] = useState('');
 
   const canManageLinks = user.role === 'ADMIN' || user.role === 'OWNER';
   const canAddLink = label.trim() && url.trim();
+
+  const filteredLinks = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase();
+
+    if (!query) return links;
+
+    return links.filter(link =>
+      link.label.toLocaleLowerCase().includes(query)
+      || link.url.toLocaleLowerCase().includes(query)
+    );
+  }, [links, search]);
 
   useEffect(() => {
     loadLinks();
@@ -98,6 +110,20 @@ export default function LinkDashboard({ user }: Props) {
           </span>
         </header>
 
+        <div className={styles['search-bar-container']}>
+          <div className={styles['search-shell']}>
+            <i className="fa-solid fa-magnifying-glass" />
+            <input
+              type="search"
+              value={search}
+              onChange={event => setSearch(event.target.value)}
+              placeholder="Search links..."
+              aria-label="Search links"
+              className={styles['search-bar']}
+            />
+          </div>
+        </div>
+
         <div className={styles['links-container']}>
           {links.length === 0 ? (
             <div className={styles['empty-state']}>
@@ -111,9 +137,17 @@ export default function LinkDashboard({ user }: Props) {
                   : 'Helpful chapter resources will show up here.'}
               </p>
             </div>
+          ) : filteredLinks.length === 0 ? (
+            <div className={styles['empty-state']}>
+              <span className={styles['empty-icon']}>
+                <i className="fa-solid fa-magnifying-glass" />
+              </span>
+              <h2>No Matching Links</h2>
+              <p>Try searching for a different label or URL.</p>
+            </div>
           ) : (
             <div className={styles['grid']}>
-              {links.map(({ id, label: linkLabel, url: linkUrl }) => (
+              {filteredLinks.map(({ id, label: linkLabel, url: linkUrl }) => (
                 <div key={id} className={styles['link-card']}>
                   <a
                     href={linkUrl}

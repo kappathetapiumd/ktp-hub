@@ -1,21 +1,13 @@
-import { filterUsers, getUsers, setUserInactive, updateMembership, updateUser, transferOwnership } from '@/lib/users';
+import { getUsers, setUserInactive, updateMembership, updateUser, transferOwnership } from '@/lib/users';
 
 import type { Role } from '@/generated/prisma/enums';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-
-  const search = searchParams.get('search');
+export async function GET() {
   const isActive = true;
 
-  // load original users or no search filter
-  if (!search) {
-    const users = await getUsers(isActive);
-    return Response.json(users);
-  }
+  const users = await getUsers(isActive);
 
-  const filteredUsers = await filterUsers(search, isActive);
-  return Response.json(filteredUsers);
+  return Response.json(users);
 }
 
 export async function PUT(request: Request) {

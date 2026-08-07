@@ -1,19 +1,11 @@
-import { deleteAllInactiveUsers, deleteInactiveUser, filterUsers, getUsers, setUserActive } from '@/lib/users';
+import { deleteAllInactiveUsers, deleteInactiveUser, getUsers, setUserActive } from '@/lib/users';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-
-  const search = searchParams.get('search');
+export async function GET() {
   const notActive = false;
 
-  // load original users or no search filter
-  if (!search) {
-    const users = await getUsers(notActive);
-    return Response.json(users);
-  }
+  const users = await getUsers(notActive);
 
-  const filteredUsers = await filterUsers(search, notActive);
-  return Response.json(filteredUsers);
+  return Response.json(users);
 }
 
 export async function DELETE(request: Request) {

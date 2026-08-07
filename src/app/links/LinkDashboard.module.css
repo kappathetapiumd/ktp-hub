@@ -27,7 +27,7 @@
 
 .panel {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   width: min(1040px, 100%);
   height: 100%;
   margin: 0 auto;
@@ -37,6 +37,58 @@
   border-radius: 28px;
   box-shadow: var(--shadow-xl);
   backdrop-filter: blur(22px);
+}
+
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  min-height: 76px;
+  padding: 12px clamp(18px, 3vw, 30px);
+  background: color-mix(in srgb, var(--color-bg-elevated) 48%, transparent);
+}
+
+.search-shell {
+  position: relative;
+  width: min(620px, 100%);
+}
+
+.search-shell > i {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 16px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.search-bar {
+  width: 100%;
+  height: 50px;
+  padding: 0 16px 0 43px;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 13px;
+  outline: none;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.search-bar::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+.search-bar:focus {
+  background: color-mix(in srgb, var(--color-bg-card) 94%, var(--color-primary));
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.search-bar::-webkit-search-cancel-button {
+  cursor: pointer;
 }
 
 .header {
@@ -144,7 +196,8 @@
 .delete-link:focus-visible,
 .strikes-btn:focus-visible,
 .link-input button:focus-visible,
-.link-input input:focus-visible {
+.link-input input:focus-visible,
+.search-bar:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-primary) 52%, transparent);
   outline-offset: 3px;
 }
@@ -429,6 +482,11 @@
 
   .links-container {
     padding: 14px;
+  }
+
+  .search-bar-container {
+    min-height: 68px;
+    padding: 9px 14px;
   }
 
   .grid {
