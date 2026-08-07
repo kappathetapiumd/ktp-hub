@@ -88,7 +88,7 @@
 .input-group input:focus {
   border-color: var(--color-primary);
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.12);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .login-btns-container {

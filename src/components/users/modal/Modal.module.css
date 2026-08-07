@@ -307,10 +307,7 @@
   background: color-mix(in srgb, var(--color-bg-elevated) 92%, white);
 }
 
-.confirmation-btns button:focus-visible,
-.user-content input:focus-visible,
-.role-trigger:focus-visible,
-.date-input:focus-visible {
+.confirmation-btns button:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-primary) 48%, transparent);
   outline-offset: 3px;
 }

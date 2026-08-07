@@ -148,16 +148,24 @@ export default function UserDashboard({ user }: Props) {
             <span>Role</span>
             <span>Membership committee</span>
           </div>
-          <UserList
-            user={user}
-            users={filteredUsers}
-            setUserId={setUserId}
-            isUpdating={isUpdating}
-            isDeleting={isDeleting}
-            setShowDeleteModal={setShowDeleteModal}
-            setShowUpdateModal={setShowUpdateModal}
-            setUsers={setUsers}
-          />
+          {filteredUsers.length === 0 && search.trim() ? (
+            <div className={styles['no-results']}>
+              <i className="fa-solid fa-magnifying-glass" />
+              <strong>No Matching Members</strong>
+              <span>Try searching for a different name, email, or role.</span>
+            </div>
+          ) : (
+            <UserList
+              user={user}
+              users={filteredUsers}
+              setUserId={setUserId}
+              isUpdating={isUpdating}
+              isDeleting={isDeleting}
+              setShowDeleteModal={setShowDeleteModal}
+              setShowUpdateModal={setShowUpdateModal}
+              setUsers={setUsers}
+            />
+          )}
         </div>
 
         <div className={styles['button-list-container']}>

@@ -297,7 +297,7 @@ export default function RequirementDashboard({ user }: Props) {
             {filteredUsers.length === 0 && search.trim() ? (
               <div className={styles['no-results']}>
                 <i className="fa-solid fa-magnifying-glass" />
-                <strong>No matching members</strong>
+                <strong>No Matching Members</strong>
                 <span>Try searching for a different name or role.</span>
               </div>
             ) : (

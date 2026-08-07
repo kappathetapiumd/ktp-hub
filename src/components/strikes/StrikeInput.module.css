@@ -100,7 +100,7 @@
 .amount-input:focus {
   background: color-mix(in srgb, var(--color-bg-elevated) 94%, var(--color-primary));
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 9%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .add-btn {
@@ -135,8 +135,6 @@
   box-shadow: none;
 }
 
-.reason-input:focus-visible,
-.amount-input:focus-visible,
 .add-btn:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-primary) 45%, transparent);
   outline-offset: 2px;

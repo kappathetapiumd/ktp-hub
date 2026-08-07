@@ -195,9 +195,7 @@
 .link:focus-visible,
 .delete-link:focus-visible,
 .strikes-btn:focus-visible,
-.link-input button:focus-visible,
-.link-input input:focus-visible,
-.search-bar:focus-visible {
+.link-input button:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-primary) 52%, transparent);
   outline-offset: 3px;
 }

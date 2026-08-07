@@ -513,9 +513,7 @@
 .task-name:focus-visible,
 .delete-task:focus-visible,
 .toggle-task-input:focus-visible,
-.task-input:focus-visible,
-.add-task:focus-visible,
-.search-bar:focus-visible {
+.add-task:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-primary) 52%, transparent);
   outline-offset: 3px;
 }
