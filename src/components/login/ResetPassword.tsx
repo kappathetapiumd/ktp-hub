@@ -1,25 +1,25 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 import styles from './PasswordPage.module.css';
 
-export default function ResetPassword() {
+type Props = {
+  token: string | undefined;
+}
+
+export default function ResetPassword({ token }: Props) {
   const [password, setPassword] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const searchParams = useSearchParams();
 
   async function resetPassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setIsLoading(true);
     setError(null);
-
-    const token = searchParams.get('token');
 
     if (!token) {
       setError('This password reset link is invalid or incomplete.');
