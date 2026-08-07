@@ -503,21 +503,7 @@
   }
 
   .link-input {
-    padding: 16px 14px calc(16px + env(safe-area-inset-bottom));
-  }
-
-  .fields {
-    grid-template-columns: 1fr auto;
-  }
-
-  .fields label,
-  .fields .url-field {
-    grid-column: 1 / -1;
-  }
-
-  .fields button {
-    grid-column: 1 / -1;
-    width: 100%;
+    display: none;
   }
 
   .strikes-btn {

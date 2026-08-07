@@ -138,7 +138,6 @@ export default function StrikeInput(
             value={amount}
             type="text"
             className={styles['amount-input']}
-            inputMode="numeric"
             placeholder="#"
             suppressHydrationWarning
           />

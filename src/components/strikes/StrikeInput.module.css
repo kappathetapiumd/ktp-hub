@@ -142,23 +142,47 @@
 
 @media (max-width: 620px) {
   .strike-content {
-    grid-template-columns: minmax(0, 1fr) 68px;
+    grid-template-columns: minmax(0, 1fr) 58px 44px;
+    gap: 6px;
   }
 
   .add-btn {
-    grid-column: 1 / -1;
+    grid-column: auto;
+    width: 44px;
+    padding: 0;
   }
 }
 
 @media (max-width: 520px) {
   .strike-input-container {
-    padding: 12px;
-    border-radius: 16px;
+    display: block;
+    padding: 8px;
+    border-radius: 14px;
   }
 
-  .input-heading small {
+  .input-heading,
+  .strike-content label > span {
     display: none;
   }
+
+  .strike-content {
+    grid-template-columns: minmax(0, 1fr) 58px 44px;
+  }
+
+  .reason-input,
+  .amount-input,
+  .add-btn {
+    height: 42px;
+  }
+
+  .reason-input {
+    padding-inline: 10px;
+  }
+
+  .amount-input {
+    padding-inline: 6px;
+  }
+
 }
 
 @media (max-height: 720px) {

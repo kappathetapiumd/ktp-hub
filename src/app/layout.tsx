@@ -3,7 +3,7 @@ import { Outfit } from 'next/font/google';
 import Head from './head';
 import Footer from '@/components/footer/Footer';
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
 import './globals.css';
 
@@ -19,6 +19,12 @@ export const metadata: Metadata = {
   description: "A hub for Kappa Theta Pi @ UMD",
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export default function RootLayout({ children }: Readonly<{children: React.ReactNode;}>) {
   return (
     <>
@@ -29,9 +35,11 @@ export default function RootLayout({ children }: Readonly<{children: React.React
         suppressHydrationWarning
       >
         <Head />
-        <body suppressHydrationWarning>{children}</body>
+        <body suppressHydrationWarning>
+          {children}
+          <Footer />
+        </body>
       </html>
-      <Footer />
     </>
   );
 }
