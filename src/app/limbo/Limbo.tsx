@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import styles from './Limbo.module.css';
@@ -28,12 +29,12 @@ export default function Limbo({ message }: { message: string | undefined }) {
           }
         </p>
 
-        <button
-          onClick={() => router.push('/')}
+        <Link
+          href="/"
           className={styles['ok-btn']}
         >
           OK
-        </button>
+        </Link>
       </section>
     </div>
   )

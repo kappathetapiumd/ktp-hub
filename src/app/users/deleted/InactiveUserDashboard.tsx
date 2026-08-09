@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 import DeleteModal from '@/components/users/modal/DeleteModal';
 import ActiveModal from '@/components/users/modal/ActiveModal';
@@ -19,7 +19,6 @@ type Props = {
 }
 
 export default function InactiveUserDashboard({ user }: Props) {
-  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [search, setSearch] = useState('');
   const [userId, setUserId] = useState('');
@@ -180,13 +179,13 @@ export default function InactiveUserDashboard({ user }: Props) {
         </div>
       </div>
 
-      <button
-        onClick={() => router.push('/strikes')}
+      <Link
+        href="/strikes"
         className={styles['dashboard-btn']}
       >
         <i className="fa-solid fa-user-xmark"></i>
         <span>Strike Dashboard</span>
-      </button>
+      </Link>
     </main>
   );
 }

@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 import type { Pledge } from '@/lib/pledges';
 import type { CurrentUser } from '@/lib/auth/currentUser';
@@ -26,8 +26,6 @@ export default function PledgeSideBar(
     setShowSideBar
   }: Props
 ) {
-  const router = useRouter();
-  
   return (
     <>
       <div
@@ -95,31 +93,31 @@ export default function PledgeSideBar(
         </div>
 
         <div className={styles['sidebar-actions']}>
-          <button
-            onClick={() => router.push('/links')}
+          <Link
+            href="/links"
             className={styles['links-btn']}
           >
             <i className="fa-solid fa-link"></i>
             <span>Links</span>
-          </button>
+          </Link>
 
           {(user.role === 'ADMIN' || user.role === 'OWNER') &&
-            <button
-              onClick={() => router.push('/users')}
+            <Link
+              href="/users"
               className={styles['users-btn']}
             >
               <i className="fa-solid fa-tachograph-digital"></i>
               <span>Members</span>
-            </button>
+            </Link>
           }
 
-          <button
-            onClick={() => router.push('/requirements')}
+          <Link
+            href="/requirements"
             className={styles['reqs-btn']}
           >
             <i className="fa-solid fa-list-check"></i>
             <span>Requirements</span>
-          </button>
+          </Link>
         </div>
       </div>
 

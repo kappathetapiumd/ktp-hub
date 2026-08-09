@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import styles from './LoginPage.module.css';
@@ -124,12 +125,12 @@ export default function LoginPage() {
               <br />
 
               {isLogin &&
-                <a
-                  onClick={() => {router.push('/forgot-password')}}
+                <Link
+                  href="/forgot-password"
                   className={styles['forgot-password-link']}
                 >
                   Forgot your password?
-                </a>
+                </Link>
               }
             </p>
           </div>
