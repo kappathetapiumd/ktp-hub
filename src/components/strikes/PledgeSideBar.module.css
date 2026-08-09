@@ -316,9 +316,9 @@
   .open-sidebar {
     position: fixed;
     z-index: 50;
-    right: max(14px, env(safe-area-inset-right));
-    left: auto;
-    bottom: max(26px, calc(env(safe-area-inset-bottom) + 3px));
+    right: auto;
+    left: max(76px, calc(env(safe-area-inset-left) + 76px));
+    bottom: max(14px, env(safe-area-inset-bottom));
     display: grid;
     place-items: center;
     width: 48px;
@@ -330,6 +330,7 @@
     box-shadow: var(--shadow-lg);
     backdrop-filter: blur(16px);
     cursor: pointer;
+    animation: reveal-open-sidebar 1ms 250ms backwards;
   }
 
   .sidebar:not(.hide-bar) ~ .open-sidebar {
@@ -341,12 +342,26 @@
   }
 }
 
+@keyframes reveal-open-sidebar {
+  from {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  to {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sidebar,
   .pledge-card,
   .links-btn,
   .reqs-btn,
-  .users-btn {
+  .users-btn,
+  .open-sidebar {
     transition: none;
+    animation: none;
   }
 }
