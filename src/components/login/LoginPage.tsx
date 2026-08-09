@@ -73,15 +73,6 @@ export default function LoginPage() {
       <section className={styles['login-content']}>
         <div className={styles['brand']}>Κ Θ Π</div>
 
-        <div className={styles['heading-group']}>
-          <p className={styles['eyebrow']}>
-            {isLogin ? 'Welcome back' : 'Join KTP'}
-          </p>
-          <h1 className={styles['title']}>
-            {isLogin ? 'Sign in to your account' : 'Create your account'}
-          </h1>
-        </div>
-
         <form className={styles['login-input']} onSubmit={handleAuth}>
           {!isLogin && (
             <div className={styles['input-group']}>
@@ -111,7 +102,17 @@ export default function LoginPage() {
           </div>
 
           <div className={styles['input-group']}>
-            <label htmlFor="auth-password">Password</label>
+            <div className={styles['password-heading']}>
+              <label htmlFor="auth-password">Password</label>
+              {isLogin && (
+                <Link
+                  href="/forgot-password"
+                  className={styles['forgot-password-link']}
+                >
+                  Forgot password?
+                </Link>
+              )}
+            </div>
             <input
               id="auth-password"
               autoComplete={isLogin ? 'current-password' : 'new-password'}
@@ -136,29 +137,21 @@ export default function LoginPage() {
                 ? (isLogin ? 'Signing in…' : 'Registering…')
                 : (isLogin ? 'Sign in' : 'Register')}
             </button>
-            <p className={styles['account-container']}>
-              {isLogin
-                ? "Don't have an account? "
-                : 'Already have an account? '
-              }
+            <div className={styles['account-container']}>
+              <div className={styles['account-divider']}>
+                <span>
+                  {isLogin ? 'New to KTP?' : 'Already have an account?'}
+                </span>
+              </div>
               <button
                 type="button"
                 onClick={() => !isSubmitting && setIsLogin(!isLogin)}
-                className={styles['switch-link']}
+                className={styles['switch-button']}
                 disabled={isSubmitting}
               >
-                {isLogin ? 'Register' : 'Sign in'}
+                {isLogin ? 'Create an account' : 'Back to sign in'}
               </button>
-              
-              {isLogin && (
-                <Link
-                  href="/forgot-password"
-                  className={styles['forgot-password-link']}
-                >
-                  Forgot your password?
-                </Link>
-              )}
-            </p>
+            </div>
           </div>
         </form>
       </section>

@@ -75,6 +75,13 @@
   font-weight: 600;
 }
 
+.password-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+}
+
 .input-group input {
   width: 100%;
   padding: 0.95rem 1rem;
@@ -145,59 +152,66 @@
 }
 
 .account-container {
-  margin: 0;
+  display: grid;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
   text-align: center;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   line-height: 1.5;
 }
 
-.switch-link,
+.account-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  white-space: nowrap;
+}
+
+.account-divider::before,
+.account-divider::after {
+  content: '';
+  width: 100%;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.account-container .switch-button {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--color-text);
+}
+
+.account-container .switch-button:hover {
+  border-color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .forgot-password-link {
-  margin-left: 0.25rem;
   padding: 0;
-  border: none;
   border-radius: var(--radius-sm);
-  background: none;
   color: var(--color-primary-light);
-  font: inherit;
+  font-size: var(--font-size-xs);
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: none;
   transition:
     color var(--transition-fast),
     text-shadow var(--transition-fast);
 }
 
-.switch-link:disabled {
+.switch-button:disabled {
   cursor: not-allowed;
   opacity: 0.65;
 }
 
-.switch-link:hover,
 .forgot-password-link:hover {
-  transform: none;
   color: var(--color-primary);
   text-shadow: 0 0 12px rgba(0, 212, 170, 0.35);
 }
 
-.switch-link:focus-visible,
 .forgot-password-link:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.2);
-}
-
-.forgot-password-link {
-  display: block;
-  margin-top: var(--spacing-2);
-  margin-left: 0;
-  color: var(--color-text-muted);
-  font-weight: 400;
-  text-decoration: none;
-}
-
-.forgot-password-link:hover {
-  color: var(--color-primary-light);
 }
 
 @media (max-width: 520px) {
