@@ -74,7 +74,10 @@ export default function StrikeHistory(
               <p>{`Pledges can't view strike history.`}</p>
             </div>
           : isLoading
-          ? <FetchingState label="Fetching strike history…" />
+          ? <FetchingState
+              label="Fetching strike history…"
+              className={styles['history-fetching']}
+            />
           : strikeHistory.length === 0
           ? <div className={styles['info-message']}>
               <span><i className="fa-solid fa-circle-check"></i></span>

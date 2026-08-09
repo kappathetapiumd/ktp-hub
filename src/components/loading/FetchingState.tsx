@@ -3,12 +3,19 @@ import styles from './FetchingState.module.css';
 type Props = {
   label: string;
   compact?: boolean;
+  className?: string;
 }
 
-export default function FetchingState({ label, compact = false }: Props) {
+export default function FetchingState(
+  { label, compact = false, className = '' }: Props
+) {
   return (
     <div
-      className={`${styles['fetching']} ${compact ? styles['compact'] : ''}`}
+      className={`
+        ${styles['fetching']}
+        ${compact ? styles['compact'] : ''}
+        ${className}
+      `}
       role="status"
     >
       <span className={styles['spinner']}>

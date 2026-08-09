@@ -95,6 +95,10 @@
   text-align: center;
 }
 
+.history-fetching {
+  height: 100%;
+}
+
 .info-message > span {
   display: grid;
   place-items: center;
