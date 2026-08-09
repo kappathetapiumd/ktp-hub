@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import dayjs from 'dayjs';
+import FetchingState from '@/components/loading/FetchingState';
 
 import styles from './WeeksSelect.module.css';
 
@@ -7,10 +8,11 @@ type Props = {
   weeks: string[],
   selectedWeek: string,
   setSelectedWeek: React.Dispatch<React.SetStateAction<string>>
+  isLoading: boolean;
 }
 
 export default function WeeksSelect(
-  { weeks, selectedWeek, setSelectedWeek }: Props
+  { weeks, selectedWeek, setSelectedWeek, isLoading }: Props
 ) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const selectedWeekRef = useRef<HTMLButtonElement>(null);
@@ -83,7 +85,7 @@ export default function WeeksSelect(
         <span><i className="fa-regular fa-calendar"></i></span>
         <div>
           <strong>Timeline</strong>
-          <small>Select a week to review</small>
+          <small>{isLoading ? 'Fetching Weeks…' : 'Select a week to review'}</small>
         </div>
       </div>
       <div
@@ -95,7 +97,9 @@ export default function WeeksSelect(
         onMouseLeave={stopDragging}
       >
         <div className={styles['weeks-container']}>
-          {weeks.map((week, index) => (
+          {isLoading ? (
+            <FetchingState label="Fetching Weeks…" compact />
+          ) : weeks.map((week, index) => (
             <button
               key={week}
               ref={selectedWeek === week ? selectedWeekRef : null}

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import { CurrentUser } from '@/lib/auth/currentUser';
+import FetchingState from '@/components/loading/FetchingState';
 
 import styles from './LinkDashboard.module.css';
 
@@ -23,6 +24,8 @@ export default function LinkDashboard({ user }: Props) {
   const [label, setLabel] = useState('');
   const [url, setUrl] = useState('');
   const [showLinkInput, setShowLinkInput] = useState(false);
+  const [isLoadingLinks, setIsLoadingLinks] = useState(true);
+  const [isAddingLink, setIsAddingLink] = useState(false);
 
   const canManageLinks = user.role === 'ADMIN' || user.role === 'OWNER';
   const canAddLink = label.trim() && url.trim();
@@ -42,37 +45,47 @@ export default function LinkDashboard({ user }: Props) {
     loadLinks();
 
     async function loadLinks() {
-      const response = await fetch('/api/links');
+      try {
+        const response = await fetch('/api/links');
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const links = await response.json();
-      setLinks(links);
+        const links = await response.json();
+        setLinks(links);
+      } finally {
+        setIsLoadingLinks(false);
+      }
     }
   }, []);
 
   async function addLink() {
+    if (isAddingLink) return;
     const cleanLabel = label.trim();
     const cleanUrl = url.trim();
     if (!cleanLabel || !cleanUrl) return;
+    setIsAddingLink(true);
 
-    const response = await fetch('/api/links', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        label,
-        url
-      })
-    });
+    try {
+      const response = await fetch('/api/links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          label,
+          url
+        })
+      });
 
-    if (!response.ok) return;
+      if (!response.ok) return;
 
-    const newLink = await response.json();
+      const newLink = await response.json();
 
-    setLinks(prev => [...prev, newLink]);
+      setLinks(prev => [...prev, newLink]);
 
-    setLabel('');
-    setUrl('');
+      setLabel('');
+      setUrl('');
+    } finally {
+      setIsAddingLink(false);
+    }
   }
 
   async function deleteLink(id: string) {
@@ -106,7 +119,9 @@ export default function LinkDashboard({ user }: Props) {
             </p>
           </div>
           <span className={styles['count']}>
-            {links.length} {links.length === 1 ? 'link' : 'links'}
+            {isLoadingLinks
+              ? 'Fetching Links…'
+              : `${links.length} ${links.length === 1 ? 'link' : 'links'}`}
           </span>
         </header>
 
@@ -115,17 +130,19 @@ export default function LinkDashboard({ user }: Props) {
             <i className="fa-solid fa-magnifying-glass" />
             <input
               type="search"
+              aria-label="Search links"
               value={search}
               onChange={event => setSearch(event.target.value)}
               placeholder="Search links..."
-              aria-label="Search links"
               className={styles['search-bar']}
             />
           </div>
         </div>
 
         <div className={styles['links-container']}>
-          {links.length === 0 ? (
+          {isLoadingLinks ? (
+            <FetchingState label="Fetching Links…" />
+          ) : links.length === 0 ? (
             <div className={styles['empty-state']}>
               <span className={styles['empty-icon']}>
                 <i className="fa-solid fa-compass" />
@@ -171,6 +188,8 @@ export default function LinkDashboard({ user }: Props) {
 
                   {canManageLinks && (
                     <button
+                      type="button"
+                      aria-label={`Delete ${linkLabel}`}
                       onClick={() => deleteLink(id)}
                       className={styles['delete-link']}
                     >
@@ -187,6 +206,8 @@ export default function LinkDashboard({ user }: Props) {
           <div className={styles['link-input']}>
             <button
               type="button"
+              aria-expanded={showLinkInput}
+              aria-controls="new-link-fields"
               className={styles['composer-heading']}
               onClick={() => setShowLinkInput(current => !current)}
             >
@@ -231,10 +252,10 @@ export default function LinkDashboard({ user }: Props) {
                 </label>
                 <button
                   onClick={addLink}
-                  disabled={!canAddLink}
+                disabled={!canAddLink || isAddingLink}
                 >
                   <i className="fa-solid fa-plus" />
-                  <span>Add link</span>
+                <span>{isAddingLink ? 'Adding…' : 'Add link'}</span>
                 </button>
               </div>
             }
@@ -242,13 +263,6 @@ export default function LinkDashboard({ user }: Props) {
         )}
       </div>
 
-      <Link
-        href="/strikes"
-        className={styles['strikes-btn']}
-      >
-        <i className="fa-solid fa-user-xmark"/>
-        <span>Strike Dashboard</span>
-      </Link>
     </main>
   );
 }

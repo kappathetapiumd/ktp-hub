@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 
 import DeleteModal from '@/components/users/modal/DeleteModal';
 import UpdateModal from '@/components/users/modal/UpdateModal';
@@ -10,6 +9,7 @@ import OwnerModal from '@/components/users/modal/OwnerModal';
 import SearchBar from '@/components/users/SearchBar';
 import UserList from '@/components/users/UserList';
 import ButtonList from '@/components/users/ButtonList';
+import FetchingState from '@/components/loading/FetchingState';
 
 import type { User } from '@/lib/users';
 import type { CurrentUser } from '@/lib/auth/currentUser';
@@ -30,6 +30,7 @@ export default function UserDashboard({ user }: Props) {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showWeekModal, setShowWeekModal] = useState(false);
   const [showOwnerModal, setShowOwnerModal] = useState(false);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const isActive = true;
 
   const filteredUsers = useMemo(() => {
@@ -56,13 +57,17 @@ export default function UserDashboard({ user }: Props) {
     loadUsers();
 
     async function loadUsers() {
-      const response = await fetch('/api/users');
+      try {
+        const response = await fetch('/api/users');
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const users = await response.json();
+        const users = await response.json();
 
-      setUsers(users);
+        setUsers(users);
+      } finally {
+        setIsLoadingUsers(false);
+      }
     }
   }, []);
 
@@ -117,7 +122,9 @@ export default function UserDashboard({ user }: Props) {
           </div>
           <div className={styles['header-actions']}>
             <span className={styles['count']}>
-              {users.length} {users.length === 1 ? 'member' : 'members'}
+              {isLoadingUsers
+                ? 'Fetching Members…'
+                : `${users.length} ${users.length === 1 ? 'member' : 'members'}`}
             </span>
             {user.role === 'OWNER' &&
               <button
@@ -142,12 +149,14 @@ export default function UserDashboard({ user }: Props) {
         </div>
 
         <div className={styles['user-list-container']}>
-          <div className={styles['list-headers']}>
+          {!isLoadingUsers && <div className={styles['list-headers']}>
             <span>Member</span>
             <span>Role</span>
             <span>Membership committee</span>
-          </div>
-          {filteredUsers.length === 0 && search.trim() ? (
+          </div>}
+          {isLoadingUsers ? (
+            <FetchingState label="Fetching Members…" />
+          ) : filteredUsers.length === 0 && search.trim() ? (
             <div className={styles['no-results']}>
               <i className="fa-solid fa-magnifying-glass" />
               <strong>No Matching Members</strong>
@@ -180,13 +189,6 @@ export default function UserDashboard({ user }: Props) {
         </div>
       </div>
 
-      <Link
-        href="/strikes"
-        className={styles['dashboard-btn']}
-      >
-        <i className="fa-solid fa-user-xmark"></i>
-        <span>Strike Dashboard</span>
-      </Link>
     </main>
   );
 }

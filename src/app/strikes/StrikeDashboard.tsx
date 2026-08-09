@@ -11,6 +11,7 @@ import PledgeSideBar from '@/components/strikes/PledgeSideBar';
 import StrikeInput from '@/components/strikes/StrikeInput';
 import WeeksSelect from "@/components/strikes/WeeksSelect";
 import StrikeHistory from '@/components/strikes/StrikeHistory';
+import AppNavigation from '@/components/navigation/AppNavigation';
 
 import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
@@ -35,6 +36,9 @@ export default function StrikeDashboard({ user }: Props) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [strikeId, setStrikeId] = useState('');
   const [showSideBar, setShowSideBar] = useState(true);
+  const [isLoadingPledges, setIsLoadingPledges] = useState(true);
+  const [isLoadingWeeks, setIsLoadingWeeks] = useState(true);
+  const [isLoadingStrikeHistory, setIsLoadingStrikeHistory] = useState(false);
 
   useEffect(() => {
     const channel = pusherClient.subscribe('private-strikes');
@@ -61,12 +65,17 @@ export default function StrikeDashboard({ user }: Props) {
     }
 
     async function loadPledges() {
-      const response = await fetch('/api/pledges');
+      setIsLoadingPledges(true);
+      try {
+        const response = await fetch('/api/pledges');
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const pledges = await response.json();
-      setPledges(pledges);
+        const pledges = await response.json();
+        setPledges(pledges);
+      } finally {
+        setIsLoadingPledges(false);
+      }
     }
 
     async function loadStrikeHistory() {
@@ -75,16 +84,21 @@ export default function StrikeDashboard({ user }: Props) {
         week: selectedWeek
       });
 
-      const response = await fetch(`/api/strikes?${params.toString()}`);
+      setIsLoadingStrikeHistory(true);
+      try {
+        const response = await fetch(`/api/strikes?${params.toString()}`);
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const { strikeHistory, totalStrikesPerWeek } = await response.json();
+        const { strikeHistory, totalStrikesPerWeek } = await response.json();
 
-      setTotalStrikesPerWeek(totalStrikesPerWeek);
+        setTotalStrikesPerWeek(totalStrikesPerWeek);
 
-      if (strikeHistory)
-        setStrikeHistory(strikeHistory);
+        if (strikeHistory)
+          setStrikeHistory(strikeHistory);
+      } finally {
+        setIsLoadingStrikeHistory(false);
+      }
     }
   }, [selectedPledge, selectedWeek, user.id]);
 
@@ -93,12 +107,16 @@ export default function StrikeDashboard({ user }: Props) {
     loadPledges();
 
     async function loadPledges() {
-      const response = await fetch('/api/pledges');
+      try {
+        const response = await fetch('/api/pledges');
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const pledges = await response.json();
-      setPledges(pledges);
+        const pledges = await response.json();
+        setPledges(pledges);
+      } finally {
+        setIsLoadingPledges(false);
+      }
     }
   }, []);
 
@@ -107,18 +125,23 @@ export default function StrikeDashboard({ user }: Props) {
     loadWeeks();
 
     async function loadWeeks() {
-      const response = await fetch('/api/weeks');
+      try {
+        const response = await fetch('/api/weeks');
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const weeks = await response.json();
-      setWeeks(weeks);
+        const weeks = await response.json();
+        setWeeks(weeks);
+      } finally {
+        setIsLoadingWeeks(false);
+      }
     }
   }, []);
 
   // get the strike history any time a new pledge/week is selected
   useEffect(() => {
     if (!selectedPledge) return;
+    const controller = new AbortController();
 
     loadStrikeHistory();
 
@@ -128,17 +151,30 @@ export default function StrikeDashboard({ user }: Props) {
         week: selectedWeek
       });
 
-      const response = await fetch(`/api/strikes?${params.toString()}`);
+      setIsLoadingStrikeHistory(true);
+      try {
+        const response = await fetch(
+          `/api/strikes?${params.toString()}`,
+          { signal: controller.signal }
+        );
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const { strikeHistory, totalStrikesPerWeek } = await response.json();
+        const { strikeHistory, totalStrikesPerWeek } = await response.json();
 
-      setTotalStrikesPerWeek(totalStrikesPerWeek);
+        setTotalStrikesPerWeek(totalStrikesPerWeek);
 
-      if (strikeHistory)
-        setStrikeHistory(strikeHistory);
+        if (strikeHistory)
+          setStrikeHistory(strikeHistory);
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === 'AbortError'))
+          throw error;
+      } finally {
+        if (!controller.signal.aborted) setIsLoadingStrikeHistory(false);
+      }
     }
+
+    return () => controller.abort();
   }, [selectedPledge, selectedWeek]);
 
   const isMobile = useMediaQuery({ maxWidth: 520 });
@@ -198,8 +234,15 @@ export default function StrikeDashboard({ user }: Props) {
           setSelectedPledge={setSelectedPledge}
           showSideBar={showSideBar}
           setShowSideBar={setShowSideBar}
+          isLoading={isLoadingPledges}
         />
       </aside>
+
+      <AppNavigation
+        user={user}
+        className={styles['mobile-navigation']}
+        hidden={isMobile && showSideBar}
+      />
 
       <section
         onClick={() => isMobile && setShowSideBar(false)}
@@ -224,7 +267,13 @@ export default function StrikeDashboard({ user }: Props) {
               <small>Total strikes</small>
             </div>
             <div className={styles['stat']}>
-              <span>{totalStrikesPerWeek > 0 ? `+${totalStrikesPerWeek}` : totalStrikesPerWeek}</span>
+              <span>
+                {isLoadingStrikeHistory
+                  ? '—'
+                  : totalStrikesPerWeek > 0
+                  ? `+${totalStrikesPerWeek}`
+                  : totalStrikesPerWeek}
+              </span>
               <small>Selected week</small>
             </div>
           </div>
@@ -249,6 +298,7 @@ export default function StrikeDashboard({ user }: Props) {
               weeks={weeks}
               selectedWeek={selectedWeek}
               setSelectedWeek={setSelectedWeek}
+              isLoading={isLoadingWeeks}
             />
           </div>
         </div>
@@ -262,6 +312,7 @@ export default function StrikeDashboard({ user }: Props) {
             setShowEditModal={setShowEditModal}
             setStrikeId={setStrikeId}
             selectedPledge={selectedPledge}
+            isLoading={isLoadingStrikeHistory}
           />
         </div>
       </section>

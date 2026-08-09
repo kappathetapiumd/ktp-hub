@@ -20,18 +20,6 @@ type User = {
 
 export default function UserList({ user, users, setUsers }: Props) {
   async function updateEvent(id: string, completed: boolean, event: string) {
-    const response = await fetch('/api/requirements', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id,
-        completed: !completed,
-        event
-      })
-    });
-
-    if (!response.ok) return;
-
     setUsers(prev =>
       prev.map(user => {
         return user.id !== id
@@ -45,6 +33,16 @@ export default function UserList({ user, users, setUsers }: Props) {
           : { ...user, profDevEventB: !completed }
       })
     );
+
+    await fetch('/api/requirements', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id,
+        completed: !completed,
+        event
+      })
+    });
   }
 
   return (

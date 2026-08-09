@@ -40,11 +40,11 @@ export default function OwnerModal({ users, showModal }: Props) {
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={`${styles['modal-container']} ${styles['owner-modal']}`}>
+      <div className={`${styles['modal-container']} ${styles['owner-modal']}`} role="dialog" aria-modal="true" aria-labelledby="owner-modal-title">
         <div className={styles['modal-heading']}>
           <span className={styles['modal-icon']}><i className="fa-solid fa-crown"></i></span>
           <p className={styles['eyebrow']}>Chapter ownership</p>
-          <h2>Transfer ownership</h2>
+          <h2 id="owner-modal-title">Transfer ownership</h2>
           <p className={styles['message']}>
             Enter the new owner’s university email. You’ll confirm once more before transferring.
           </p>

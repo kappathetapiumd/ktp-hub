@@ -29,11 +29,11 @@ export default function ActiveModal({ userId, setUsers, showModal }: Props) {
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={styles['modal-container']}>
+      <div className={styles['modal-container']} role="alertdialog" aria-modal="true" aria-labelledby="reinstate-user-title">
         <div className={styles['modal-heading']}>
           <span className={styles['modal-icon']}><i className="fa-solid fa-user-check"></i></span>
           <p className={styles['eyebrow']}>Restore access</p>
-          <h2>Reinstate this user?</h2>
+          <h2 id="reinstate-user-title">Reinstate this user?</h2>
           <p className={styles['message']}>
             This user will return to the active member directory.
           </p>

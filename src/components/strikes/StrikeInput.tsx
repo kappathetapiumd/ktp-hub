@@ -49,60 +49,63 @@ export default function StrikeInput(
   });
 
   async function addStrike() {
+    if (processingStrike) return;
     setProcessingStrike(true);
 
-    const currentPledge = pledges.find(pledge => pledge.id === selectedPledge)!;
-    
-    // if total strikes for a pledge will be negative, don't add the strike
-    if (currentPledge.strikes + Number(amount) < 0) {
-      setShowStrikesModal(true);
-      return;
+    try {
+      const currentPledge = pledges.find(pledge => pledge.id === selectedPledge)!;
+
+      // if total strikes for a pledge will be negative, don't add the strike
+      if (currentPledge.strikes + Number(amount) < 0) {
+        setShowStrikesModal(true);
+        return;
+      }
+
+      const response = await fetch('/api/strikes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pledgeId: selectedPledge,
+          createdById: user.id,
+          amount: Number(amount),
+          reason
+        })
+      });
+
+      if (!response.ok) return;
+
+      const strikeEvent = await response.json();
+
+      setReason('');
+      setAmount('');
+
+      const randomIndex = Math.floor(Math.random() * reasonPlaceholders.length);
+      setRandomPlaceHolder(reasonPlaceholders[randomIndex]);
+
+      // update pledges array to rerender pledge list with correct strike counts
+      setPledges(prev =>
+        prev.map((pledge) =>
+          pledge.id === selectedPledge
+            ? { ...pledge, strikes: pledge.strikes + Number(amount)}
+            : pledge
+      ));
+
+      // update strikeHistory only if it's the current week
+      if (addedToThisWeek(selectedWeek)) {
+        setTotalStrikesPerWeek(prev => prev + strikeEvent.amount);
+        setStrikeHistory(prev => [{
+          id: strikeEvent.id,
+          amount: strikeEvent.amount,
+          reason: strikeEvent.reason,
+          createdAt: strikeEvent.createdAt,
+          createdBy: strikeEvent.createdBy,
+          createdById: strikeEvent.createdById
+        }, ...prev]);
+      }
+
+    } finally {
+      setProcessingStrike(false);
     }
-
-    const response = await fetch('/api/strikes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        pledgeId: selectedPledge,
-        createdById: user.id,
-        amount: Number(amount),
-        reason
-      })
-    });
-
-    if (!response.ok) return;
-
-    const strikeEvent = await response.json();
-
-    setReason('');
-    setAmount('');
-
-    const randomIndex = Math.floor(Math.random() * reasonPlaceholders.length);
-    setRandomPlaceHolder(reasonPlaceholders[randomIndex]);
-
-    // update pledges array to rerender pledge list with correct strike counts
-    setPledges(prev => 
-      prev.map((pledge) =>
-        pledge.id === selectedPledge
-          ? { ...pledge, strikes: pledge.strikes + Number(amount)} 
-          : pledge
-    ));
-
-    // update strikeHistory array to rerender with the new strike only if it's 
-    // the current week
-    if (addedToThisWeek(selectedWeek)) {
-      setTotalStrikesPerWeek(prev => prev + strikeEvent.amount);
-      setStrikeHistory(prev => [{
-        id: strikeEvent.id,
-        amount: strikeEvent.amount,
-        reason: strikeEvent.reason,
-        createdAt: strikeEvent.createdAt,
-        createdBy: strikeEvent.createdBy,
-        createdById: strikeEvent.createdById
-      }, ...prev]);
-    }
-
-    setProcessingStrike(false);
   }
 
   // if not on membership committee, can't add strike
@@ -144,6 +147,8 @@ export default function StrikeInput(
         </label>
 
         <button
+          type="button"
+          aria-label="Add strike"
           onClick={addStrike}
           disabled={
             invalidStrike(reason, amount, selectedPledge, weeks)
@@ -151,7 +156,7 @@ export default function StrikeInput(
           }
           className={styles['add-btn']}
         >
-          <i className="fa-solid fa-plus"></i>
+          <i className="fa-solid fa-plus" aria-hidden="true"></i>
         </button>
       </div>
     </div>

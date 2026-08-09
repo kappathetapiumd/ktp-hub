@@ -260,6 +260,10 @@
   display: none;
 }
 
+.group-tasks > [role='status'] {
+  flex: 1;
+}
+
 .group-task {
   position: relative;
   flex: 0 0 auto;

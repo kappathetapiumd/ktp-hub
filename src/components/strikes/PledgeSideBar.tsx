@@ -1,7 +1,7 @@
-import Link from 'next/link';
-
 import type { Pledge } from '@/lib/pledges';
 import type { CurrentUser } from '@/lib/auth/currentUser';
+import FetchingState from '@/components/loading/FetchingState';
+import AppNavigation from '@/components/navigation/AppNavigation';
 
 import styles from './PledgeSideBar.module.css';
 
@@ -13,6 +13,7 @@ type Props = {
   setSelectedPledge: React.Dispatch<React.SetStateAction<string>>;
   showSideBar: boolean;
   setShowSideBar: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
 }
 
 export default function PledgeSideBar(
@@ -23,12 +24,16 @@ export default function PledgeSideBar(
     selectedPledge,
     setSelectedPledge,
     showSideBar,
-    setShowSideBar
+    setShowSideBar,
+    isLoading
   }: Props
 ) {
   return (
     <>
       <div
+        id="pledge-sidebar"
+        aria-label="Pledge roster"
+        aria-hidden={!showSideBar}
         className={`
           ${styles['sidebar']}
           ${!showSideBar ? styles['hide-bar'] : ''}
@@ -45,6 +50,8 @@ export default function PledgeSideBar(
             </div>
           </div>
           <button
+            type="button"
+            aria-label="Close pledge roster"
             onClick={() => setShowSideBar(false)}
             className={styles['close-sidebar']}
           >
@@ -57,18 +64,23 @@ export default function PledgeSideBar(
             <span>Total</span>
             <small>Across all pledges</small>
           </div>
-          <strong>{totalStrikes}</strong>
+          <strong>{isLoading ? '—' : totalStrikes}</strong>
         </div>
 
         <div className={styles['list-label']}>
           <span>Pledges</span>
-          <small>{pledges.length}</small>
+          <small>{isLoading ? '…' : pledges.length}</small>
         </div>
 
         <div className={styles['pledge-list']}>
-          {pledges.map(({ id, name, strikes }) => (
-            <div
+          {isLoading ? (
+            <FetchingState label="Fetching Pledge Roster…" compact />
+          ) : pledges.map(({ id, name, strikes }) => (
+            <button
+              type="button"
               onClick={() => setSelectedPledge(id)}
+              aria-pressed={selectedPledge === id}
+              aria-label={`${name}, ${strikes} ${strikes === 1 ? 'strike' : 'strikes'}`}
               key={id}
               className={`
                 ${styles['pledge-card']} 
@@ -81,10 +93,10 @@ export default function PledgeSideBar(
               <span className={styles['status-dot']}></span>
               <span className={styles['name']}>{name}</span>
               <span className={styles['strike-count']}>{strikes}</span>
-            </div>
+            </button>
           ))}
 
-          {pledges.length === 0 &&
+          {!isLoading && pledges.length === 0 &&
             <div className={styles['empty-roster']}>
               <i className="fa-solid fa-user-group"></i>
               <span>No pledges yet</span>
@@ -92,36 +104,18 @@ export default function PledgeSideBar(
           }
         </div>
 
-        <div className={styles['sidebar-actions']}>
-          <Link
-            href="/links"
-            className={styles['links-btn']}
-          >
-            <i className="fa-solid fa-link"></i>
-            <span>Links</span>
-          </Link>
+        <AppNavigation
+          user={user}
+          className={styles['sidebar-navigation']}
+        />
 
-          {(user.role === 'ADMIN' || user.role === 'OWNER') &&
-            <Link
-              href="/users"
-              className={styles['users-btn']}
-            >
-              <i className="fa-solid fa-tachograph-digital"></i>
-              <span>Members</span>
-            </Link>
-          }
-
-          <Link
-            href="/requirements"
-            className={styles['reqs-btn']}
-          >
-            <i className="fa-solid fa-list-check"></i>
-            <span>Requirements</span>
-          </Link>
-        </div>
       </div>
 
       <button
+        type="button"
+        aria-label="Open pledge roster"
+        aria-expanded={showSideBar}
+        aria-controls="pledge-sidebar"
         onClick={() => setShowSideBar(true)}
         className={styles['open-sidebar']}
       >

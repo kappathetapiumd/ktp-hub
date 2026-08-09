@@ -10,7 +10,7 @@ import { getUserFromSession, updateUserSessionExpiration } from '@/lib/auth/sess
 // links - GET
 // pusher/auth - POST
 const pledgePcpBrotherRoutes = [
-  '/strikes', '/requirements', '/links', '/api/strikes', '/api/pledges',
+  '/home', '/strikes', '/requirements', '/links', '/api/strikes', '/api/pledges',
   '/api/weeks', '/api/requirements', '/api/requirements/pledge', '/api/links',
   '/api/pusher/auth'
 ];
@@ -29,7 +29,7 @@ const adminRoutes = [...membershipRoutes, '/users', '/api/users'];
 const ownerRoutes = [...adminRoutes, '/users/deleted', '/api/users/deleted'];
 
 const REDIRECT_COOKIE = 'redirect-path';
-const DEFAULT_REDIRECT = '/strikes';
+const DEFAULT_REDIRECT = '/home';
 
 export async function proxy(request: NextRequest) {
   const response = await proxyAuth(request);
@@ -112,7 +112,7 @@ function brotherPcpAuth(
   path: string, apiCall: boolean, request: NextRequest
 ) {
   if (!pledgePcpBrotherRoutes.includes(path))
-    return deny('/strikes', apiCall, request);
+    return deny('/home', apiCall, request);
 
   if (apiCall && path !== '/api/pusher/auth' && request.method !== 'GET')
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -124,7 +124,7 @@ function membershipAuth(
   path: string, apiCall: boolean, request: NextRequest
 ) {
   if (!membershipRoutes.includes(path))
-    return deny('/strikes', apiCall, request);
+    return deny('/home', apiCall, request);
 
   if ((path === '/api/weeks' || path.startsWith('/api/requirements')
     || path === '/api/links') && request.method !== 'GET'
@@ -138,7 +138,7 @@ function adminAuth(
   path: string, apiCall: boolean, request: NextRequest
 ) {
   if (!adminRoutes.includes(path))
-    return deny('/strikes', apiCall, request);
+    return deny('/home', apiCall, request);
 
   if ((path === '/api/weeks' || path === '/api/requirements/pledge')
     && request.method !== 'GET'
@@ -152,7 +152,7 @@ function ownerAuth(
   path: string, apiCall: boolean, request: NextRequest
 ) {
   if (!ownerRoutes.includes(path))
-    return deny('/strikes', apiCall, request);
+    return deny('/home', apiCall, request);
 
   return NextResponse.next();
 }

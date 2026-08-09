@@ -55,11 +55,11 @@ export default function DeleteModal({
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={`${styles['modal-container']} ${styles['danger-modal']}`}>
+      <div className={`${styles['modal-container']} ${styles['danger-modal']}`} role="alertdialog" aria-modal="true" aria-labelledby="delete-strike-title">
         <div className={styles['modal-heading']}>
           <span className={styles['modal-icon']}><i className="fa-solid fa-trash-can"></i></span>
           <p className={styles['eyebrow']}>Delete strike</p>
-          <h2>Remove this strike?</h2>
+          <h2 id="delete-strike-title">Remove this strike?</h2>
           <p className={styles['message']}>
             This strike will be removed from the pledge’s history. This action cannot be undone.
           </p>

@@ -33,6 +33,10 @@
   overflow: hidden;
 }
 
+.mobile-navigation {
+  display: none;
+}
+
 .dashboard-main {
   position: fixed;
   inset: 0 0 0 288px;
@@ -175,6 +179,7 @@
   .dashboard-main {
     left: 264px;
   }
+
 }
 
 @media (max-width: 520px) {
@@ -195,6 +200,12 @@
     inset: 0;
     gap: 10px;
     padding: 10px 9px 72px;
+  }
+
+  .mobile-navigation {
+    display: grid;
+    left: max(14px, env(safe-area-inset-left));
+    animation: reveal-mobile-navigation 1ms 250ms backwards;
   }
 
   .dashboard-header {
@@ -227,6 +238,24 @@
 
   .dashboard-controls {
     gap: 10px;
+  }
+}
+
+@keyframes reveal-mobile-navigation {
+  from {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  to {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-navigation {
+    animation: none;
   }
 }
 

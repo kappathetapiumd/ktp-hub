@@ -62,11 +62,11 @@ export default function UpdateModal(
       onKeyDown={e => closeRowSelect(e)}
       className={styles['modal-overlay']}
     >
-      <div className={styles['modal-container']}>
+      <div className={styles['modal-container']} role="dialog" aria-modal="true" aria-labelledby="update-user-title">
         <div className={styles['modal-heading']}>
           <span className={styles['modal-icon']}><i className="fa-solid fa-user-pen"></i></span>
           <p className={styles['eyebrow']}>Member details</p>
-          <h2>Edit user</h2>
+          <h2 id="update-user-title">Edit user</h2>
           <p className={styles['message']}>Update this member’s contact information and role.</p>
         </div>
 
@@ -96,6 +96,10 @@ export default function UpdateModal(
             <span>Role</span>
             <div className={styles['role-dropdown']}>
               <button
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded={showRoleSelect}
+                aria-controls="user-role-options"
                 onClick={() => setShowRowSelect(!showRoleSelect)}
                 className={`
                   ${styles['role-trigger']}
@@ -106,6 +110,10 @@ export default function UpdateModal(
                 <i className="fa-solid fa-chevron-down"></i>
               </button>
               <div
+                id="user-role-options"
+                role="menu"
+                aria-label="User role"
+                aria-hidden={!showRoleSelect}
                 className={`
                   ${styles['role-select']}
                   ${!showRoleSelect ? styles['hide-role-select'] : ''}
@@ -113,6 +121,7 @@ export default function UpdateModal(
               >
                 {user.role === 'OWNER' &&
                   <button
+                    role="menuitem"
                     onClick={() => changeRole('ADMIN')}
                     className={`${styles['role-btn']} ${styles['admin']}`}
                   >
@@ -120,24 +129,28 @@ export default function UpdateModal(
                   </button>
                 }
                 <button
+                  role="menuitem"
                   onClick={() => changeRole('BROTHER')}
                   className={`${styles['role-btn']} ${styles['brother']}`}
                 >
                   BROTHER
                 </button>
                 <button
+                  role="menuitem"
                   onClick={() => changeRole('PCP_PCVP')}
                   className={`${styles['role-btn']} ${styles['pcp_pcvp']}`}
                 >
                   PCP/PCVP
                 </button>
                 <button
+                  role="menuitem"
                   onClick={() => changeRole('PLEDGE')}
                   className={`${styles['role-btn']} ${styles['pledge']}`}
                 >
                   PLEDGE
                 </button>
                 <button
+                  role="menuitem"
                   onClick={() => changeRole('NONE')}
                   className={`${styles['role-btn']}`}
                 >

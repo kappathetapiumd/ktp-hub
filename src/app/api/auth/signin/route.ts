@@ -7,7 +7,7 @@ import { createUserSession } from '@/lib/auth/session';
 export async function POST(request: Request) {
   const { email, password } = await request.json();
 
-  const user = await getUser(email);
+  const user = await getUser(email.trim().toLowerCase());
 
   if (!user)
     return Response.json({ error: 'No user exists with that email.' });

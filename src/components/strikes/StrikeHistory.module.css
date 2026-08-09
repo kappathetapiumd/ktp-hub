@@ -95,6 +95,34 @@
   text-align: center;
 }
 
+.history-fetching {
+  height: 100%;
+}
+
+.history-fetching > span {
+  width: 58px;
+  height: 58px;
+  margin-bottom: var(--spacing-3);
+  font-size: 1.25rem;
+  border-radius: 18px;
+}
+
+.history-fetching > strong {
+  color: var(--color-text-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.history-fetching > small {
+  max-width: 340px;
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
 .info-message > span {
   display: grid;
   place-items: center;

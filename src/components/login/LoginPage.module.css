@@ -15,39 +15,24 @@
   position: relative;
   z-index: 1;
   width: min(100%, 440px);
-  padding: var(--spacing-10) var(--spacing-10) var(--spacing-6);
-
-  background: transparent;
+  padding: var(--spacing-8) var(--spacing-10) var(--spacing-6);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-2xl);
-
+  background: rgba(10, 22, 40, 0.9);
+  box-shadow:
+    0 0 40px rgba(0, 212, 170, 0.2),
+    0 0 80px rgba(9, 132, 227, 0.12);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
 
-/* 0.03 0.25 0.15 */
-.login-content::before {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-
-  background: rgba(10, 22, 40, 0.9);
-
-  box-shadow:
-    0 0 40px rgba(0, 212, 170, 0.25),
-    0 0 80px rgba(9, 132, 227, 0.15);
-
-  pointer-events: none;
-  z-index: -1;
-}
-
-.login-content h1 {
-  margin-bottom: var(--spacing-8);
+.brand {
+  margin-bottom: var(--spacing-6);
   text-align: center;
   transform: translateX(0.05em);
   font-size: 6rem;
   font-weight: 800;
+  line-height: 1;
   letter-spacing: 0.08em;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
@@ -55,16 +40,46 @@
   color: transparent;
 }
 
+.heading-group {
+  margin-bottom: var(--spacing-6);
+  text-align: center;
+}
+
+.eyebrow {
+  margin-bottom: var(--spacing-2);
+  color: var(--color-primary-light);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-3xl);
+}
+
 .login-input {
   display: grid;
   gap: var(--spacing-5);
 }
 
-.input-group p {
-  margin-bottom: var(--spacing-2);
+.input-group {
+  display: grid;
+  gap: var(--spacing-2);
+}
+
+.input-group label {
   color: var(--color-text-heading);
   font-size: var(--font-size-sm);
   font-weight: 600;
+}
+
+.password-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-3);
 }
 
 .input-group input {
@@ -94,7 +109,6 @@
 .login-btns-container {
   display: grid;
   gap: var(--spacing-3);
-  /* margin-top: 0px; */
   margin-top: var(--spacing-2);
 }
 
@@ -138,73 +152,84 @@
 }
 
 .account-container {
+  display: grid;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
   text-align: center;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   line-height: 1.5;
 }
 
-.switch-link,
+.account-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  white-space: nowrap;
+}
+
+.account-divider::before,
+.account-divider::after {
+  content: '';
+  width: 100%;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.account-container .switch-button {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--color-text);
+}
+
+.account-container .switch-button:hover {
+  border-color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .forgot-password-link {
-  margin-left: 0.25rem;
   padding: 0;
-  border: none;
   border-radius: var(--radius-sm);
-  background: none;
   color: var(--color-primary-light);
-  font: inherit;
+  font-size: var(--font-size-xs);
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: none;
   transition:
     color var(--transition-fast),
     text-shadow var(--transition-fast);
 }
 
-.switch-link:hover,
+.switch-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 .forgot-password-link:hover {
-  transform: none;
   color: var(--color-primary);
   text-shadow: 0 0 12px rgba(0, 212, 170, 0.35);
 }
 
-.switch-link:focus-visible,
 .forgot-password-link:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.2);
 }
 
-.forgot-password-link {
-  display: inline-block;
-  margin-top: var(--spacing-2);
-  margin-left: 0;
-  color: var(--color-text-muted);
-  font-weight: 400;
-  text-decoration: none;
-}
-
-.forgot-password-link:hover {
-  color: var(--color-primary-light);
-}
-
-.info-message {
-  text-align: center;
-  color: var(--color-text);
-  font-size: 20px;
-  line-height: 1.5;
-}
-
 @media (max-width: 520px) {
   .login-container {
-    background: transparent;
+    padding: var(--spacing-4);
+    background: var(--color-bg);
   }
 
   .login-content {
     padding: var(--spacing-8) var(--spacing-6) var(--spacing-5);
   }
 
-  .login-content h1 {
+  .brand {
     letter-spacing: 0.04em;
     font-size: 6.5rem;
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
   }
 }

@@ -1,4 +1,5 @@
 import InactiveUserDashboard from './InactiveUserDashboard';
+import AppNavigation from '@/components/navigation/AppNavigation';
 
 import type { Metadata } from 'next';
 
@@ -12,5 +13,8 @@ export const metadata: Metadata = {
 export default async function DeletedUserDashboard() {
   const user = await convertToUser((await getCurrentUser())!);
 
-  return <InactiveUserDashboard user={user} />
+  return <>
+    <InactiveUserDashboard user={user} />
+    <AppNavigation user={user} />
+  </>
 }

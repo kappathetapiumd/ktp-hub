@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
 
@@ -18,7 +19,15 @@ export default function LoginPage() {
     !email.includes('umd.edu') || !email.includes('@');
   const validSignup = name.trim().split(/\s+/).length >= 2;
 
-  async function handleAuth() {
+  async function handleAuth(event?: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+
+    const isInvalid = isLogin ? invalidLogin : invalidLogin || !validSignup;
+
+    if (isSubmitting || isInvalid) return;
+
+    setIsSubmitting(true);
+
     let response;
 
     if (!isLogin) {
@@ -55,20 +64,22 @@ export default function LoginPage() {
       if (!isLogin || role === 'NONE')
         router.push('/limbo')
       else
-        router.push('/strikes');
+        router.push('/home');
     }
   }
 
   return (
-    <div className={styles['login-container']}>
+    <main className={styles['login-container']}>
       <section className={styles['login-content']}>
-        <h1>Κ Θ Π</h1>
+        <div className={styles['brand']}>Κ Θ Π</div>
 
-        <div className={styles['login-input']}>
+        <form className={styles['login-input']} onSubmit={handleAuth}>
           {!isLogin && (
             <div className={styles['input-group']}>
-              <p>Name</p>
+              <label htmlFor="signup-name">Name</label>
               <input
+                id="signup-name"
+                autoComplete="name"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 type="text"
@@ -78,22 +89,35 @@ export default function LoginPage() {
           )}
 
           <div className={styles['input-group']}>
-            <p>Email</p>
+            <label htmlFor="auth-email">Email</label>
             <input
+              id="auth-email"
+              autoComplete="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              type="text"
+              type="email"
               placeholder="Email"
               suppressHydrationWarning
             />
           </div>
 
           <div className={styles['input-group']}>
-            <p>Password</p>
+            <div className={styles['password-heading']}>
+              <label htmlFor="auth-password">Password</label>
+              {isLogin && (
+                <Link
+                  href="/forgot-password"
+                  className={styles['forgot-password-link']}
+                >
+                  Forgot password?
+                </Link>
+              )}
+            </div>
             <input
+              id="auth-password"
+              autoComplete={isLogin ? 'current-password' : 'new-password'}
               value={password}
               onChange={e => setPassword(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleAuth()}
               type="password"
               placeholder="Password"
               suppressHydrationWarning
@@ -102,41 +126,36 @@ export default function LoginPage() {
 
           <div className={styles['login-btns-container']}>
             <button
-              onClick={handleAuth}
+              type="submit"
               className={styles['submit-btn']}
               disabled={
-                isLogin ? (invalidLogin) : (invalidLogin || !validSignup)
+                isSubmitting
+                || (isLogin ? invalidLogin : invalidLogin || !validSignup)
               }
             >
-              {isLogin ? 'Sign in' : 'Register'}
+              {isSubmitting
+                ? (isLogin ? 'Signing in…' : 'Registering…')
+                : (isLogin ? 'Sign in' : 'Register')}
             </button>
-            <p className={styles['account-container']}>
-              {isLogin
-                ? "Don't have an account? "
-                : 'Already have an account? '
-              }
-              <a
-                onClick={() => setIsLogin(!isLogin)}
-                className={styles['switch-link']}
+            <div className={styles['account-container']}>
+              <div className={styles['account-divider']}>
+                <span>
+                  {isLogin ? 'New to KTP?' : 'Already have an account?'}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => !isSubmitting && setIsLogin(!isLogin)}
+                className={styles['switch-button']}
+                disabled={isSubmitting}
               >
-                {isLogin ? 'Register' : 'Sign in'}
-              </a>
-              
-              <br />
-
-              {isLogin &&
-                <Link
-                  href="/forgot-password"
-                  className={styles['forgot-password-link']}
-                >
-                  Forgot your password?
-                </Link>
-              }
-            </p>
+                {isLogin ? 'Create an account' : 'Back to sign in'}
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
       </section>
-    </div>
+    </main>
   );
 }
 
