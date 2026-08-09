@@ -1,0 +1,61 @@
+.progress {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease 180ms;
+}
+
+.progress span {
+  display: block;
+  width: 12%;
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  box-shadow: 0 0 12px var(--color-primary);
+  transform: translateX(-100%);
+}
+
+.progress.active {
+  opacity: 1;
+  transition-delay: 100ms;
+}
+
+.progress.active span {
+  animation: navigation-progress 8s cubic-bezier(0.1, 0.5, 0.2, 1) forwards;
+}
+
+@keyframes navigation-progress {
+  0% {
+    width: 12%;
+    transform: translateX(-100%);
+  }
+
+  12% {
+    width: 38%;
+    transform: translateX(0);
+  }
+
+  100% {
+    width: 88%;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress,
+  .progress.active {
+    transition: none;
+  }
+
+  .progress.active span {
+    width: 72%;
+    transform: translateX(0);
+    animation: none;
+  }
+}

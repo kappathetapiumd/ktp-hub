@@ -1,7 +1,9 @@
+import { Suspense } from 'react';
 import { Outfit } from 'next/font/google';
 
 import Head from './head';
 import Footer from '@/components/footer/Footer';
+import NavigationProgress from '@/components/navigation/NavigationProgress';
 
 import type { Metadata, Viewport } from 'next';
 
@@ -36,6 +38,9 @@ export default function RootLayout({ children }: Readonly<{children: React.React
       >
         <Head />
         <body suppressHydrationWarning>
+          <Suspense fallback={null}>
+            <NavigationProgress />
+          </Suspense>
           {children}
           <Footer />
         </body>

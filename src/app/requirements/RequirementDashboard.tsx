@@ -96,7 +96,15 @@ export default function RequirementDashboard({ user }: Props) {
   }
 
   async function toggleGroupTask(id: string, completed: boolean) {
-    const response = await fetch('/api/requirements/pledge', {
+    setGroupReqs(prev =>
+      prev.map(groupReq =>
+        groupReq.id === id
+          ? { ...groupReq, completed: !completed }
+          : groupReq
+      )
+    );
+
+    await fetch('/api/requirements/pledge', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -104,16 +112,6 @@ export default function RequirementDashboard({ user }: Props) {
         completed: !completed
       })
     });
-
-    if (!response.ok) return;
-
-    setGroupReqs(prev =>
-      prev.map(groupReq =>
-        groupReq.id === id
-        ? {...groupReq, completed: !completed}
-        : groupReq
-      )
-    );
   }
 
   async function deleteGroupTask(id: string) {
