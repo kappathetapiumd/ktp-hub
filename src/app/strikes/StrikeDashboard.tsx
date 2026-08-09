@@ -56,9 +56,7 @@ export default function StrikeDashboard({ user }: Props) {
     channel.bind('strike-deleted', handleStrikeEvent);
 
     return () => {
-      channel.unbind('strike-created', handleStrikeEvent);
-      channel.unbind('strike-updated', handleStrikeEvent);
-      channel.unbind('strike-deleted', handleStrikeEvent);
+      channel.unbind_all();
       pusherClient.unsubscribe('private-strikes');
     }
 
