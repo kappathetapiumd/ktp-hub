@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 import UserList from '@/components/requirements/UserList';
 import ClearModal from '@/components/requirements/modal/ClearModal';
@@ -31,7 +31,6 @@ type GroupTask = {
 }
 
 export default function RequirementDashboard({ user }: Props) {
-  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [search, setSearch] = useState('');
   const [groupReqs, setGroupReqs] = useState<GroupTask[]>([]);
@@ -350,13 +349,13 @@ export default function RequirementDashboard({ user }: Props) {
         </div>
       </div>
 
-      <button
-        onClick={() => router.push('/strikes')}
+      <Link
+        href="/strikes"
         className={styles['strikes-btn']}
       >
         <i className="fa-solid fa-user-xmark"></i>
         <span>Strike Dashboard</span>
-      </button>
+      </Link>
     </main>
   );
 }

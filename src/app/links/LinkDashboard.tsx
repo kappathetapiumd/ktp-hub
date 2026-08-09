@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 import { CurrentUser } from '@/lib/auth/currentUser';
 
@@ -18,7 +18,6 @@ type Link = {
 }
 
 export default function LinkDashboard({ user }: Props) {
-  const router = useRouter();
   const [links, setLinks] = useState<Link[]>([]);
   const [search, setSearch] = useState('');
   const [label, setLabel] = useState('');
@@ -243,13 +242,13 @@ export default function LinkDashboard({ user }: Props) {
         )}
       </div>
 
-      <button
-        onClick={() => router.push('/strikes')}
+      <Link
+        href="/strikes"
         className={styles['strikes-btn']}
       >
         <i className="fa-solid fa-user-xmark"/>
         <span>Strike Dashboard</span>
-      </button>
+      </Link>
     </main>
   );
 }

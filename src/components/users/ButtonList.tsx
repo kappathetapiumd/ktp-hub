@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 import type { CurrentUser } from '@/lib/auth/currentUser';
 
@@ -25,8 +25,6 @@ export default function ButtonList(
     isActive
   }: Props
 ) {
-  const router = useRouter();
-
   function toggleUpdating() {
     if (isDeleting || !isUpdating) {
       setIsUpdating(true);
@@ -78,15 +76,12 @@ export default function ButtonList(
               : <i className="fa-solid fa-dumpster"></i>}
           </button>
 
-          <button
-            onClick={() => isActive
-              ? router.push('/users/deleted')
-              : router.push('/users')
-            }
+          <Link
+            href={isActive ? '/users/deleted' : '/users'}
             className={styles['users-btn']}
           >
             <i className={`fa-solid fa-users${isActive ? '-slash' : ''}`}></i>
-          </button>
+          </Link>
         </>
       }
     </div>

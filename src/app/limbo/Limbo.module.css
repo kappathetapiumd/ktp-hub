@@ -63,11 +63,14 @@
 }
 
 .ok-btn {
+  display: block;
   cursor: pointer;
   border: 0;
   border-radius: var(--radius-full);
   padding: 0.95rem 1.25rem;
   font-weight: 700;
+  text-align: center;
+  text-decoration: none;
   transition:
   transform var(--transition-fast),
   box-shadow var(--transition-fast),

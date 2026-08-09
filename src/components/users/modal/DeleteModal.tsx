@@ -16,18 +16,6 @@ export default function DeleteModal(
   async function deleteUser() {
     showModal(false);
 
-    const params = new URLSearchParams({
-      userId,
-      deleteAll: deleteAll.toString()
-    });
-
-    const response = await fetch(
-      `/api/users${!isActive ? '/deleted' : ''}?${params.toString()}`,
-      { method: 'DELETE' }
-    );
-
-    if (!response.ok) return;
-
     if (deleteAll) {
       setUsers([]);
     } else {
@@ -35,6 +23,16 @@ export default function DeleteModal(
         prev.filter(user => user.id !== userId)
       );
     }
+
+    const params = new URLSearchParams({
+      userId,
+      deleteAll: deleteAll.toString()
+    });
+
+    await fetch(
+      `/api/users${!isActive ? '/deleted' : ''}?${params.toString()}`,
+      { method: 'DELETE' }
+    );
   }
 
   return (
