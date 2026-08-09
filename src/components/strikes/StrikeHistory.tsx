@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 import type { Strike } from '@/lib/strikes';
 import type { CurrentUser } from '@/lib/auth/currentUser';
+import FetchingState from '@/components/loading/FetchingState';
 
 import styles from './StrikeHistory.module.css';
 
@@ -13,6 +14,7 @@ type Props = {
   setShowEditModal: React.Dispatch<React.SetStateAction<boolean>>;
   setStrikeId: React.Dispatch<React.SetStateAction<string>>;
   selectedPledge: string;
+  isLoading: boolean;
 }
 
 export default function StrikeHistory(
@@ -23,7 +25,8 @@ export default function StrikeHistory(
     setShowDeleteModal,
     setShowEditModal,
     setStrikeId,
-    selectedPledge
+    selectedPledge,
+    isLoading
   }: Props
 ) {
   function handleDelete(id: string) {
@@ -49,7 +52,11 @@ export default function StrikeHistory(
           </div>
         </div>
         <span className={`${styles['week-amount']} ${totalStrikesPerWeek > 0 ? styles['positive'] : styles['neutral']}`}>
-          {totalStrikesPerWeek > 0 ? `+${totalStrikesPerWeek}` : totalStrikesPerWeek}
+          {isLoading
+            ? '—'
+            : totalStrikesPerWeek > 0
+            ? `+${totalStrikesPerWeek}`
+            : totalStrikesPerWeek}
         </span>
       </div>
 
@@ -66,6 +73,8 @@ export default function StrikeHistory(
               <h3>History is Private</h3>
               <p>{`Pledges can't view strike history.`}</p>
             </div>
+          : isLoading
+          ? <FetchingState label="Fetching strike history…" />
           : strikeHistory.length === 0
           ? <div className={styles['info-message']}>
               <span><i className="fa-solid fa-circle-check"></i></span>

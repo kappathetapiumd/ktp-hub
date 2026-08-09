@@ -75,6 +75,11 @@
   min-width: 100%;
 }
 
+.weeks-container > [role='status'] {
+  flex: 1;
+  min-width: 220px;
+}
+
 .week-btn {
   position: relative;
   flex: 1 0 auto;

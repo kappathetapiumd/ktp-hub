@@ -8,6 +8,7 @@ import ActiveModal from '@/components/users/modal/ActiveModal';
 import SearchBar from '@/components/users/SearchBar';
 import UserList from '@/components/users/UserList';
 import ButtonList from '@/components/users/ButtonList';
+import FetchingState from '@/components/loading/FetchingState';
 
 import type { User } from '@/lib/users';
 import type { CurrentUser } from '@/lib/auth/currentUser';
@@ -27,6 +28,7 @@ export default function InactiveUserDashboard({ user }: Props) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showActiveModal, setShowActiveModal] = useState(false);
   const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const isActive = false;
 
   const filteredUsers = useMemo(() => {
@@ -53,13 +55,17 @@ export default function InactiveUserDashboard({ user }: Props) {
     loadUsers();
 
     async function loadUsers() {
-      const response = await fetch('/api/users/deleted');
+      try {
+        const response = await fetch('/api/users/deleted');
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const users = await response.json();
+        const users = await response.json();
 
-      setUsers(users);
+        setUsers(users);
+      } finally {
+        setIsLoadingUsers(false);
+      }
     }
   }, []);
 
@@ -108,12 +114,12 @@ export default function InactiveUserDashboard({ user }: Props) {
             </p>
           </div>
           <span className={styles['count']}>
-            {users.length} archived
+            {isLoadingUsers ? 'Fetching archive…' : `${users.length} archived`}
           </span>
         </header>
 
         <div className={styles['search-bar-container']}>
-          {users.length > 0 &&
+          {!isLoadingUsers && users.length > 0 &&
             <div className={styles['search-shell']}>
               <i className="fa-solid fa-magnifying-glass"></i>
               <SearchBar
@@ -125,7 +131,9 @@ export default function InactiveUserDashboard({ user }: Props) {
         </div>
 
         <div className={styles['user-list-container']}>
-          {users.length > 0 &&
+          {isLoadingUsers ? (
+            <FetchingState label="Fetching archived members…" />
+          ) : users.length > 0 &&
             <>
               <div className={styles['list-headers']}>
                 <span>Archived member</span>
@@ -156,7 +164,7 @@ export default function InactiveUserDashboard({ user }: Props) {
           }
         </div>
         
-        {users.length === 0 && 
+        {!isLoadingUsers && users.length === 0 &&
           <div className={styles['info-message']}>
             <span className={styles['empty-icon']}>
               <i className="fa-solid fa-box-open"></i>

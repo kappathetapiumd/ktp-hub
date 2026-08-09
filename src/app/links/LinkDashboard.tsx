@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import { CurrentUser } from '@/lib/auth/currentUser';
+import FetchingState from '@/components/loading/FetchingState';
 
 import styles from './LinkDashboard.module.css';
 
@@ -23,6 +24,7 @@ export default function LinkDashboard({ user }: Props) {
   const [label, setLabel] = useState('');
   const [url, setUrl] = useState('');
   const [showLinkInput, setShowLinkInput] = useState(false);
+  const [isLoadingLinks, setIsLoadingLinks] = useState(true);
 
   const canManageLinks = user.role === 'ADMIN' || user.role === 'OWNER';
   const canAddLink = label.trim() && url.trim();
@@ -42,12 +44,16 @@ export default function LinkDashboard({ user }: Props) {
     loadLinks();
 
     async function loadLinks() {
-      const response = await fetch('/api/links');
+      try {
+        const response = await fetch('/api/links');
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const links = await response.json();
-      setLinks(links);
+        const links = await response.json();
+        setLinks(links);
+      } finally {
+        setIsLoadingLinks(false);
+      }
     }
   }, []);
 
@@ -106,7 +112,9 @@ export default function LinkDashboard({ user }: Props) {
             </p>
           </div>
           <span className={styles['count']}>
-            {links.length} {links.length === 1 ? 'link' : 'links'}
+            {isLoadingLinks
+              ? 'Fetching links…'
+              : `${links.length} ${links.length === 1 ? 'link' : 'links'}`}
           </span>
         </header>
 
@@ -118,14 +126,15 @@ export default function LinkDashboard({ user }: Props) {
               value={search}
               onChange={event => setSearch(event.target.value)}
               placeholder="Search links..."
-              aria-label="Search links"
               className={styles['search-bar']}
             />
           </div>
         </div>
 
         <div className={styles['links-container']}>
-          {links.length === 0 ? (
+          {isLoadingLinks ? (
+            <FetchingState label="Fetching links…" />
+          ) : links.length === 0 ? (
             <div className={styles['empty-state']}>
               <span className={styles['empty-icon']}>
                 <i className="fa-solid fa-compass" />

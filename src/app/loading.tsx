@@ -5,7 +5,6 @@ export default function Loading() {
     <div
       className={`${styles['progress']} ${styles['active']}`}
       role="progressbar"
-      aria-label="Loading page"
     >
       <span />
     </div>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import UserList from '@/components/requirements/UserList';
 import ClearModal from '@/components/requirements/modal/ClearModal';
+import FetchingState from '@/components/loading/FetchingState';
 
 import type { CurrentUser } from '@/lib/auth/currentUser';
 
@@ -37,6 +38,10 @@ export default function RequirementDashboard({ user }: Props) {
   const [newGroupReq, setNewGroupReq] = useState('');
   const [showGroupReqInput, setShowGroupReqInput] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(true);
+  const [isLoadingGroupReqs, setIsLoadingGroupReqs] = useState(
+    user.role !== 'BROTHER'
+  );
 
   
   useEffect(() => {
@@ -54,12 +59,16 @@ export default function RequirementDashboard({ user }: Props) {
         type
       });
 
-      const response = await fetch(`/api/requirements?${params.toString()}`);
+      try {
+        const response = await fetch(`/api/requirements?${params.toString()}`);
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const users = await response.json();
-      setUsers(users);
+        const users = await response.json();
+        setUsers(users);
+      } finally {
+        setIsLoadingUsers(false);
+      }
     }
   }, [user.role]);
 
@@ -68,12 +77,16 @@ export default function RequirementDashboard({ user }: Props) {
       loadGroupReqs();
 
     async function loadGroupReqs() {
-      const response = await fetch('/api/requirements/pledge');
+      try {
+        const response = await fetch('/api/requirements/pledge');
 
-      if (!response.ok) return;
+        if (!response.ok) return;
 
-      const groupReqs = await response.json();
-      setGroupReqs(groupReqs);
+        const groupReqs = await response.json();
+        setGroupReqs(groupReqs);
+      } finally {
+        setIsLoadingGroupReqs(false);
+      }
     }
   }, [user.role]);
 
@@ -181,8 +194,12 @@ export default function RequirementDashboard({ user }: Props) {
 
           <div className={styles['header-actions']}>
             <div className={styles['progress-pill']}>
-              <span>{completedRequirements}</span>
-              <small>of {totalRequirements || 0} complete</small>
+              <span>{isLoadingUsers ? '—' : completedRequirements}</span>
+              <small>
+                {isLoadingUsers
+                  ? 'fetching progress'
+                  : `of ${totalRequirements || 0} complete`}
+              </small>
             </div>
             {(user.role === 'ADMIN' || user.role === 'OWNER') &&
               <button
@@ -213,7 +230,9 @@ export default function RequirementDashboard({ user }: Props) {
               </div>
 
               <div className={styles['group-tasks']}>
-                {groupReqs.map(({ id, completed, name }) => (
+                {isLoadingGroupReqs ? (
+                  <FetchingState label="Fetching group tasks…" compact />
+                ) : groupReqs.map(({ id, completed, name }) => (
                   <div key={id} className={styles['group-task']}>
                     <button
                       onClick={() => toggleGroupTask(id, completed)}
@@ -243,7 +262,7 @@ export default function RequirementDashboard({ user }: Props) {
                   </div>
                 ))}
 
-                {groupReqs.length === 0 &&
+                {!isLoadingGroupReqs && groupReqs.length === 0 &&
                   <span className={styles['no-tasks']}>No group tasks yet</span>
                 }
               </div>
@@ -259,7 +278,6 @@ export default function RequirementDashboard({ user }: Props) {
               value={search}
               onChange={event => setSearch(event.target.value)}
               placeholder="Search members..."
-              aria-label="Search members"
               className={styles['search-bar']}
             />
           </div>
@@ -291,7 +309,9 @@ export default function RequirementDashboard({ user }: Props) {
           </div>
 
           <div className={styles['user-list']}>
-            {filteredUsers.length === 0 && search.trim() ? (
+            {isLoadingUsers ? (
+              <FetchingState label="Fetching requirements…" />
+            ) : filteredUsers.length === 0 && search.trim() ? (
               <div className={styles['no-results']}>
                 <i className="fa-solid fa-magnifying-glass" />
                 <strong>No Matching Members</strong>

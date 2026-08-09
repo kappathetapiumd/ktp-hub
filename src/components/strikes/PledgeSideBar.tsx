@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import type { Pledge } from '@/lib/pledges';
 import type { CurrentUser } from '@/lib/auth/currentUser';
+import FetchingState from '@/components/loading/FetchingState';
 
 import styles from './PledgeSideBar.module.css';
 
@@ -13,6 +14,7 @@ type Props = {
   setSelectedPledge: React.Dispatch<React.SetStateAction<string>>;
   showSideBar: boolean;
   setShowSideBar: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
 }
 
 export default function PledgeSideBar(
@@ -23,7 +25,8 @@ export default function PledgeSideBar(
     selectedPledge,
     setSelectedPledge,
     showSideBar,
-    setShowSideBar
+    setShowSideBar,
+    isLoading
   }: Props
 ) {
   return (
@@ -57,16 +60,18 @@ export default function PledgeSideBar(
             <span>Total</span>
             <small>Across all pledges</small>
           </div>
-          <strong>{totalStrikes}</strong>
+          <strong>{isLoading ? '—' : totalStrikes}</strong>
         </div>
 
         <div className={styles['list-label']}>
           <span>Pledges</span>
-          <small>{pledges.length}</small>
+          <small>{isLoading ? '…' : pledges.length}</small>
         </div>
 
         <div className={styles['pledge-list']}>
-          {pledges.map(({ id, name, strikes }) => (
+          {isLoading ? (
+            <FetchingState label="Fetching pledge roster…" compact />
+          ) : pledges.map(({ id, name, strikes }) => (
             <div
               onClick={() => setSelectedPledge(id)}
               key={id}
@@ -84,7 +89,7 @@ export default function PledgeSideBar(
             </div>
           ))}
 
-          {pledges.length === 0 &&
+          {!isLoading && pledges.length === 0 &&
             <div className={styles['empty-roster']}>
               <i className="fa-solid fa-user-group"></i>
               <span>No pledges yet</span>
