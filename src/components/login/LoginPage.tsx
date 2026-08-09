@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -19,7 +19,9 @@ export default function LoginPage() {
     !email.includes('umd.edu') || !email.includes('@');
   const validSignup = name.trim().split(/\s+/).length >= 2;
 
-  async function handleAuth() {
+  async function handleAuth(event?: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+
     const isInvalid = isLogin ? invalidLogin : invalidLogin || !validSignup;
 
     if (isSubmitting || isInvalid) return;
@@ -67,11 +69,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div className={styles['login-container']}>
+    <main className={styles['login-container']}>
       <section className={styles['login-content']}>
-        <h1>Κ Θ Π</h1>
+        <div className={styles['brand']}>Κ Θ Π</div>
 
-        <div className={styles['login-input']}>
+        <div className={styles['heading-group']}>
+          <p className={styles['eyebrow']}>
+            {isLogin ? 'Welcome back' : 'Join KTP'}
+          </p>
+          <h1 className={styles['title']}>
+            {isLogin ? 'Sign in to your account' : 'Create your account'}
+          </h1>
+        </div>
+
+        <form className={styles['login-input']} onSubmit={handleAuth}>
           {!isLogin && (
             <div className={styles['input-group']}>
               <label htmlFor="signup-name">Name</label>
@@ -106,7 +117,6 @@ export default function LoginPage() {
               autoComplete={isLogin ? 'current-password' : 'new-password'}
               value={password}
               onChange={e => setPassword(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleAuth()}
               type="password"
               placeholder="Password"
               suppressHydrationWarning
@@ -115,7 +125,7 @@ export default function LoginPage() {
 
           <div className={styles['login-btns-container']}>
             <button
-              onClick={handleAuth}
+              type="submit"
               className={styles['submit-btn']}
               disabled={
                 isSubmitting
@@ -140,21 +150,19 @@ export default function LoginPage() {
                 {isLogin ? 'Register' : 'Sign in'}
               </button>
               
-              <br />
-
-              {isLogin &&
+              {isLogin && (
                 <Link
                   href="/forgot-password"
                   className={styles['forgot-password-link']}
                 >
                   Forgot your password?
                 </Link>
-              }
+              )}
             </p>
           </div>
-        </div>
+        </form>
       </section>
-    </div>
+    </main>
   );
 }
 
