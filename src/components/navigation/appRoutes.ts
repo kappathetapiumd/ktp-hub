@@ -18,7 +18,7 @@ const commonRoutes: AppRoute[] = [
   },
   {
     href: '/strikes',
-    label: 'Strike Dashboard',
+    label: 'Strikes',
     description: 'Review pledge strikes and weekly activity.',
     icon: 'fa-bolt',
     accent: 'blue'
@@ -32,7 +32,7 @@ const commonRoutes: AppRoute[] = [
   },
   {
     href: '/links',
-    label: 'Chapter Links',
+    label: 'Links',
     description: 'Find shared chapter tools and resources.',
     icon: 'fa-link',
     accent: 'amber'

@@ -11,6 +11,7 @@ import PledgeSideBar from '@/components/strikes/PledgeSideBar';
 import StrikeInput from '@/components/strikes/StrikeInput';
 import WeeksSelect from "@/components/strikes/WeeksSelect";
 import StrikeHistory from '@/components/strikes/StrikeHistory';
+import AppNavigation from '@/components/navigation/AppNavigation';
 
 import type { Pledge } from '@/lib/pledges';
 import type { Strike } from '@/lib/strikes';
@@ -236,6 +237,12 @@ export default function StrikeDashboard({ user }: Props) {
           isLoading={isLoadingPledges}
         />
       </aside>
+
+      <AppNavigation
+        user={user}
+        className={styles['app-navigation']}
+        hidden={isMobile && showSideBar}
+      />
 
       <section
         onClick={() => isMobile && setShowSideBar(false)}

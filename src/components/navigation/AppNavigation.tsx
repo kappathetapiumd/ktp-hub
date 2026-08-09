@@ -9,7 +9,13 @@ import { getAppRoutes } from './appRoutes';
 
 import styles from './AppNavigation.module.css';
 
-export default function AppNavigation({ user }: { user: CurrentUser }) {
+type Props = {
+  user: CurrentUser;
+  className?: string;
+  hidden?: boolean;
+};
+
+export default function AppNavigation({ user, className = '', hidden = false }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const navigationRef = useRef<HTMLElement>(null);
@@ -34,7 +40,12 @@ export default function AppNavigation({ user }: { user: CurrentUser }) {
   }, [isOpen]);
 
   return (
-    <nav ref={navigationRef} className={styles.navigation} aria-label="Page navigation">
+    <nav
+      ref={navigationRef}
+      className={`${styles.navigation} ${className}`}
+      aria-label="Page navigation"
+      hidden={hidden}
+    >
       <div id="app-navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`} aria-hidden={!isOpen}>
         {routes.map(route => (
           <Link

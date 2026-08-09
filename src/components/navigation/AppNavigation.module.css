@@ -8,6 +8,10 @@
   gap: 9px;
 }
 
+.navigation[hidden] {
+  display: none;
+}
+
 .menu {
   display: flex;
   flex-direction: column;

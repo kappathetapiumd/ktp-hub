@@ -33,6 +33,10 @@
   overflow: hidden;
 }
 
+.app-navigation {
+  left: 308px;
+}
+
 .dashboard-main {
   position: fixed;
   inset: 0 0 0 288px;
@@ -175,6 +179,10 @@
   .dashboard-main {
     left: 264px;
   }
+
+  .app-navigation {
+    left: 284px;
+  }
 }
 
 @media (max-width: 520px) {
@@ -195,6 +203,10 @@
     inset: 0;
     gap: 10px;
     padding: 10px 9px 72px;
+  }
+
+  .app-navigation {
+    left: max(14px, env(safe-area-inset-left));
   }
 
   .dashboard-header {

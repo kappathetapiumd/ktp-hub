@@ -1,5 +1,4 @@
 import StrikeDashboard from './StrikeDashboard';
-import AppNavigation from '@/components/navigation/AppNavigation';
 
 import type { Metadata } from 'next';
 
@@ -15,6 +14,5 @@ export default async function Page() {
 
   return <>
     <StrikeDashboard user={user} />
-    <AppNavigation user={user} />
   </>
 }
