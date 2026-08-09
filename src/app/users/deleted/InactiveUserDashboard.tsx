@@ -114,7 +114,7 @@ export default function InactiveUserDashboard({ user }: Props) {
             </p>
           </div>
           <span className={styles['count']}>
-            {isLoadingUsers ? 'Fetching archive…' : `${users.length} archived`}
+            {isLoadingUsers ? 'Fetching Archive…' : `${users.length} archived`}
           </span>
         </header>
 
@@ -132,7 +132,7 @@ export default function InactiveUserDashboard({ user }: Props) {
 
         <div className={styles['user-list-container']}>
           {isLoadingUsers ? (
-            <FetchingState label="Fetching archived members…" />
+            <FetchingState label="Fetching Archived Members…" />
           ) : users.length > 0 &&
             <>
               <div className={styles['list-headers']}>

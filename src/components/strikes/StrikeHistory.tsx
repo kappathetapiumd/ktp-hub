@@ -75,7 +75,7 @@ export default function StrikeHistory(
             </div>
           : isLoading
           ? <FetchingState
-              label="Fetching strike history…"
+              label="Fetching Strike History…"
               className={styles['history-fetching']}
             />
           : strikeHistory.length === 0

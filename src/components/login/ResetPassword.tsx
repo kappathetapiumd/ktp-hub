@@ -17,6 +17,7 @@ export default function ResetPassword({ token }: Props) {
 
   async function resetPassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (isLoading || isSubmitted) return;
 
     setIsLoading(true);
     setError(null);

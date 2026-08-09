@@ -9,20 +9,27 @@ type Props = {
 export default function WeekModal({ showModal }: Props) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
 
   async function generateWeeks() {
-    showModal(false);
-    
-    const response = await fetch('/api/weeks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        startDate,
-        endDate
-      })
-    });
+    if (isCreating) return;
+    setIsCreating(true);
 
-    if (!response.ok) return;
+    try {
+      const response = await fetch('/api/weeks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          startDate,
+          endDate
+        })
+      });
+
+      if (!response.ok) return;
+      showModal(false);
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   return (
@@ -58,11 +65,11 @@ export default function WeekModal({ showModal }: Props) {
         <div className={styles['confirmation-btns']}>
           <button
             onClick={generateWeeks}
-            disabled={invalidDates(startDate, endDate)}
+            disabled={invalidDates(startDate, endDate) || isCreating}
             className={styles['yes-btn']}
           >
             <i className="fa-solid fa-calendar-plus"></i>
-            Create Term
+            {isCreating ? 'Creating…' : 'Create Term'}
           </button>
           <button
             onClick={() => showModal(false)}

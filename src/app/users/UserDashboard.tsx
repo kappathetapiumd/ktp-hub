@@ -124,7 +124,7 @@ export default function UserDashboard({ user }: Props) {
           <div className={styles['header-actions']}>
             <span className={styles['count']}>
               {isLoadingUsers
-                ? 'Fetching members…'
+                ? 'Fetching Members…'
                 : `${users.length} ${users.length === 1 ? 'member' : 'members'}`}
             </span>
             {user.role === 'OWNER' &&
@@ -156,7 +156,7 @@ export default function UserDashboard({ user }: Props) {
             <span>Membership committee</span>
           </div>}
           {isLoadingUsers ? (
-            <FetchingState label="Fetching members…" />
+            <FetchingState label="Fetching Members…" />
           ) : filteredUsers.length === 0 && search.trim() ? (
             <div className={styles['no-results']}>
               <i className="fa-solid fa-magnifying-glass" />

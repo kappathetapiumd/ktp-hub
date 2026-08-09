@@ -85,7 +85,7 @@ export default function WeeksSelect(
         <span><i className="fa-regular fa-calendar"></i></span>
         <div>
           <strong>Timeline</strong>
-          <small>{isLoading ? 'Fetching weeks…' : 'Select a week to review'}</small>
+          <small>{isLoading ? 'Fetching Weeks…' : 'Select a week to review'}</small>
         </div>
       </div>
       <div
@@ -98,7 +98,7 @@ export default function WeeksSelect(
       >
         <div className={styles['weeks-container']}>
           {isLoading ? (
-            <FetchingState label="Fetching weeks…" compact />
+            <FetchingState label="Fetching Weeks…" compact />
           ) : weeks.map((week, index) => (
             <button
               key={week}

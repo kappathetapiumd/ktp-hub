@@ -42,6 +42,7 @@ export default function RequirementDashboard({ user }: Props) {
   const [isLoadingGroupReqs, setIsLoadingGroupReqs] = useState(
     user.role !== 'BROTHER'
   );
+  const [isAddingGroupReq, setIsAddingGroupReq] = useState(false);
 
   
   useEffect(() => {
@@ -91,21 +92,27 @@ export default function RequirementDashboard({ user }: Props) {
   }, [user.role]);
 
   async function addGroupReq() {
-    setNewGroupReq('');
+    if (isAddingGroupReq || !newGroupReq.trim()) return;
+    setIsAddingGroupReq(true);
 
-    const response = await fetch('/api/requirements/pledge', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        req: newGroupReq
-      })
-    });
+    try {
+      const response = await fetch('/api/requirements/pledge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          req: newGroupReq
+        })
+      });
 
-    if (!response.ok) return;
+      if (!response.ok) return;
 
-    const createdGroupReq = await response.json();
+      const createdGroupReq = await response.json();
 
-    setGroupReqs(prev => [...prev, createdGroupReq]);
+      setGroupReqs(prev => [...prev, createdGroupReq]);
+      setNewGroupReq('');
+    } finally {
+      setIsAddingGroupReq(false);
+    }
   }
 
   async function toggleGroupTask(id: string, completed: boolean) {
@@ -231,7 +238,7 @@ export default function RequirementDashboard({ user }: Props) {
 
               <div className={styles['group-tasks']}>
                 {isLoadingGroupReqs ? (
-                  <FetchingState label="Fetching group tasks…" compact />
+                  <FetchingState label="Fetching Group Tasks…" compact />
                 ) : groupReqs.map(({ id, completed, name }) => (
                   <div key={id} className={styles['group-task']}>
                     <button
@@ -310,7 +317,7 @@ export default function RequirementDashboard({ user }: Props) {
 
           <div className={styles['user-list']}>
             {isLoadingUsers ? (
-              <FetchingState label="Fetching requirements…" />
+              <FetchingState label="Fetching Requirements…" />
             ) : filteredUsers.length === 0 && search.trim() ? (
               <div className={styles['no-results']}>
                 <i className="fa-solid fa-magnifying-glass" />
@@ -354,11 +361,11 @@ export default function RequirementDashboard({ user }: Props) {
                   />
                   <button
                     onClick={addGroupReq}
-                    disabled={!newGroupReq.trim()}
+                    disabled={!newGroupReq.trim() || isAddingGroupReq}
                     className={styles['add-task']}
                   >
                     <i className="fa-solid fa-plus"></i>
-                    <span>Add task</span>
+                    <span>{isAddingGroupReq ? 'Adding…' : 'Add task'}</span>
                   </button>
                 </div>
               }

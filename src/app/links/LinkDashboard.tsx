@@ -25,6 +25,7 @@ export default function LinkDashboard({ user }: Props) {
   const [url, setUrl] = useState('');
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [isLoadingLinks, setIsLoadingLinks] = useState(true);
+  const [isAddingLink, setIsAddingLink] = useState(false);
 
   const canManageLinks = user.role === 'ADMIN' || user.role === 'OWNER';
   const canAddLink = label.trim() && url.trim();
@@ -58,27 +59,33 @@ export default function LinkDashboard({ user }: Props) {
   }, []);
 
   async function addLink() {
+    if (isAddingLink) return;
     const cleanLabel = label.trim();
     const cleanUrl = url.trim();
     if (!cleanLabel || !cleanUrl) return;
+    setIsAddingLink(true);
 
-    const response = await fetch('/api/links', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        label,
-        url
-      })
-    });
+    try {
+      const response = await fetch('/api/links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          label,
+          url
+        })
+      });
 
-    if (!response.ok) return;
+      if (!response.ok) return;
 
-    const newLink = await response.json();
+      const newLink = await response.json();
 
-    setLinks(prev => [...prev, newLink]);
+      setLinks(prev => [...prev, newLink]);
 
-    setLabel('');
-    setUrl('');
+      setLabel('');
+      setUrl('');
+    } finally {
+      setIsAddingLink(false);
+    }
   }
 
   async function deleteLink(id: string) {
@@ -113,7 +120,7 @@ export default function LinkDashboard({ user }: Props) {
           </div>
           <span className={styles['count']}>
             {isLoadingLinks
-              ? 'Fetching links…'
+              ? 'Fetching Links…'
               : `${links.length} ${links.length === 1 ? 'link' : 'links'}`}
           </span>
         </header>
@@ -133,7 +140,7 @@ export default function LinkDashboard({ user }: Props) {
 
         <div className={styles['links-container']}>
           {isLoadingLinks ? (
-            <FetchingState label="Fetching links…" />
+            <FetchingState label="Fetching Links…" />
           ) : links.length === 0 ? (
             <div className={styles['empty-state']}>
               <span className={styles['empty-icon']}>
@@ -240,10 +247,10 @@ export default function LinkDashboard({ user }: Props) {
                 </label>
                 <button
                   onClick={addLink}
-                  disabled={!canAddLink}
+                disabled={!canAddLink || isAddingLink}
                 >
                   <i className="fa-solid fa-plus" />
-                  <span>Add link</span>
+                <span>{isAddingLink ? 'Adding…' : 'Add link'}</span>
                 </button>
               </div>
             }

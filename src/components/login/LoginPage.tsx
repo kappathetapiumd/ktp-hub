@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
 
@@ -19,43 +20,53 @@ export default function LoginPage() {
   const validSignup = name.trim().split(/\s+/).length >= 2;
 
   async function handleAuth() {
-    let response;
+    const isInvalid = isLogin
+      ? invalidLogin
+      : invalidLogin || !validSignup;
+    if (isSubmitting || isInvalid) return;
+    setIsSubmitting(true);
 
-    if (!isLogin) {
-      response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          name: capitalizeName(name),
-          password
-        })
-      });
-    } else {
-      response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password
-        })
-      });
-    }
+    try {
+      let response;
 
-    if (!response.ok) return;
+      if (!isLogin) {
+        response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            name: capitalizeName(name),
+            password
+          })
+        });
+      } else {
+        response = await fetch('/api/auth/signin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            password
+          })
+        });
+      }
 
-    const { success, error, role } = await response.json();
+      if (!response.ok) return;
 
-    if (error) {
-      router.push(`/limbo?message=${encodeURIComponent(error)}`);
-      return;
-    }
+      const { success, error, role } = await response.json();
 
-    if (success) {
-      if (!isLogin || role === 'NONE')
-        router.push('/limbo')
-      else
-        router.push('/strikes');
+      if (error) {
+        router.push(`/limbo?message=${encodeURIComponent(error)}`);
+        return;
+      }
+
+      if (success) {
+        if (!isLogin || role === 'NONE')
+          router.push('/limbo')
+        else
+          router.push('/strikes');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -105,10 +116,13 @@ export default function LoginPage() {
               onClick={handleAuth}
               className={styles['submit-btn']}
               disabled={
-                isLogin ? (invalidLogin) : (invalidLogin || !validSignup)
+                isSubmitting
+                || (isLogin ? invalidLogin : invalidLogin || !validSignup)
               }
             >
-              {isLogin ? 'Sign in' : 'Register'}
+              {isSubmitting
+                ? (isLogin ? 'Signing in…' : 'Registering…')
+                : (isLogin ? 'Sign in' : 'Register')}
             </button>
             <p className={styles['account-container']}>
               {isLogin
@@ -116,8 +130,9 @@ export default function LoginPage() {
                 : 'Already have an account? '
               }
               <a
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => !isSubmitting && setIsLogin(!isLogin)}
                 className={styles['switch-link']}
+                aria-disabled={isSubmitting}
               >
                 {isLogin ? 'Register' : 'Sign in'}
               </a>

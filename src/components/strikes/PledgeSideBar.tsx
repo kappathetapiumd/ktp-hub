@@ -70,7 +70,7 @@ export default function PledgeSideBar(
 
         <div className={styles['pledge-list']}>
           {isLoading ? (
-            <FetchingState label="Fetching pledge roster…" compact />
+            <FetchingState label="Fetching Pledge Roster…" compact />
           ) : pledges.map(({ id, name, strikes }) => (
             <div
               onClick={() => setSelectedPledge(id)}
