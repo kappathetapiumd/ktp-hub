@@ -93,8 +93,13 @@ export default function UserList(
             </span>
 
             <button
-              onClick={() => updateMembership(id, membershipCommittee)}
+              onClick={event => {
+                event.stopPropagation();
+                updateMembership(id, membershipCommittee);
+              }}
               disabled={role !== 'BROTHER' || isUpdating || isDeleting}
+              aria-pressed={membershipCommittee}
+              aria-label={`${name}: membership committee`}
               className={styles['membership-toggle']}
             >
               <i

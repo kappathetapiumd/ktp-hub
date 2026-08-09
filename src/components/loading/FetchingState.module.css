@@ -33,7 +33,7 @@
 
 .fetching strong {
   color: var(--color-text-heading);
-  font-size: var(--font-size-sm);
+  font-size: 1rem;
 }
 
 .fetching small {

@@ -12,6 +12,7 @@ export default function SearchBar({ search, setSearch }: Props) {
       onChange={e => setSearch(e.target.value)}
       value={search}
       placeholder='Search...'
+      aria-label="Search users"
       className={styles['search-bar']}
       suppressHydrationWarning
     />

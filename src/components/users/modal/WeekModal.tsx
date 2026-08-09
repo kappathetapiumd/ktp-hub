@@ -34,27 +34,29 @@ export default function WeekModal({ showModal }: Props) {
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={styles['modal-container']}>
+      <div className={styles['modal-container']} role="dialog" aria-modal="true" aria-labelledby="week-modal-title">
         <div className={styles['modal-heading']}>
           <span className={styles['modal-icon']}><i className="fa-regular fa-calendar"></i></span>
           <p className={styles['eyebrow']}>Term setup</p>
-          <h2>Generate chapter weeks</h2>
+          <h2 id="week-modal-title">Generate chapter weeks</h2>
           <p className={styles['message']}>
             Choose the first and last day of the pledging term.
           </p>
         </div>
 
         <div className={styles['date-selector']}>
-          <label>Start Date</label>
+          <label htmlFor="term-start-date">Start Date</label>
           <input
+            id="term-start-date"
             value={startDate}
             onChange={e => setStartDate(e.target.value)}
             type="date"
             className={styles['date-input']}
           />
 
-          <label>End Date</label>
+          <label htmlFor="term-end-date">End Date</label>
           <input
+            id="term-end-date"
             value={endDate}
             onChange={e => setEndDate(e.target.value)}
             type="date"

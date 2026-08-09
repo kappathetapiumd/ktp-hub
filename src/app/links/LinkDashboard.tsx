@@ -130,6 +130,7 @@ export default function LinkDashboard({ user }: Props) {
             <i className="fa-solid fa-magnifying-glass" />
             <input
               type="search"
+              aria-label="Search links"
               value={search}
               onChange={event => setSearch(event.target.value)}
               placeholder="Search links..."
@@ -187,6 +188,8 @@ export default function LinkDashboard({ user }: Props) {
 
                   {canManageLinks && (
                     <button
+                      type="button"
+                      aria-label={`Delete ${linkLabel}`}
                       onClick={() => deleteLink(id)}
                       className={styles['delete-link']}
                     >
@@ -203,6 +206,8 @@ export default function LinkDashboard({ user }: Props) {
           <div className={styles['link-input']}>
             <button
               type="button"
+              aria-expanded={showLinkInput}
+              aria-controls="new-link-fields"
               className={styles['composer-heading']}
               onClick={() => setShowLinkInput(current => !current)}
             >

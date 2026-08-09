@@ -281,6 +281,7 @@ export default function RequirementDashboard({ user }: Props) {
             <i className="fa-solid fa-magnifying-glass" />
             <input
               type="search"
+              aria-label="Search members"
               value={search}
               onChange={event => setSearch(event.target.value)}
               placeholder="Search members..."
@@ -337,6 +338,9 @@ export default function RequirementDashboard({ user }: Props) {
           {user.role === 'OWNER' && (
             <div className={styles['task-controls']}>
               <button
+                type="button"
+                aria-expanded={showGroupReqInput}
+                aria-controls="group-task-form"
                 onClick={() => setShowGroupReqInput(prev => !prev)}
                 className={styles['toggle-task-input']}
               >
@@ -349,8 +353,9 @@ export default function RequirementDashboard({ user }: Props) {
               </button>
 
               {showGroupReqInput &&
-                <div className={styles['task-form']}>
+                <div id="group-task-form" className={styles['task-form']}>
                   <input
+                    aria-label="Group task name"
                     value={newGroupReq}
                     onChange={e => setNewGroupReq(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && addGroupReq()}

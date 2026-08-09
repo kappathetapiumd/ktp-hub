@@ -240,7 +240,7 @@ export default function StrikeDashboard({ user }: Props) {
 
       <AppNavigation
         user={user}
-        className={styles['app-navigation']}
+        className={styles['mobile-navigation']}
         hidden={isMobile && showSideBar}
       />
 

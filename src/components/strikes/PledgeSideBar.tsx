@@ -1,6 +1,7 @@
 import type { Pledge } from '@/lib/pledges';
 import type { CurrentUser } from '@/lib/auth/currentUser';
 import FetchingState from '@/components/loading/FetchingState';
+import AppNavigation from '@/components/navigation/AppNavigation';
 
 import styles from './PledgeSideBar.module.css';
 
@@ -17,6 +18,7 @@ type Props = {
 
 export default function PledgeSideBar(
   {
+    user,
     pledges,
     totalStrikes,
     selectedPledge,
@@ -29,6 +31,9 @@ export default function PledgeSideBar(
   return (
     <>
       <div
+        id="pledge-sidebar"
+        aria-label="Pledge roster"
+        aria-hidden={!showSideBar}
         className={`
           ${styles['sidebar']}
           ${!showSideBar ? styles['hide-bar'] : ''}
@@ -45,6 +50,8 @@ export default function PledgeSideBar(
             </div>
           </div>
           <button
+            type="button"
+            aria-label="Close pledge roster"
             onClick={() => setShowSideBar(false)}
             className={styles['close-sidebar']}
           >
@@ -69,8 +76,11 @@ export default function PledgeSideBar(
           {isLoading ? (
             <FetchingState label="Fetching Pledge Roster…" compact />
           ) : pledges.map(({ id, name, strikes }) => (
-            <div
+            <button
+              type="button"
               onClick={() => setSelectedPledge(id)}
+              aria-pressed={selectedPledge === id}
+              aria-label={`${name}, ${strikes} ${strikes === 1 ? 'strike' : 'strikes'}`}
               key={id}
               className={`
                 ${styles['pledge-card']} 
@@ -83,7 +93,7 @@ export default function PledgeSideBar(
               <span className={styles['status-dot']}></span>
               <span className={styles['name']}>{name}</span>
               <span className={styles['strike-count']}>{strikes}</span>
-            </div>
+            </button>
           ))}
 
           {!isLoading && pledges.length === 0 &&
@@ -94,9 +104,18 @@ export default function PledgeSideBar(
           }
         </div>
 
+        <AppNavigation
+          user={user}
+          className={styles['sidebar-navigation']}
+        />
+
       </div>
 
       <button
+        type="button"
+        aria-label="Open pledge roster"
+        aria-expanded={showSideBar}
+        aria-controls="pledge-sidebar"
         onClick={() => setShowSideBar(true)}
         className={styles['open-sidebar']}
       >

@@ -147,6 +147,8 @@ export default function StrikeInput(
         </label>
 
         <button
+          type="button"
+          aria-label="Add strike"
           onClick={addStrike}
           disabled={
             invalidStrike(reason, amount, selectedPledge, weeks)
@@ -154,7 +156,7 @@ export default function StrikeInput(
           }
           className={styles['add-btn']}
         >
-          <i className="fa-solid fa-plus"></i>
+          <i className="fa-solid fa-plus" aria-hidden="true"></i>
         </button>
       </div>
     </div>

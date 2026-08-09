@@ -33,8 +33,8 @@
   overflow: hidden;
 }
 
-.app-navigation {
-  left: 308px;
+.mobile-navigation {
+  display: none;
 }
 
 .dashboard-main {
@@ -180,9 +180,6 @@
     left: 264px;
   }
 
-  .app-navigation {
-    left: 284px;
-  }
 }
 
 @media (max-width: 520px) {
@@ -205,7 +202,8 @@
     padding: 10px 9px 72px;
   }
 
-  .app-navigation {
+  .mobile-navigation {
+    display: grid;
     left: max(14px, env(safe-area-inset-left));
   }
 

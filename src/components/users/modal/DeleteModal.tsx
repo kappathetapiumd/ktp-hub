@@ -37,7 +37,7 @@ export default function DeleteModal(
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={`${styles['modal-container']} ${styles['danger-modal']}`}>
+      <div className={`${styles['modal-container']} ${styles['danger-modal']}`} role="alertdialog" aria-modal="true" aria-labelledby="delete-user-title">
         <div className={styles['modal-heading']}>
           <span className={styles['modal-icon']}>
             <i className={`fa-solid ${deleteAll ? 'fa-dumpster' : 'fa-user-minus'}`}></i>
@@ -45,7 +45,7 @@ export default function DeleteModal(
           <p className={styles['eyebrow']}>
             {isActive ? 'Archive member' : 'Permanent deletion'}
           </p>
-          <h2>
+          <h2 id="delete-user-title">
             {deleteAll
               ? 'Empty the entire archive?'
               : isActive

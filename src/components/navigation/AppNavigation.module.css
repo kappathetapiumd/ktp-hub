@@ -13,7 +13,7 @@
 }
 
 .menu {
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 8px;
   pointer-events: none;
@@ -44,6 +44,7 @@
 }
 
 .open {
+  display: flex;
   pointer-events: auto;
 }
 

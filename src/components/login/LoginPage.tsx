@@ -78,8 +78,10 @@ export default function LoginPage() {
         <div className={styles['login-input']}>
           {!isLogin && (
             <div className={styles['input-group']}>
-              <p>Name</p>
+              <label htmlFor="signup-name">Name</label>
               <input
+                id="signup-name"
+                autoComplete="name"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 type="text"
@@ -89,19 +91,23 @@ export default function LoginPage() {
           )}
 
           <div className={styles['input-group']}>
-            <p>Email</p>
+            <label htmlFor="auth-email">Email</label>
             <input
+              id="auth-email"
+              autoComplete="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              type="text"
+              type="email"
               placeholder="Email"
               suppressHydrationWarning
             />
           </div>
 
           <div className={styles['input-group']}>
-            <p>Password</p>
+            <label htmlFor="auth-password">Password</label>
             <input
+              id="auth-password"
+              autoComplete={isLogin ? 'current-password' : 'new-password'}
               value={password}
               onChange={e => setPassword(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleAuth()}
@@ -129,13 +135,14 @@ export default function LoginPage() {
                 ? "Don't have an account? "
                 : 'Already have an account? '
               }
-              <a
+              <button
+                type="button"
                 onClick={() => !isSubmitting && setIsLogin(!isLogin)}
                 className={styles['switch-link']}
-                aria-disabled={isSubmitting}
+                disabled={isSubmitting}
               >
                 {isLogin ? 'Register' : 'Sign in'}
-              </a>
+              </button>
               
               <br />
 

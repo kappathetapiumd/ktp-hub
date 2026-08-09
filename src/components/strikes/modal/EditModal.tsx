@@ -94,11 +94,11 @@ export default function EditModal(
 
   return (
     <div className={styles['modal-overlay']}>
-      <div className={styles['modal-container']}>
+      <div className={styles['modal-container']} role="dialog" aria-modal="true" aria-labelledby="edit-strike-title">
         <div className={styles['modal-heading']}>
           <span className={styles['modal-icon']}><i className="fa-solid fa-pen"></i></span>
           <p className={styles['eyebrow']}>Strike details</p>
-          <h2>Edit strike</h2>
+          <h2 id="edit-strike-title">Edit strike</h2>
           <p className={styles['message']}>Update the reason or adjust the strike amount.</p>
         </div>
 
