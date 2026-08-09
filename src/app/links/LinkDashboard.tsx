@@ -258,13 +258,6 @@ export default function LinkDashboard({ user }: Props) {
         )}
       </div>
 
-      <Link
-        href="/strikes"
-        className={styles['strikes-btn']}
-      >
-        <i className="fa-solid fa-user-xmark"/>
-        <span>Strike Dashboard</span>
-      </Link>
     </main>
   );
 }

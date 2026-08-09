@@ -63,7 +63,7 @@ export default function LoginPage() {
         if (!isLogin || role === 'NONE')
           router.push('/limbo')
         else
-          router.push('/strikes');
+          router.push('/home');
       }
     } finally {
       setIsSubmitting(false);

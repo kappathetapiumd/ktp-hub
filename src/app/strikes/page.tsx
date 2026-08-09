@@ -1,4 +1,5 @@
 import StrikeDashboard from './StrikeDashboard';
+import AppNavigation from '@/components/navigation/AppNavigation';
 
 import type { Metadata } from 'next';
 
@@ -12,5 +13,8 @@ export const metadata: Metadata = {
 export default async function Page() {
   const user = await convertToUser((await getCurrentUser())!);
 
-  return <StrikeDashboard user={user} />
+  return <>
+    <StrikeDashboard user={user} />
+    <AppNavigation user={user} />
+  </>
 }

@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import type { Pledge } from '@/lib/pledges';
 import type { CurrentUser } from '@/lib/auth/currentUser';
 import FetchingState from '@/components/loading/FetchingState';
@@ -19,7 +17,6 @@ type Props = {
 
 export default function PledgeSideBar(
   {
-    user,
     pledges,
     totalStrikes,
     selectedPledge,
@@ -97,33 +94,6 @@ export default function PledgeSideBar(
           }
         </div>
 
-        <div className={styles['sidebar-actions']}>
-          <Link
-            href="/links"
-            className={styles['links-btn']}
-          >
-            <i className="fa-solid fa-link"></i>
-            <span>Links</span>
-          </Link>
-
-          {(user.role === 'ADMIN' || user.role === 'OWNER') &&
-            <Link
-              href="/users"
-              className={styles['users-btn']}
-            >
-              <i className="fa-solid fa-tachograph-digital"></i>
-              <span>Members</span>
-            </Link>
-          }
-
-          <Link
-            href="/requirements"
-            className={styles['reqs-btn']}
-          >
-            <i className="fa-solid fa-list-check"></i>
-            <span>Requirements</span>
-          </Link>
-        </div>
       </div>
 
       <button

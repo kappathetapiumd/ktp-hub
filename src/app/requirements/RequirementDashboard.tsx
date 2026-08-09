@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 
 import UserList from '@/components/requirements/UserList';
 import ClearModal from '@/components/requirements/modal/ClearModal';
@@ -374,13 +373,6 @@ export default function RequirementDashboard({ user }: Props) {
         </div>
       </div>
 
-      <Link
-        href="/strikes"
-        className={styles['strikes-btn']}
-      >
-        <i className="fa-solid fa-user-xmark"></i>
-        <span>Strike Dashboard</span>
-      </Link>
     </main>
   );
 }

@@ -304,7 +304,8 @@
   .open-sidebar {
     position: fixed;
     z-index: 50;
-    left: max(14px, env(safe-area-inset-left));
+    right: max(14px, env(safe-area-inset-right));
+    left: auto;
     bottom: max(14px, env(safe-area-inset-bottom));
     display: grid;
     place-items: center;

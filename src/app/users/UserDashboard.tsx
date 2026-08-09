@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 
 import DeleteModal from '@/components/users/modal/DeleteModal';
 import UpdateModal from '@/components/users/modal/UpdateModal';
@@ -190,13 +189,6 @@ export default function UserDashboard({ user }: Props) {
         </div>
       </div>
 
-      <Link
-        href="/strikes"
-        className={styles['dashboard-btn']}
-      >
-        <i className="fa-solid fa-user-xmark"></i>
-        <span>Strike Dashboard</span>
-      </Link>
     </main>
   );
 }
