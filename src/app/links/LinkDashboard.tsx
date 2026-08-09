@@ -23,6 +23,7 @@ export default function LinkDashboard({ user }: Props) {
   const [search, setSearch] = useState('');
   const [label, setLabel] = useState('');
   const [url, setUrl] = useState('');
+  const [showLinkInput, setShowLinkInput] = useState(false);
 
   const canManageLinks = user.role === 'ADMIN' || user.role === 'OWNER';
   const canAddLink = label.trim() && url.trim();
@@ -185,47 +186,59 @@ export default function LinkDashboard({ user }: Props) {
 
         {canManageLinks && (
           <div className={styles['link-input']}>
-            <div className={styles['composer-heading']}>
+            <button
+              type="button"
+              className={styles['composer-heading']}
+              onClick={() => setShowLinkInput(current => !current)}
+            >
               <span><i className="fa-solid fa-plus" /></span>
               <div>
                 <strong>Add a new link</strong>
                 <small>Share a resource with everyone</small>
               </div>
-            </div>
+              <i
+                className={`
+                  fa-solid fa-chevron-down ${styles['composer-chevron']}
+                  ${showLinkInput ? styles['composer-chevron-open'] : ''}
+                `}
+              />
+            </button>
 
-            <div className={styles['fields']}>
-              <label>
-                <span>Label</span>
-                <input
-                  type="text"
-                  value={label}
-                  onChange={e => setLabel(e.target.value)}
-                  onKeyDown={
-                    e => (canAddLink && e.key === 'Enter') && addLink()
-                  }
-                  placeholder="e.g. Chapter Calendar"
-                />
-              </label>
-              <label className={styles['url-field']}>
-                <span>URL</span>
-                <input
-                  type="url"
-                  value={url}
-                  onChange={e => setUrl(e.target.value)}
-                  onKeyDown={
-                    e => (canAddLink && e.key === 'Enter') && addLink()
-                  }
-                  placeholder="https://example.com"
-                />
-              </label>
-              <button
-                onClick={addLink}
-                disabled={!canAddLink}
-              >
-                <i className="fa-solid fa-plus" />
-                <span>Add link</span>
-              </button>
-            </div>
+            {showLinkInput &&
+              <div id="new-link-fields" className={styles['fields']}>
+                <label>
+                  <span>Label</span>
+                  <input
+                    type="text"
+                    value={label}
+                    onChange={e => setLabel(e.target.value)}
+                    onKeyDown={
+                      e => (canAddLink && e.key === 'Enter') && addLink()
+                    }
+                    placeholder="e.g. Chapter Calendar"
+                  />
+                </label>
+                <label className={styles['url-field']}>
+                  <span>URL</span>
+                  <input
+                    type="url"
+                    value={url}
+                    onChange={e => setUrl(e.target.value)}
+                    onKeyDown={
+                      e => (canAddLink && e.key === 'Enter') && addLink()
+                    }
+                    placeholder="https://example.com"
+                  />
+                </label>
+                <button
+                  onClick={addLink}
+                  disabled={!canAddLink}
+                >
+                  <i className="fa-solid fa-plus" />
+                  <span>Add link</span>
+                </button>
+              </div>
+            }
           </div>
         )}
       </div>

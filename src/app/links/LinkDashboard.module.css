@@ -315,7 +315,13 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  margin-bottom: var(--spacing-3);
+  width: 100%;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 }
 
 .composer-heading > span {
@@ -343,11 +349,22 @@
   font-size: var(--font-size-xs);
 }
 
+.composer-chevron {
+  margin-left: auto;
+  color: var(--color-text-muted);
+  transition: transform var(--transition-fast);
+}
+
+.composer-chevron-open {
+  transform: rotate(180deg);
+}
+
 .fields {
   display: grid;
   grid-template-columns: minmax(150px, 0.75fr) minmax(220px, 1.25fr) auto;
   align-items: end;
   gap: var(--spacing-3);
+  margin-top: var(--spacing-3);
 }
 
 .fields label {

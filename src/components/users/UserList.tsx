@@ -39,7 +39,16 @@ export default function UserList(
   }
 
   async function updateMembership(id: string, membershipCommittee: boolean) {
-    const response = await fetch('/api/users', {
+    // set the user's membership committee status and rerender the list
+    setUsers(prev =>
+      prev.map(user =>
+        user.id === id
+          ? { ...user, membershipCommittee: !membershipCommittee }
+          : user
+      )
+    );
+
+    await fetch('/api/users', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -47,17 +56,6 @@ export default function UserList(
         membershipCommittee: !membershipCommittee
       })
     });
-
-    if (!response.ok) return;
-
-    // set the user's membership committee status and rerender the list
-    setUsers(prev =>
-      prev.map(user => 
-        user.id === id
-        ? {...user, membershipCommittee: !membershipCommittee}
-        : user
-      )
-    );
   }
 
   return (

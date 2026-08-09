@@ -36,7 +36,15 @@ export default function UpdateModal(
   async function updateUser() {
     showModal(false);
 
-    const response = await fetch('/api/users', {
+    setUsers(prev =>
+      prev.map(user =>
+        user.id === userId
+          ? { ...user, name, email, role }
+          : user
+      )
+    );
+
+    await fetch('/api/users', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -46,18 +54,6 @@ export default function UpdateModal(
         role
       })
     });
-
-    if (!response.ok) return;
-
-    const { membershipCommittee } = await response.json();
-
-    setUsers(prev =>
-      prev.map(user =>
-        user.id === userId
-          ? { ...user, name, email, role, membershipCommittee }
-          : user
-      )
-    );
   }
 
   return (
