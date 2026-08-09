@@ -213,7 +213,7 @@ export default function LinkDashboard({ user }: Props) {
             >
               <span><i className="fa-solid fa-plus" /></span>
               <div>
-                <strong>Add a new link</strong>
+                <strong>Add a New Link</strong>
                 <small>Share a resource with everyone</small>
               </div>
               <i

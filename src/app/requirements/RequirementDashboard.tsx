@@ -344,25 +344,32 @@ export default function RequirementDashboard({ user }: Props) {
                 onClick={() => setShowGroupReqInput(prev => !prev)}
                 className={styles['toggle-task-input']}
               >
+                <span><i className="fa-solid fa-plus" /></span>
+                <div>
+                  <strong>Add a Group Task</strong>
+                  <small>Create a shared pledge requirement</small>
+                </div>
                 <i
-                  className={`fa-solid
-                    ${showGroupReqInput ? 'fa-minus' : 'fa-plus'}
+                  className={`
+                    fa-solid fa-chevron-down ${styles['task-chevron']}
+                    ${showGroupReqInput ? styles['task-chevron-open'] : ''}
                   `}
-                ></i>
-                <span>{showGroupReqInput ? 'Hide' : 'Add a group task'}</span>
+                />
               </button>
 
               {showGroupReqInput &&
                 <div id="group-task-form" className={styles['task-form']}>
-                  <input
-                    aria-label="Group task name"
-                    value={newGroupReq}
-                    onChange={e => setNewGroupReq(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && addGroupReq()}
-                    className={styles['task-input']}
-                    placeholder="e.g. Music Video"
-                    maxLength={60}
-                  />
+                  <label>
+                    <span>Task name</span>
+                    <input
+                      value={newGroupReq}
+                      onChange={e => setNewGroupReq(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && addGroupReq()}
+                      className={styles['task-input']}
+                      placeholder="e.g. Music Video"
+                      maxLength={60}
+                    />
+                  </label>
                   <button
                     onClick={addGroupReq}
                     disabled={!newGroupReq.trim() || isAddingGroupReq}

@@ -117,8 +117,9 @@ export default function InactiveUserDashboard({ user }: Props) {
           </span>
         </header>
 
-        <div className={styles['search-bar-container']}>
-          {!isLoadingUsers && users.length > 0 &&
+        {(isLoadingUsers || users.length > 0) &&
+          <div className={styles['search-bar-container']}>
+            {!isLoadingUsers &&
             <div className={styles['search-shell']}>
               <i className="fa-solid fa-magnifying-glass"></i>
               <SearchBar
@@ -126,13 +127,15 @@ export default function InactiveUserDashboard({ user }: Props) {
                 setSearch={setSearch}
               />
             </div>
-          }
-        </div>
+            }
+          </div>
+        }
 
-        <div className={styles['user-list-container']}>
-          {isLoadingUsers ? (
+        {(isLoadingUsers || users.length > 0) &&
+          <div className={styles['user-list-container']}>
+            {isLoadingUsers ? (
             <FetchingState label="Fetching Archived Members…" />
-          ) : users.length > 0 &&
+            ) :
             <>
               <div className={styles['list-headers']}>
                 <span>Archived member</span>
@@ -160,8 +163,9 @@ export default function InactiveUserDashboard({ user }: Props) {
                 />
               )}
             </>
-          }
-        </div>
+            }
+          </div>
+        }
         
         {!isLoadingUsers && users.length === 0 &&
           <div className={styles['info-message']}>
