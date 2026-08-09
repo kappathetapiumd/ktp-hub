@@ -277,7 +277,10 @@
 .sidebar-navigation {
   position: relative;
   z-index: auto;
+  bottom: auto;
+  left: auto;
   flex-shrink: 0;
+  align-self: flex-start;
 }
 
 @media (max-width: 520px) {
@@ -315,7 +318,7 @@
     z-index: 50;
     right: max(14px, env(safe-area-inset-right));
     left: auto;
-    bottom: max(26px, calc(env(safe-area-inset-bottom) + 6px));
+    bottom: max(26px, calc(env(safe-area-inset-bottom) + 3px));
     display: grid;
     place-items: center;
     width: 48px;

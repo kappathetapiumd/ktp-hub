@@ -20,53 +20,49 @@ export default function LoginPage() {
   const validSignup = name.trim().split(/\s+/).length >= 2;
 
   async function handleAuth() {
-    const isInvalid = isLogin
-      ? invalidLogin
-      : invalidLogin || !validSignup;
+    const isInvalid = isLogin ? invalidLogin : invalidLogin || !validSignup;
+
     if (isSubmitting || isInvalid) return;
+
     setIsSubmitting(true);
 
-    try {
-      let response;
+    let response;
 
-      if (!isLogin) {
-        response = await fetch('/api/auth/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            name: capitalizeName(name),
-            password
-          })
-        });
-      } else {
-        response = await fetch('/api/auth/signin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            password
-          })
-        });
-      }
+    if (!isLogin) {
+      response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name: capitalizeName(name),
+          password
+        })
+      });
+    } else {
+      response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password
+        })
+      });
+    }
 
-      if (!response.ok) return;
+    if (!response.ok) return;
 
-      const { success, error, role } = await response.json();
+    const { success, error, role } = await response.json();
 
-      if (error) {
-        router.push(`/limbo?message=${encodeURIComponent(error)}`);
-        return;
-      }
+    if (error) {
+      router.push(`/limbo?message=${encodeURIComponent(error)}`);
+      return;
+    }
 
-      if (success) {
-        if (!isLogin || role === 'NONE')
-          router.push('/limbo')
-        else
-          router.push('/home');
-      }
-    } finally {
-      setIsSubmitting(false);
+    if (success) {
+      if (!isLogin || role === 'NONE')
+        router.push('/limbo')
+      else
+        router.push('/home');
     }
   }
 
