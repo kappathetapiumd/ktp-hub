@@ -13,6 +13,9 @@
 }
 
 .menu {
+  position: absolute;
+  bottom: calc(100% + 9px);
+  left: 0;
   display: none;
   flex-direction: column;
   gap: 8px;

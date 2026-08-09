@@ -19,7 +19,7 @@ export default function AppNavigation({ user, className = '', hidden = false }: 
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const navigationRef = useRef<HTMLElement>(null);
-  const routes = getAppRoutes(user);
+  const routes = getAppRoutes(user).filter(route => route.href !== pathname);
 
   useEffect(() => {
     function closeOnOutsideClick(event: PointerEvent) {

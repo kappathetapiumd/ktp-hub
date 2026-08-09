@@ -275,7 +275,7 @@
 }
 
 .sidebar-navigation {
-  position: static;
+  position: relative;
   z-index: auto;
   flex-shrink: 0;
 }
@@ -315,7 +315,7 @@
     z-index: 50;
     right: max(14px, env(safe-area-inset-right));
     left: auto;
-    bottom: max(26px, calc(env(safe-area-inset-bottom) + 12px));
+    bottom: max(26px, calc(env(safe-area-inset-bottom) + 6px));
     display: grid;
     place-items: center;
     width: 48px;
