@@ -99,6 +99,22 @@
   height: 100%;
 }
 
+.history-fetching > span {
+  width: 58px;
+  height: 58px;
+  margin-bottom: var(--spacing-3);
+  font-size: 1.25rem;
+  border-radius: 18px;
+}
+
+.history-fetching > strong {
+  font-size: 1rem;
+}
+
+.history-fetching > small {
+  margin-top: 4px;
+}
+
 .info-message > span {
   display: grid;
   place-items: center;
