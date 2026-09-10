@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import type { RequirementUser as User } from '@/lib/requirement-types';
 import styles from './Modal.module.css';
 
 type Props = {
@@ -5,35 +7,19 @@ type Props = {
   showModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type User = {
-  id: string;
-  name: string;
-  role: string;
-  philSmallEvent: boolean;
-  philBigEvent: boolean;
-  profDevEventA: boolean;
-  profDevEventB: boolean
-}
-
 export default function ClearModal({ setUsers, showModal }: Props) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
   async function clearRequirements() {
-    showModal(false);
-
-    const response = await fetch('/api/requirements', { method: 'DELETE' });
-
-    if (!response.ok) return;
-
-    setUsers(prev =>
-      prev.map(user => {
-        return {
-          ...user,
-          philSmallEvent: false,
-          philBigEvent: false,
-          profDevEventA: false,
-          profDevEventB: false,
-        }
-      })
-    );
+    if (busy) return;
+    setBusy(true); setError('');
+    try {
+      const response = await fetch('/api/requirements?action=clear-progress', { method: 'DELETE' });
+      if (!response.ok) throw new Error('Could not clear progress. Please try again.');
+      setUsers(prev => prev.map(user => ({ ...user, completedRequirementIds: [] })));
+      showModal(false);
+    } catch { setError('Could not clear progress. Please try again.'); }
+    finally { setBusy(false); }
   }
 
   return (
@@ -42,15 +28,17 @@ export default function ClearModal({ setUsers, showModal }: Props) {
         <div className={styles['modal-heading']}>
           <span className={styles['modal-icon']}><i className="fa-solid fa-rotate-left"></i></span>
           <p className={styles['eyebrow']}>Reset progress</p>
-          <h2 id="clear-requirements-title">Clear all requirements?</h2>
+          <h2 id="clear-requirements-title">Clear all progress?</h2>
           <p className={styles['message']}>
-            Every member’s requirement progress will be reset. This cannot be undone.
+            Every member’s individual requirement progress will be reset. Requirements and group pledge tasks will be kept. This cannot be undone.
           </p>
         </div>
 
+        {error && <p role="alert">{error}</p>}
         <div className={styles['confirmation-btns']}>
           <button
             onClick={clearRequirements}
+            disabled={busy}
             className={styles['yes-btn']}
           >
             <i className="fa-solid fa-trash-can"></i>
@@ -58,6 +46,7 @@ export default function ClearModal({ setUsers, showModal }: Props) {
           </button>
           <button
             onClick={() => showModal(false)}
+            disabled={busy}
             className={styles['cancel-btn']}
           >
             Cancel

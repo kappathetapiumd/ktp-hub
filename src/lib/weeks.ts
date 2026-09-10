@@ -1,8 +1,12 @@
 import prisma from './prisma';
 
-import dayjs from 'dayjs';
-
 export async function createStrikeTerm(startDate: string, endDate: string) {
+  const parsedStartDate = parseDateOnly(startDate);
+  const parsedEndDate = parseDateOnly(endDate);
+
+  if (parsedStartDate >= parsedEndDate)
+    throw new RangeError('The term end date must be after its start date.');
+
   await prisma.$transaction(async (tx) => {
     const oldStrikeTerm = await tx.strikeTerm.findFirst({
       select: { id: true }
@@ -15,8 +19,8 @@ export async function createStrikeTerm(startDate: string, endDate: string) {
 
     await tx.strikeTerm.create({
       data: {
-        startDate: new Date(startDate),
-        endDate: new Date(endDate)
+        startDate: parsedStartDate,
+        endDate: parsedEndDate
       }
     });
   });
@@ -38,19 +42,44 @@ export async function getWeeks() {
 function generateWeeks(startDate: Date, endDate: Date) {
   const weeks = [];
 
-  let currentStart = dayjs(startDate).add(1, 'day');
-  const finalDate = dayjs(endDate).add(1, 'day');
+  let currentStart = startDate;
 
-  while (currentStart.isBefore(finalDate) || currentStart.isSame(finalDate)) {
-    const weekEnd = currentStart.add(6, 'day');
-    const currentEnd = weekEnd.isAfter(finalDate) ? finalDate : weekEnd;
+  while (currentStart <= endDate) {
+    const weekEnd = addUtcDays(currentStart, 6);
+    const currentEnd = weekEnd > endDate ? endDate : weekEnd;
 
     weeks.push(
-      `${currentStart.format('M/DD/YY')} - ${currentEnd.format('M/DD/YY')}`
+      `${formatUtcDate(currentStart)} - ${formatUtcDate(currentEnd)}`
     );
 
-    currentStart = currentStart.add(7, 'day');
+    currentStart = addUtcDays(currentStart, 7);
   }
 
   return weeks;
+}
+
+function parseDateOnly(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value))
+    throw new RangeError('Invalid date.');
+
+  const date = new Date(`${value}T00:00:00.000Z`);
+
+  if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value)
+    throw new RangeError('Invalid date.');
+
+  return date;
+}
+
+function addUtcDays(date: Date, days: number) {
+  const result = new Date(date);
+  result.setUTCDate(result.getUTCDate() + days);
+  return result;
+}
+
+function formatUtcDate(date: Date) {
+  const month = date.getUTCMonth() + 1;
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const year = String(date.getUTCFullYear()).slice(-2);
+
+  return `${month}/${day}/${year}`;
 }

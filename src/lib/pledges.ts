@@ -25,7 +25,7 @@ export async function getPledges() {
       philSmallEvent: true,
       philBigEvent: true,
       profDevEventA: true,
-      profDevEventB: true
+      profDevEventB: true,
     },
     include: {
       pledgeStrikeEvents: {

@@ -21,7 +21,7 @@ export async function getUsers(isActive: boolean) {
       philSmallEvent: true,
       philBigEvent: true,
       profDevEventA: true,
-      profDevEventB: true
+      profDevEventB: true,
     }
   });
   
@@ -62,7 +62,7 @@ export async function filterUsers(search: string, isActive: boolean) {
       philSmallEvent: true,
       philBigEvent: true,
       profDevEventA: true,
-      profDevEventB: true
+      profDevEventB: true,
     }
   });
 

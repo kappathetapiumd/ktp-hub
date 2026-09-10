@@ -32,10 +32,13 @@ model User {
   membershipCommittee Boolean @default(false)
   isActive            Boolean @default(true)
 
-  philSmallEvent      Boolean @default(false)
-  philBigEvent        Boolean @default(false)
-  profDevEventA       Boolean @default(false)
-  profDevEventB       Boolean @default(false)
+  // Kept temporarily so pre-dynamic-requirement deployments can run safely.
+  philSmallEvent Boolean @default(false)
+  philBigEvent   Boolean @default(false)
+  profDevEventA  Boolean @default(false)
+  profDevEventB  Boolean @default(false)
+
+  requirementCompletions RequirementCompletion[]
 
   pledgeStrikeEvents  StrikeEvent[] @relation("PledgeStrikeEvents")
   createdStrikeEvents StrikeEvent[] @relation("CreatedStrikeEvents")
@@ -68,6 +71,33 @@ model GroupTask {
 
   name        String
   completed   Boolean @default(false)
+}
+
+enum RequirementAudience {
+  ALL
+  BROTHERS
+  PLEDGES
+}
+
+model Requirement {
+  id          String @id @default(cuid())
+  name        String
+  category    String
+  appliesTo   RequirementAudience @default(ALL)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  completions RequirementCompletion[]
+}
+
+model RequirementCompletion {
+  userId        String
+  requirementId String
+  completedAt   DateTime @default(now())
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  requirement   Requirement @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+
+  @@id([userId, requirementId])
+  @@index([requirementId])
 }
 
 model Link {

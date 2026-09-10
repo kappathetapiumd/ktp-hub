@@ -3,7 +3,14 @@ import { createStrikeTerm, getWeeks } from '@/lib/weeks';
 export async function POST(request: Request) {
   const { startDate, endDate } = await request.json();
 
-  await createStrikeTerm(startDate, endDate);
+  try {
+    await createStrikeTerm(startDate, endDate);
+  } catch (error) {
+    if (error instanceof RangeError)
+      return Response.json({ error: error.message }, { status: 400 });
+
+    throw error;
+  }
 
   return Response.json({ success: true });
 }
