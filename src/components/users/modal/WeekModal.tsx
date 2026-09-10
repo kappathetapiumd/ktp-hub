@@ -88,5 +88,5 @@ export default function WeekModal({ showModal }: Props) {
 function invalidDates(startDate: string, endDate: string) {
   if (!startDate || !endDate) return true;
 
-  return new Date(startDate) >= new Date(endDate)
+  return startDate >= endDate;
 }

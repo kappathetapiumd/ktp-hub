@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [requestError, setRequestError] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -27,44 +28,52 @@ export default function LoginPage() {
     if (isSubmitting || isInvalid) return;
 
     setIsSubmitting(true);
+    setRequestError(null);
 
-    let response;
+    try {
+      const response = await fetch(
+        isLogin ? '/api/auth/signin' : '/api/auth/signup',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            ...(!isLogin && { name: capitalizeName(name) }),
+            password
+          })
+        }
+      );
 
-    if (!isLogin) {
-      response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          name: capitalizeName(name),
-          password
-        })
-      });
-    } else {
-      response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password
-        })
-      });
-    }
+      const result = await readAuthResponse(response);
 
-    if (!response.ok) return;
+      if (!response.ok) {
+        setRequestError(
+          result.error ?? 'Unable to sign in right now. Please try again.'
+        );
+        return;
+      }
 
-    const { success, error, role } = await response.json();
+      if (result.error) {
+        router.push(`/limbo?message=${encodeURIComponent(result.error)}`);
+        return;
+      }
 
-    if (error) {
-      router.push(`/limbo?message=${encodeURIComponent(error)}`);
-      return;
-    }
+      if (result.success) {
+        if (!isLogin || result.role === 'NONE')
+          router.push('/limbo')
+        else
+          router.push('/home');
 
-    if (success) {
-      if (!isLogin || role === 'NONE')
-        router.push('/limbo')
-      else
-        router.push('/home');
+        return;
+      }
+
+      setRequestError('The server returned an unexpected response. Try again.');
+    } catch {
+      setRequestError(
+        'Could not reach the server. Check your connection and try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -125,6 +134,11 @@ export default function LoginPage() {
           </div>
 
           <div className={styles['login-btns-container']}>
+            {requestError && (
+              <p className={styles['error-message']} role="alert">
+                {requestError}
+              </p>
+            )}
             <button
               type="submit"
               className={styles['submit-btn']}
@@ -163,4 +177,18 @@ function capitalizeName(name: string) {
   return name.trim().split(/\s+/).map(word =>
     word[0].toUpperCase() + word.slice(1).toLowerCase()
   ).join(' ');
+}
+
+type AuthResponse = {
+  success?: boolean;
+  error?: string;
+  role?: string;
+}
+
+async function readAuthResponse(response: Response): Promise<AuthResponse> {
+  try {
+    return await response.json();
+  } catch {
+    return {};
+  }
 }

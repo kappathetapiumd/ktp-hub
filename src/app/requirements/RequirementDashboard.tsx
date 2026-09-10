@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import UserList from '@/components/requirements/UserList';
+import RequirementTracker from '@/components/requirements/RequirementTracker';
+import { appliesToMember, type Requirement, type RequirementUser } from '@/lib/requirement-types';
 import ClearModal from '@/components/requirements/modal/ClearModal';
 import FetchingState from '@/components/loading/FetchingState';
 
@@ -12,17 +13,11 @@ import styles from './RequirementDashboard.module.css'
 
 type Props = {
   user: CurrentUser;
+  initialUsers: RequirementUser[];
+  initialRequirements: Requirement[];
 }
 
-type User = {
-  id: string;
-  name: string;
-  role: string;
-  philSmallEvent: boolean;
-  philBigEvent: boolean;
-  profDevEventA: boolean;
-  profDevEventB: boolean
-}
+type User = RequirementUser;
 
 type GroupTask = {
   id: string;
@@ -30,48 +25,24 @@ type GroupTask = {
   completed: boolean;
 }
 
-export default function RequirementDashboard({ user }: Props) {
-  const [users, setUsers] = useState<User[]>([]);
+export default function RequirementDashboard({
+  user, initialUsers, initialRequirements
+}: Props) {
+  const [users, setUsers] = useState<User[]>(initialUsers);
+  const [requirements, setRequirements] = useState<Requirement[]>(
+    initialRequirements
+  );
   const [search, setSearch] = useState('');
   const [groupReqs, setGroupReqs] = useState<GroupTask[]>([]);
   const [newGroupReq, setNewGroupReq] = useState('');
   const [showGroupReqInput, setShowGroupReqInput] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
-  const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [isLoadingGroupReqs, setIsLoadingGroupReqs] = useState(
     user.role !== 'BROTHER'
   );
   const [isAddingGroupReq, setIsAddingGroupReq] = useState(false);
 
   
-  useEffect(() => {
-    loadUsers();
-
-    async function loadUsers() {
-      const type =
-        (user.role === 'OWNER' || user.role === 'ADMIN')
-        ? 'all'
-        : user.role === 'BROTHER'
-        ? 'brothers'
-        : 'pledges';
-
-      const params = new URLSearchParams({
-        type
-      });
-
-      try {
-        const response = await fetch(`/api/requirements?${params.toString()}`);
-
-        if (!response.ok) return;
-
-        const users = await response.json();
-        setUsers(users);
-      } finally {
-        setIsLoadingUsers(false);
-      }
-    }
-  }, [user.role]);
-
   useEffect(() => {
     if (user.role !== 'BROTHER')
       loadGroupReqs();
@@ -149,15 +120,10 @@ export default function RequirementDashboard({ user }: Props) {
     setGroupReqs(prev => prev.filter(groupReq => groupReq.id !== id));
   }
 
-  const completedRequirements = users.reduce((total, currentUser) =>
-    total
-    + Number(currentUser.philSmallEvent)
-    + Number(currentUser.philBigEvent)
-    + Number(currentUser.profDevEventA)
-    + Number(currentUser.profDevEventB), 0
-  );
-
-  const totalRequirements = users.length * 4;
+  const completedRequirements = users.reduce((total, member) => total + requirements.filter(req =>
+    appliesToMember(req, member.role) && member.completedRequirementIds.includes(req.id)).length, 0);
+  const totalRequirements = users.reduce((total, member) =>
+    total + requirements.filter(req => appliesToMember(req, member.role)).length, 0);
 
   const filteredUsers = useMemo(() => {
     const query = search.trim().toLocaleLowerCase();
@@ -200,11 +166,9 @@ export default function RequirementDashboard({ user }: Props) {
 
           <div className={styles['header-actions']}>
             <div className={styles['progress-pill']}>
-              <span>{isLoadingUsers ? '—' : completedRequirements}</span>
+              <span>{completedRequirements}</span>
               <small>
-                {isLoadingUsers
-                  ? 'fetching progress'
-                  : `of ${totalRequirements || 0} complete`}
+                {`of ${totalRequirements || 0} complete`}
               </small>
             </div>
             {(user.role === 'ADMIN' || user.role === 'OWNER') &&
@@ -290,49 +254,13 @@ export default function RequirementDashboard({ user }: Props) {
           </div>
         </div>
 
-        <div className={styles['tracker']}>
-          <div className={styles['headers']}>
-            <span className={styles['header']}>Member</span>
-            <span className={styles['header']}>
-              <span>Small Event</span>
-              <span className={styles['header-detail']}>(Philanthropy)</span>
-            </span>
-            <span className={styles['header']}>
-              <span>Big Event</span>
-              <span className={styles['header-detail']}>(Philanthropy)</span>
-            </span>
-            <span className={styles['header']}>
-              <span>Event #1</span>
-              <span className={styles['header-detail']}>
-                (Professional Development)
-              </span>
-            </span>
-            <span className={styles['header']}>
-              <span>Event #2</span>
-              <span className={styles['header-detail']}>
-                (Professional Development)
-              </span>
-            </span>
-          </div>
-
-          <div className={styles['user-list']}>
-            {isLoadingUsers ? (
-              <FetchingState label="Fetching Requirements…" />
-            ) : filteredUsers.length === 0 && search.trim() ? (
-              <div className={styles['no-results']}>
-                <i className="fa-solid fa-magnifying-glass" />
-                <strong>No Matching Members</strong>
-                <span>Try searching for a different name or role.</span>
-              </div>
-            ) : (
-              <UserList
-                user={user}
-                users={filteredUsers}
-                setUsers={setUsers}
-              />
-            )}
-          </div>
-        </div>
+        <RequirementTracker
+              requirements={requirements}
+              users={filteredUsers}
+              canManage={user.role === 'OWNER' || user.role === 'ADMIN'}
+              setRequirements={setRequirements}
+              setUsers={setUsers}
+            />
 
         <div className={styles['task-control-slot']}>
           {user.role === 'OWNER' && (

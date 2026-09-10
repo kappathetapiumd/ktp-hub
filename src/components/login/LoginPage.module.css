@@ -112,6 +112,18 @@
   margin-top: var(--spacing-2);
 }
 
+.error-message {
+  margin: 0;
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  border-radius: var(--radius-md);
+  background: rgba(255, 107, 107, 0.1);
+  color: #ffb4b4;
+  font-size: var(--font-size-sm);
+  line-height: 1.45;
+  text-align: center;
+}
+
 .login-btns-container button {
   cursor: pointer;
   border: 0;

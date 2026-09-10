@@ -48,7 +48,7 @@ export default function StrikeHistory(
           <span className={styles['history-icon']}><i className="fa-solid fa-clock-rotate-left"></i></span>
           <div>
             <p className={styles['eyebrow']}>Selected week</p>
-            <h2>Strike history</h2>
+            <h2>Strike History</h2>
           </div>
         </div>
         <span className={`${styles['week-amount']} ${totalStrikesPerWeek > 0 ? styles['positive'] : styles['neutral']}`}>
@@ -67,17 +67,17 @@ export default function StrikeHistory(
               <h3>Select a Pledge</h3>
               <p>Choose someone from the roster to view their history.</p>
             </div>
+          : isLoading
+          ? <FetchingState
+              label="Fetching Strikes…"
+              className={styles['history-fetching']}
+            />
           : isPledge
           ? <div className={styles['info-message']}>
               <span><i className="fa-solid fa-lock"></i></span>
               <h3>History is Private</h3>
               <p>{`Pledges can't view strike history.`}</p>
             </div>
-          : isLoading
-          ? <FetchingState
-              label="Fetching Strike History…"
-              className={styles['history-fetching']}
-            />
           : strikeHistory.length === 0
           ? <div className={styles['info-message']}>
               <span><i className="fa-solid fa-circle-check"></i></span>
@@ -149,5 +149,5 @@ export default function StrikeHistory(
 }
 
 function formatDate(date: string) {
-  return dayjs(date).format('MM/D • h:mm A')
+  return dayjs(date).format('MM/DD • h:mm A')
 }
