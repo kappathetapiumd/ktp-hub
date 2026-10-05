@@ -21,11 +21,20 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
   const pledgeId = searchParams.get('pledgeId');
-  const week = searchParams.get('week');
+  const start = searchParams.get('start');
+  const end = searchParams.get('end');
 
-  if (!pledgeId || !week) return Response.json([]);
+  // Require explicit UTC instants so the server timezone cannot shift the week.
+  if (!pledgeId || !start?.endsWith('Z') || !end?.endsWith('Z'))
+    return Response.json({ error: 'Missing week boundaries.' }, { status: 400 });
 
-  const strikeHistoryInfo = await getStrikeHistory(pledgeId, week);
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  if (!Number.isFinite(startDate.getTime()) || !Number.isFinite(endDate.getTime())
+    || startDate >= endDate)
+    return Response.json({ error: 'Invalid week boundaries.' }, { status: 400 });
+
+  const strikeHistoryInfo = await getStrikeHistory(pledgeId, startDate, endDate);
 
   if (user.role === 'PLEDGE') {
     return Response.json({

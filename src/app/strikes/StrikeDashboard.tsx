@@ -19,6 +19,7 @@ import type { CurrentUser } from '@/lib/auth/currentUser';
 
 import styles from './StrikeDashboard.module.css';
 import { addedToThisWeek } from '@/lib/utils';
+import { getStrikeWeekRange } from '@/lib/strikeWeekRange';
 
 type Props = {
   user: CurrentUser;
@@ -81,7 +82,7 @@ export default function StrikeDashboard({ user }: Props) {
     async function loadStrikeHistory() {
       const params = new URLSearchParams({
         pledgeId: selectedPledge,
-        week: selectedWeek
+        ...getStrikeWeekRange(selectedWeek)
       });
 
       setIsLoadingStrikeHistory(true);
@@ -140,7 +141,7 @@ export default function StrikeDashboard({ user }: Props) {
 
   // get the strike history any time a new pledge/week is selected
   useEffect(() => {
-    if (!selectedPledge) return;
+    if (!selectedPledge || !selectedWeek) return;
     const controller = new AbortController();
 
     loadStrikeHistory();
@@ -148,7 +149,7 @@ export default function StrikeDashboard({ user }: Props) {
     async function loadStrikeHistory() {
       const params = new URLSearchParams({
         pledgeId: selectedPledge,
-        week: selectedWeek
+        ...getStrikeWeekRange(selectedWeek)
       });
 
       setIsLoadingStrikeHistory(true);
