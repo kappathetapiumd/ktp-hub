@@ -46,13 +46,15 @@ export async function getStrikeHistory(pledgeId: string, week: string) {
   const [start, end] = week.split(' - ');
   const startDate = new Date(start);
   const endDate = new Date(end);
+  // Week labels include the entire final day, not just its midnight.
+  endDate.setDate(endDate.getDate() + 1);
 
   const strikeEvents = await prisma.strikeEvent.findMany({
     where: {
       pledgeId,
       createdAt: {
         gte: startDate,
-        lte: endDate
+        lt: endDate
       },
     },
     omit: { pledgeId: true },
