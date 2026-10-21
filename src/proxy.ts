@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getUserFromSession, updateUserSessionExpiration } from '@/lib/auth/session';
+import { getUserFromSession, updateUserSessionExpiration, USER_SESSION_HEADER, type ValidatedSession } from '@/lib/auth/session';
 
 // pledges - GET
 // weeks - GET
@@ -32,24 +32,33 @@ const REDIRECT_COOKIE = 'redirect-path';
 const DEFAULT_REDIRECT = '/home';
 
 export async function proxy(request: NextRequest) {
-  const response = await proxyAuth(request);
+  // Never trust a caller-provided identity, including on public auth routes.
+  request.headers.delete(USER_SESSION_HEADER);
+  if (request.nextUrl.pathname.startsWith('/api/auth/'))
+    return next(request);
 
-  await updateUserSessionExpiration(request, response);
-
+  const session = await getUserFromSession(request.cookies);
+  if (session) {
+    const { userId, role, membershipCommittee } = session;
+    request.headers.set(USER_SESSION_HEADER, JSON.stringify({ userId, role, membershipCommittee }));
+  }
+  const response = await proxyAuth(request, session);
+  await updateUserSessionExpiration(request, response, session);
   return response;
 }
 
-async function proxyAuth(request: NextRequest) {
-  const user = await getUserFromSession(request.cookies);
+function next(request: NextRequest) {
+  // Forward upstream only; do not expose the identity as a response header.
+  return NextResponse.next({ request: { headers: request.headers } });
+}
+
+async function proxyAuth(request: NextRequest, user: ValidatedSession | null) {
   const path = request.nextUrl.pathname;
   const apiCall = path.startsWith('/api');
   const loginPage = path === '/'
     || path === '/forgot-password' || path === '/reset-password';
   const limboPage = path === '/limbo';
   const authErrorPage = limboPage && request.nextUrl.searchParams.has('message');
-
-  if (path.startsWith('/api/auth'))
-    return NextResponse.next();
 
   if (!user) {
     if (apiCall)
@@ -58,7 +67,7 @@ async function proxyAuth(request: NextRequest) {
     if (!loginPage && !authErrorPage)
       return NextResponse.redirect(new URL('/', request.url));
 
-    return NextResponse.next();
+    return next(request);
   }
 
   if (user.role === 'NONE') {
@@ -66,7 +75,7 @@ async function proxyAuth(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     if (loginPage || limboPage)
-      return NextResponse.next();
+      return next(request);
 
     return NextResponse.redirect(new URL('/limbo', request.url));
   }
@@ -117,7 +126,7 @@ function brotherPcpAuth(
   if (apiCall && path !== '/api/pusher/auth' && request.method !== 'GET')
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  return NextResponse.next();
+  return next(request);
 }
 
 function membershipAuth(
@@ -131,7 +140,7 @@ function membershipAuth(
   )
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  return NextResponse.next();
+  return next(request);
 }
 
 function adminAuth(
@@ -145,7 +154,7 @@ function adminAuth(
   )
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  return NextResponse.next();
+  return next(request);
 }
 
 function ownerAuth(
@@ -154,7 +163,7 @@ function ownerAuth(
   if (!ownerRoutes.includes(path))
     return deny('/home', apiCall, request);
 
-  return NextResponse.next();
+  return next(request);
 }
 
 function deny(

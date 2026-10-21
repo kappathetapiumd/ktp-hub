@@ -30,6 +30,7 @@ export default function Limbo({ message }: { message: string | undefined }) {
         </p>
 
         <Link
+          prefetch={false}
           href="/"
           className={styles['ok-btn']}
         >
