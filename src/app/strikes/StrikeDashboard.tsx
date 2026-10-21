@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { pusherClient } from '@/lib/pusher/client';
 
@@ -41,13 +41,19 @@ export default function StrikeDashboard({ user }: Props) {
   const [isLoadingWeeks, setIsLoadingWeeks] = useState(true);
   const [isLoadingStrikeHistory, setIsLoadingStrikeHistory] = useState(false);
 
+  const selection = useRef({ selectedPledge, selectedWeek, userId: user.id });
+  useEffect(() => {
+    selection.current = { selectedPledge, selectedWeek, userId: user.id };
+  }, [selectedPledge, selectedWeek, user.id]);
+
   useEffect(() => {
     const channel = pusherClient.subscribe('private-strikes');
 
     function handleStrikeEvent(
       { pledgeId, userId }: { pledgeId: string; userId: string }
     ) {
-      if (user.id !== userId) {
+      const { selectedPledge, selectedWeek, userId: currentUserId } = selection.current;
+      if (currentUserId !== userId) {
         if (selectedPledge === pledgeId && addedToThisWeek(selectedWeek)) {
           loadStrikeHistory();
         }
@@ -61,7 +67,9 @@ export default function StrikeDashboard({ user }: Props) {
     channel.bind('strike-deleted', handleStrikeEvent);
 
     return () => {
-      channel.unbind_all();
+      channel.unbind('strike-created', handleStrikeEvent);
+      channel.unbind('strike-updated', handleStrikeEvent);
+      channel.unbind('strike-deleted', handleStrikeEvent);
       pusherClient.unsubscribe('private-strikes');
     }
 
@@ -80,6 +88,7 @@ export default function StrikeDashboard({ user }: Props) {
     }
 
     async function loadStrikeHistory() {
+      const { selectedPledge, selectedWeek } = selection.current;
       const params = new URLSearchParams({
         pledgeId: selectedPledge,
         ...getStrikeWeekRange(selectedWeek)
@@ -101,7 +110,7 @@ export default function StrikeDashboard({ user }: Props) {
         setIsLoadingStrikeHistory(false);
       }
     }
-  }, [selectedPledge, selectedWeek, user.id]);
+  }, []);
 
   // load the list of pledges
   useEffect(() => {

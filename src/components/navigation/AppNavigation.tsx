@@ -49,6 +49,7 @@ export default function AppNavigation({ user, className = '', hidden = false }: 
       <div id="app-navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`} aria-hidden={!isOpen}>
         {routes.map(route => (
           <Link
+            prefetch={false}
             key={route.href}
             href={route.href}
             className={`${styles.link} ${pathname === route.href ? styles.active : ''}`}

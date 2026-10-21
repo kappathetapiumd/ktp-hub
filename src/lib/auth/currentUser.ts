@@ -1,9 +1,9 @@
 'use server';
 
 import { cache } from 'react';
-import { cookies } from 'next/headers';
+import { headers } from 'next/headers';
 
-import { getUserFromSession } from './session';
+import { USER_SESSION_HEADER, type ValidatedSession } from './session';
 
 import type { Role } from '@/generated/prisma/enums';
 
@@ -14,7 +14,12 @@ export type CurrentUser = {
 }
 
 export const getCurrentUser = cache(async () => {
-  return await getUserFromSession(await cookies());
+  // Proxy overwrites this header on every application request. Fail closed
+  // rather than starting a second database lookup when identity is absent.
+  const identity = (await headers()).get(USER_SESSION_HEADER);
+  return identity
+    ? JSON.parse(identity) as Omit<ValidatedSession, 'expiresAt'>
+    : null;
 });
 
 export async function convertToUser(client: {

@@ -27,6 +27,7 @@ export default function HomeDashboard({ user }: { user: CurrentUser }) {
         <div className={styles.grid}>
           {routes.map((route, index) => (
             <Link
+              prefetch={false}
               key={route.href}
               href={route.href}
               className={`${styles.card} ${styles[route.accent]}`}

@@ -77,6 +77,7 @@ export default function ButtonList(
           </button>
 
           <Link
+            prefetch={false}
             href={isActive ? '/users/deleted' : '/users'}
             className={styles['users-btn']}
           >

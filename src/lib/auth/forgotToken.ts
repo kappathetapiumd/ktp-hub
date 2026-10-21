@@ -14,9 +14,9 @@ export function hashToken(token: string) {
 }
 
 export async function addPasswordToken(tokenHash: string, userId: string) {
-  // delete any existing tokens for this user
+  // Retire expired tokens opportunistically along with this user's old tokens.
   await prisma.passwordResetToken.deleteMany({
-    where: { userId }
+    where: { OR: [{ userId }, { expiresAt: { lte: new Date() } }] }
   });
 
   await prisma.passwordResetToken.create({

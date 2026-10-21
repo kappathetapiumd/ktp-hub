@@ -12,6 +12,15 @@ export type UserSession = {
   membershipCommittee: boolean;
 }
 
+export const USER_SESSION_HEADER = 'x-ktp-validated-user';
+
+export type ValidatedSession = {
+  userId: string;
+  role: Role;
+  membershipCommittee: boolean;
+  expiresAt: Date;
+};
+
 const COOKIE_SESSION_KEY = 'session-id';
 
 export async function createUserSession(user: UserSession, cookies: ReadonlyRequestCookies) {
@@ -20,6 +29,10 @@ export async function createUserSession(user: UserSession, cookies: ReadonlyRequ
   const oneDay = 24 * 60 * 60 * 1000;
   const expiresAt = new Date(Date.now() + 7 * oneDay);
 
+  // Opportunistic cleanup only during successful sign-in/sign-up.
+  await prisma.session.deleteMany({
+    where: { expiresAt: { lte: new Date() } }
+  });
   await addSession(sessionId, user, expiresAt);
 
   cookies.set(COOKIE_SESSION_KEY, sessionId, {
@@ -56,40 +69,25 @@ export function getUserFromSession(
 }
 
 async function getUserSessionById(sessionId: string) {
-  await prisma.session.deleteMany({
-    where: {
-      expiresAt: { lt: new Date() }
-    }
-  });
-
-  await prisma.passwordResetToken.deleteMany({
-    where: {
-      expiresAt: { lt: new Date() }
-    }
-  });
-
-  const user = await prisma.session.findFirst({
+  const session = await prisma.session.findUnique({
     where: { sessionId },
     select: {
+      expiresAt: true,
       userId: true,
       role: true,
       membershipCommittee: true
     }
   });
 
-  return user;
+  return session && session.expiresAt.getTime() > Date.now() ? session : null;
 }
 
 export async function updateUserSessionExpiration(
-  request: NextRequest, response: NextResponse
+  request: NextRequest, response: NextResponse, session: ValidatedSession | null
 ) {
   const sessionId = request.cookies.get(COOKIE_SESSION_KEY)?.value;
 
   if (!sessionId) return;
-
-  const session = await prisma.session.findUnique({
-    where: { sessionId }
-  });
 
   if (!session || session.expiresAt <= new Date()) {
     response.cookies.delete(COOKIE_SESSION_KEY);
@@ -101,10 +99,12 @@ export async function updateUserSessionExpiration(
   if (session.expiresAt.getTime() - Date.now() < oneDay) {
     const expiresAt = new Date(Date.now() + 7 * oneDay)
 
-    await prisma.session.updateMany({
-      where: { sessionId },
+    const renewed = await prisma.session.updateMany({
+      where: { sessionId, expiresAt: session.expiresAt },
       data: { expiresAt }
     });
+
+    if (renewed.count === 0) return;
 
     response.cookies.set(COOKIE_SESSION_KEY, sessionId, {
       httpOnly: true,
